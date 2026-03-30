@@ -821,7 +821,7 @@ jobs:
             }
 
             // Insert `const MotionImage = motion(Image)` after the last import line
-            if (!src.includes('MotionImage')) {
+            if (!src.includes('const MotionImage')) {
               const lastImport = src.lastIndexOf('\nimport ');
               if (lastImport !== -1) {
                 const eol = src.indexOf('\n', lastImport + 1);
