@@ -1,0 +1,906 @@
+name: Migrate Vite → Next.js and Deploy
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ─── 1. CHECKOUT ─────────────────────────────────────────────────────────
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      # ─── 2. OPT-IN CHECK ─────────────────────────────────────────────────────
+      - name: Check if migration is enabled for this repo
+        id: check_flag
+        run: |
+          if [ -f "lovable.migrate.json" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+          fi
+
+      # ─── 3. NODE.JS ──────────────────────────────────────────────────────────
+      - name: Setup Node.js
+        if: steps.check_flag.outputs.enabled == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # ─── 4a. ROUTE EXTRACTION ────────────────────────────────────────────────
+      # Parses App.tsx to build a route table. Written to /tmp/routes.json for
+      # use by the migration step and Fix J (sitemap).
+      # If no routes are found, sets fallback:true — migration will use the old
+      # [[...slug]] + ssr:false pattern so no project is left broken.
+      - name: "Step 4a — Extract routes from App.tsx"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs = require('fs');
+
+          if (!fs.existsSync('src/App.tsx')) {
+            fs.writeFileSync('/tmp/routes.json', JSON.stringify({ fallback: true }));
+            console.log('App.tsx not found — will use fallback catch-all');
+            process.exit(0);
+          }
+
+          const src = fs.readFileSync('src/App.tsx', 'utf8');
+
+          // Build import map: ComponentName → importSrc
+          const imports = {};
+          for (const m of src.matchAll(/import\s+(\w+)\s+from\s+["']([^"']+)["']/g)) {
+            imports[m[1]] = m[2];
+          }
+
+          // Extract routes, skip catch-all "*"
+          const routes = [];
+          for (const m of src.matchAll(/<Route\s+path=["']([^"'*][^"']*|\/?)["']\s+element=\{<(\w+)/g)) {
+            const rpath = m[1];
+            const component = m[2];
+            const importSrc = imports[component] || null;
+            if (importSrc) routes.push({ path: rpath, component, importSrc });
+          }
+
+          // Find the NotFound component (path="*")
+          const nf = src.match(/<Route\s+path=["']\*["']\s+element=\{<(\w+)/);
+          const notFound = nf ? { component: nf[1], importSrc: imports[nf[1]] || null } : null;
+
+          if (routes.length === 0) {
+            fs.writeFileSync('/tmp/routes.json', JSON.stringify({ fallback: true }));
+            console.log('No routes found in App.tsx — will use fallback catch-all');
+          } else {
+            fs.writeFileSync('/tmp/routes.json', JSON.stringify({ routes, notFound }, null, 2));
+            console.log('Extracted ' + routes.length + ' routes from App.tsx');
+            routes.forEach(r => console.log('  ' + r.path + ' -> ' + r.component));
+          }
+          NODEJS
+
+      # ─── 4b-pre: WIPE STALE src/app ─────────────────────────────────────────
+      # Lovable commits src/app/[[...slug]]/ and src/app/layout.tsx to main.
+      # If these survive into the build they conflict with our generated pages.
+      # Using shell rm -rf here (not Node.js) is the most reliable guarantee —
+      # it runs unconditionally before the migration Node script.
+      - name: "Step 4b-pre — Remove stale src/app from main branch"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: rm -rf src/app && echo "Cleared src/app/"
+
+      # ─── 4b. INLINE MIGRATION ────────────────────────────────────────────────
+      # Reads /tmp/routes.json. If routes were extracted, generates individual
+      # Next.js page files (one per route) — full SSR, Google sees real HTML.
+      # Falls back to the old [[...slug]] + ssr:false catch-all if route
+      # extraction failed, so no project is left in a broken state.
+      #
+      # Metadata priority: lovable.migrate.json → index.html → "My App"
+      - name: "Step 4b — Inline migration: Vite SPA → Next.js App Router"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          // ── Read config ─────────────────────────────────────────────────────
+          const cfg = JSON.parse(fs.readFileSync('lovable.migrate.json', 'utf8'));
+          let title       = cfg.title       || '';
+          let description = cfg.description || '';
+          const siteUrl       = cfg.siteUrl       || '';
+          const ogImage       = cfg.ogImage       || '';
+          const ogType        = cfg.ogType        || 'website';
+          const twitterHandle = cfg.twitterHandle || '';
+          const twitterCard   = cfg.twitterCard   || 'summary_large_image';
+          const locale        = cfg.locale        || 'en';
+          const businessName  = (cfg.businessSchema && cfg.businessSchema.name) || '';
+          const businessSchema = cfg.businessSchema || null;
+
+          // Fallback metadata from index.html
+          if ((!title || !description) && fs.existsSync('index.html')) {
+            const html = fs.readFileSync('index.html', 'utf8');
+            if (!title) {
+              const m = html.match(/<title>([^<]+)<\/title>/i);
+              if (m) title = m[1].trim();
+            }
+            if (!description) {
+              const m = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i)
+                     || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i);
+              if (m) description = m[1].trim();
+            }
+          }
+          title = title || 'My App';
+
+          // ── Find global CSS ─────────────────────────────────────────────────
+          const cssFile = fs.existsSync('src/index.css') ? '../index.css'
+                        : fs.existsSync('src/App.css')   ? '../App.css'
+                        : '';
+
+          // ── Build OG/Twitter metadata fields ───────────────────────────────
+          const metadataBase = siteUrl ? '\n  metadataBase: new URL(' + JSON.stringify(siteUrl) + '),' : '';
+          const titleField = businessName
+            ? '\n  title: {\n    default: ' + JSON.stringify(title) + ',\n    template: \'%s | ' + businessName + '\',\n  },'
+            : '\n  title: ' + JSON.stringify(title) + ',';
+          const descField = '\n  description: ' + JSON.stringify(description) + ',';
+
+          let ogBlock = '';
+          if (siteUrl || ogImage) {
+            const ogLines = [
+              '    type: ' + JSON.stringify(ogType) + ',',
+              siteUrl      ? '    url: ' + JSON.stringify(siteUrl) + ','           : '',
+              locale       ? '    locale: ' + JSON.stringify(locale) + ','         : '',
+              businessName ? '    siteName: ' + JSON.stringify(businessName) + ',' : '',
+              '    title: ' + JSON.stringify(title) + ',',
+              '    description: ' + JSON.stringify(description) + ',',
+              ogImage ? '    images: [{ url: ' + JSON.stringify(ogImage) + ', width: 1200, height: 630 }],' : '',
+            ].filter(Boolean).join('\n');
+            ogBlock = '\n  openGraph: {\n' + ogLines + '\n  },';
+          }
+
+          let twBlock = '';
+          if (twitterHandle || ogImage) {
+            const twLines = [
+              '    card: ' + JSON.stringify(twitterCard) + ',',
+              twitterHandle ? '    site: ' + JSON.stringify(twitterHandle) + ',' : '',
+              ogImage ? '    images: [' + JSON.stringify(ogImage) + '],' : '',
+            ].filter(Boolean).join('\n');
+            twBlock = '\n  twitter: {\n' + twLines + '\n  },';
+          }
+
+          const canonicalBlock = siteUrl
+            ? '\n  alternates: { canonical: ' + JSON.stringify(siteUrl) + ' },' : '';
+
+          const metadataObj =
+            '{' + metadataBase + titleField + descField + ogBlock + twBlock + canonicalBlock + '\n}';
+
+          // ── Build JSON-LD ───────────────────────────────────────────────────
+          let jsonLdScript = '';
+          if (businessSchema) {
+            const ld = {
+              '@context': 'https://schema.org',
+              '@type': businessSchema.type || 'Organization',
+              name: businessSchema.name || title,
+              description,
+              url: siteUrl || undefined,
+              telephone: businessSchema.telephone || undefined,
+              areaServed: businessSchema.areaServed || undefined,
+              priceRange: businessSchema.priceRange || undefined,
+            };
+            if (businessSchema.address) {
+              ld.address = {
+                '@type': 'PostalAddress',
+                streetAddress: businessSchema.address.streetAddress,
+                addressLocality: businessSchema.address.locality,
+                addressCountry: businessSchema.address.country,
+              };
+            }
+            // strip undefined keys
+            const ldClean = JSON.parse(JSON.stringify(ld));
+            jsonLdScript = '\n        <script\n          type="application/ld+json"\n' +
+              '          dangerouslySetInnerHTML={{ __html: ' + JSON.stringify(JSON.stringify(ldClean)) + ' }}\n' +
+              '        />';
+          }
+
+          // ── Read route table ────────────────────────────────────────────────
+          const routeData = JSON.parse(fs.readFileSync('/tmp/routes.json', 'utf8'));
+          const useFallback = routeData.fallback === true;
+
+          // ── Create src/app/ ─────────────────────────────────────────────────
+          fs.mkdirSync('src/app', { recursive: true });
+
+          // ── layout.tsx ──────────────────────────────────────────────────────
+          const layoutLines = [
+            "import type { Metadata } from 'next'",
+            "import { Toaster } from '@/components/ui/toaster'",
+            "import { Toaster as Sonner } from '@/components/ui/sonner'",
+            "import { Providers } from './providers'",
+          ];
+          if (cssFile) layoutLines.push("import '" + cssFile + "'");
+          layoutLines.push(
+            '',
+            'export const metadata: Metadata = ' + metadataObj,
+            '',
+            'export default function RootLayout({ children }: { children: React.ReactNode }) {',
+            '  return (',
+            '    <html lang="' + locale + '">',
+            '      <body>' + jsonLdScript,
+            '        <div id="root">',
+            '          <Providers>',
+            '            <Toaster />',
+            '            <Sonner />',
+            '            {children}',
+            '          </Providers>',
+            '        </div>',
+            '      </body>',
+            '    </html>',
+            '  )',
+            '}',
+            ''
+          );
+          fs.writeFileSync('src/app/layout.tsx', layoutLines.join('\n'));
+
+          // ── providers.tsx ───────────────────────────────────────────────────
+          fs.writeFileSync('src/app/providers.tsx', [
+            "'use client'",
+            "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'",
+            "import { HelmetProvider } from 'react-helmet-async'",
+            "import { useState } from 'react'",
+            '',
+            'export function Providers({ children }: { children: React.ReactNode }) {',
+            '  const [queryClient] = useState(() => new QueryClient())',
+            '  return (',
+            '    <HelmetProvider>',
+            '      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>',
+            '    </HelmetProvider>',
+            '  )',
+            '}',
+            '',
+          ].join('\n'));
+
+          if (useFallback) {
+            // ── FALLBACK: [[...slug]] catch-all with ssr:false ─────────────
+            console.warn('WARNING: Using fallback catch-all (ssr:false) — no SSR for page content');
+            const appEntry = fs.existsSync('src/App.tsx') ? '../../App' : '../../app';
+            fs.mkdirSync('src/app/[[...slug]]', { recursive: true });
+            fs.writeFileSync('src/app/[[...slug]]/page.tsx', [
+              "import { ClientOnly } from './client'",
+              "export function generateStaticParams() { return [{ slug: [''] }] }",
+              'export default function Page() { return <ClientOnly /> }',
+              '',
+            ].join('\n'));
+            fs.writeFileSync('src/app/[[...slug]]/client.tsx', [
+              "'use client'",
+              "import dynamic from 'next/dynamic'",
+              "const App = dynamic(() => import('" + appEntry + "'), { ssr: false })",
+              'export function ClientOnly() { return <App /> }',
+              '',
+            ].join('\n'));
+          } else {
+            // ── INDIVIDUAL PAGE FILES (real SSR) ──────────────────────────
+            const { routes, notFound } = routeData;
+
+            for (const route of routes) {
+              // Calculate relative import path from src/app/[route-dir]/ to src/routes/
+              // Route importSrc is like "./pages/Index" or "./pages/services/Motor"
+              // After Fix H runs, src/pages → src/routes, so we substitute that.
+              const importRelPath = route.importSrc.replace(/^\.\/pages\//, '');
+              const segments = route.path.split('/').filter(Boolean);
+              const depth = segments.length + 1; // +1 for the src/app/ prefix itself
+              const relImport = '../'.repeat(depth) + 'routes/' + importRelPath;
+
+              const pageDir = route.path === '/'
+                ? 'src/app'
+                : path.join('src/app', ...segments);
+              fs.mkdirSync(pageDir, { recursive: true });
+
+              const componentName = route.component + 'Page';
+              // Check for per-page metadata in lovable.migrate.json
+              const pagesMeta = cfg.pages && cfg.pages[route.path];
+              const pageMeta = pagesMeta
+                ? '\nexport const metadata: Metadata = {\n  title: ' + JSON.stringify(pagesMeta.title || '') + ',\n  description: ' + JSON.stringify(pagesMeta.description || '') + ',\n}\n'
+                : '';
+              const metadataImport = pagesMeta ? "import type { Metadata } from 'next'" : '';
+
+              // Two-file pattern: server page.tsx (exports metadata) + 'use client' _client.tsx
+              // (holds dynamic ssr:false). This satisfies both constraints:
+              // - export const metadata only works in Server Components (no 'use client')
+              // - dynamic(ssr:false) is forbidden in Server Components
+              const dynName = route.component + 'Dynamic';
+              const clientName = route.component + 'Client';
+
+              // _client.tsx — 'use client', wraps component with dynamic(ssr:false)
+              fs.writeFileSync(path.join(pageDir, '_client.tsx'), [
+                "'use client'",
+                "import dynamic from 'next/dynamic'",
+                '',
+                "const " + dynName + " = dynamic(() => import('" + relImport + "'), { ssr: false })",
+                '',
+                'export function ' + clientName + '() {',
+                '  return <' + dynName + ' />',
+                '}',
+                '',
+              ].join('\n'));
+
+              // page.tsx — server component, exports per-page metadata, renders client wrapper
+              const pageLines = [];
+              if (metadataImport) pageLines.push(metadataImport);
+              pageLines.push("import { " + clientName + " } from './_client'");
+              if (pageMeta.trim()) {
+                pageLines.push('');
+                pageLines.push(pageMeta.trim());
+              }
+              pageLines.push('');
+              pageLines.push('export default function ' + componentName + '() {');
+              pageLines.push('  return <' + clientName + ' />');
+              pageLines.push('}', '');
+              fs.writeFileSync(path.join(pageDir, 'page.tsx'), pageLines.join('\n'));
+              console.log('Created page: ' + pageDir + '/page.tsx -> ' + relImport);
+            }
+
+            // ── not-found.tsx (two-file pattern) ─────────────────────────
+            if (notFound && notFound.importSrc) {
+              const nfRelPath = notFound.importSrc.replace(/^\.\/pages\//, '');
+              const nfDynName = notFound.component + 'Dynamic';
+              const nfClientName = notFound.component + 'Client';
+              // _not-found-client.tsx — 'use client', wraps component with dynamic(ssr:false)
+              fs.writeFileSync('src/app/_not-found-client.tsx', [
+                "'use client'",
+                "import dynamic from 'next/dynamic'",
+                '',
+                "const " + nfDynName + " = dynamic(() => import('../routes/" + nfRelPath + "'), { ssr: false })",
+                '',
+                'export function ' + nfClientName + '() {',
+                '  return <' + nfDynName + ' />',
+                '}',
+                '',
+              ].join('\n'));
+              // not-found.tsx — server component, renders client wrapper
+              fs.writeFileSync('src/app/not-found.tsx', [
+                "import { " + nfClientName + " } from './_not-found-client'",
+                '',
+                'export default function NotFoundPage() {',
+                '  return <' + nfClientName + ' />',
+                '}',
+                '',
+              ].join('\n'));
+              console.log('Created src/app/not-found.tsx (two-file pattern)');
+            }
+          }
+
+          // ── Update package.json ─────────────────────────────────────────────
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          pkg.dependencies = pkg.dependencies || {};
+          pkg.dependencies['next'] = '^16.0.0';
+          pkg.scripts = pkg.scripts || {};
+          pkg.scripts['dev']   = 'next dev';
+          pkg.scripts['build'] = 'next build';
+          pkg.scripts['start'] = 'next start';
+          fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+
+          console.log('Migration complete — SSR mode: ' + (useFallback ? 'FALLBACK (ssr:false)' : 'INDIVIDUAL PAGES'));
+          NODEJS
+
+      # ─── FIX A: Remove stale --no-turbo CLI flag ──────────────────────────────
+      - name: "Fix A — Remove stale --no-turbo flag from package.json"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: sed -i 's/ --no-turbo//g' package.json
+
+      # ─── FIX H: Rename src/pages → src/routes ───────────────────────────────
+      # Prevents Next.js treating Vite page components as Pages Router pages.
+      - name: "Fix H — Rename src/pages → src/routes"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          if [ -d "src/pages" ]; then
+            mv src/pages src/routes
+            find src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" \) \
+              -not -path "*/node_modules/*" | while read -r file; do
+              if grep -q '/pages/' "$file"; then
+                sed -i 's|/pages/|/routes/|g' "$file"
+                echo "Updated imports in: $file"
+              fi
+            done
+            echo "Renamed src/pages -> src/routes"
+          fi
+
+      # ─── FIX B: Inject "use client" ──────────────────────────────────────────
+      - name: "Fix B — Inject 'use client' into client components"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          // Matches React built-in hooks AND any custom hook call (use[A-Z]...).
+          // This ensures files like toaster.tsx (which calls useToast()) get
+          // 'use client' even though they don't directly call useState/useEffect.
+          const CLIENT_HOOKS = /\b(useState|useEffect|useRef|useCallback|useMemo|useContext|useReducer|useLayoutEffect|useImperativeHandle|useDebugValue|useDeferredValue|useId|useInsertionEffect|useSyncExternalStore|useTransition)\b|\buse[A-Z]\w*\s*\(/;
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (/\.(tsx|ts)$/.test(entry.name)) inject(full);
+            }
+          }
+
+          function inject(file) {
+            const src = fs.readFileSync(file, 'utf8');
+            if (src.includes('"use client"') || src.includes("'use client'")) return;
+            if (!CLIENT_HOOKS.test(src)) return;
+            fs.writeFileSync(file, '"use client";\n' + src);
+            console.log('Added "use client": ' + file);
+          }
+
+          walk('src');
+          NODEJS
+
+      # ─── FIX C2: Rewrite NavLink.tsx ─────────────────────────────────────────
+      # NavLink.tsx uses a combined alias import from react-router-dom that Fix C's
+      # sed patterns cannot handle. Full rewrite to next/link + usePathname.
+      - name: "Fix C2 — Rewrite NavLink.tsx to next/link + usePathname"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs = require('fs');
+          const p = 'src/components/NavLink.tsx';
+          if (!fs.existsSync(p)) { console.log('NavLink.tsx not found — skipping'); process.exit(0); }
+          const src = fs.readFileSync(p, 'utf8');
+          if (!src.includes('react-router-dom')) { console.log('NavLink.tsx already migrated — skipping'); process.exit(0); }
+
+          fs.writeFileSync(p, [
+            "'use client'",
+            "import Link from 'next/link'",
+            "import { usePathname } from 'next/navigation'",
+            "import { forwardRef } from 'react'",
+            "import { cn } from '@/lib/utils'",
+            "import type { AnchorHTMLAttributes } from 'react'",
+            '',
+            "interface NavLinkCompatProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {",
+            '  to: string',
+            '  className?: string',
+            '  activeClassName?: string',
+            '}',
+            '',
+            'const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(',
+            '  ({ className, activeClassName, to, ...props }, ref) => {',
+            '    const pathname = usePathname()',
+            "    const isActive = pathname === to || (to !== '/' && pathname.startsWith(to))",
+            '    return (',
+            '      <Link',
+            '        ref={ref}',
+            '        href={to}',
+            '        className={cn(className, isActive && activeClassName)}',
+            '        {...props}',
+            '      />',
+            '    )',
+            '  },',
+            ')',
+            '',
+            "NavLink.displayName = 'NavLink'",
+            '',
+            'export { NavLink }',
+            '',
+          ].join('\n'));
+          console.log('Rewrote NavLink.tsx -> next/link + usePathname');
+          NODEJS
+
+      # ─── FIX C: Replace remaining react-router-dom single imports ────────────
+      - name: "Fix C — Replace remaining react-router-dom imports"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          find src -type f \( -name "*.tsx" -o -name "*.ts" \) | while read -r file; do
+            grep -q 'react-router-dom' "$file" || continue
+
+            sed -i "s|import { Link } from 'react-router-dom'|import Link from 'next/link'|g" "$file"
+            sed -i 's|import { Link } from "react-router-dom"|import Link from '"'"'next/link'"'"'|g' "$file"
+            sed -i 's|<Link to=|<Link href=|g' "$file"
+
+            sed -i "s|import { useNavigate } from 'react-router-dom'|import { useRouter } from 'next/navigation'|g" "$file"
+            sed -i 's|import { useNavigate } from "react-router-dom"|import { useRouter } from '"'"'next/navigation'"'"'|g' "$file"
+            sed -i "s|const navigate = useNavigate()|const router = useRouter()|g" "$file"
+            sed -i 's|\bnavigate(|router.push(|g' "$file"
+
+            sed -i "s|import { useLocation } from 'react-router-dom'|import { usePathname } from 'next/navigation'|g" "$file"
+            sed -i 's|import { useLocation } from "react-router-dom"|import { usePathname } from '"'"'next/navigation'"'"'|g' "$file"
+            sed -i "s|const location = useLocation()|const pathname = usePathname()|g" "$file"
+            sed -i 's|\blocation\.pathname\b|pathname|g' "$file"
+
+            echo "Processed: $file"
+          done
+
+      # ─── FIX C3: Handle combined react-router-dom imports ───────────────────
+      # Fix C only handles single-named imports like `import { Link } from 'react-router-dom'`.
+      # Combined imports like `import { Link, useLocation } from 'react-router-dom'` (used in
+      # Navigation.tsx and NotFound.tsx) are left untouched, leaving react-router-dom hooks
+      # in the codebase without a Router context → runtime crash on every page.
+      # This step also fixes usage patterns Fix C misses:
+      #   const { pathname } = useLocation()  →  const pathname = usePathname()
+      #   const [searchParams] = useSearchParams()  →  const searchParams = useSearchParams()
+      - name: "Fix C3 — Handle combined react-router-dom imports and missed usage patterns"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist', 'app'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (/\.(tsx|ts)$/.test(entry.name)) processFile(full);
+            }
+          }
+
+          function processFile(file) {
+            let src = fs.readFileSync(file, 'utf8');
+            const orig = src;
+
+            // Replace any remaining combined react-router-dom named imports
+            if (src.includes('react-router-dom')) {
+              src = src.replace(
+                /import\s*\{([^}]+)\}\s*from\s*["']react-router-dom["'];?/g,
+                (match, names) => {
+                  const parts = names.split(',').map(n => n.trim()).filter(Boolean);
+                  const lines = [];
+                  const nextNavImports = [];
+                  const remaining = [];
+                  for (const name of parts) {
+                    switch (name) {
+                      case 'Link':             lines.push("import Link from 'next/link'"); break;
+                      case 'useLocation':      nextNavImports.push('usePathname'); break;
+                      case 'useNavigate':      nextNavImports.push('useRouter'); break;
+                      case 'useSearchParams':  nextNavImports.push('useSearchParams'); break;
+                      case 'useParams':        nextNavImports.push('useParams'); break;
+                      default:                 remaining.push(name);
+                    }
+                  }
+                  if (nextNavImports.length) lines.push("import { " + nextNavImports.join(', ') + " } from 'next/navigation'");
+                  if (remaining.length)      lines.push("import { " + remaining.join(', ') + " } from 'react-router-dom'");
+                  return lines.join('\n');
+                }
+              );
+            }
+
+            // Fix destructuring pattern Fix C misses: const { pathname } = useLocation()
+            src = src.replace(/const\s*\{\s*pathname\s*\}\s*=\s*useLocation\s*\(\)/g, 'const pathname = usePathname()');
+
+            // Fix react-router-dom useSearchParams tuple → next/navigation scalar
+            // react-router-dom: const [p] = useSearchParams()  →  next: const p = useSearchParams()
+            src = src.replace(/const\s*\[\s*(\w+)\s*\]\s*=\s*useSearchParams\s*\(\)/g, 'const $1 = useSearchParams()');
+
+            // Fix C misses multi-line <Link to=... where <Link and to= are on separate lines.
+            // Replace any remaining `to=` prop on a next/link Link (already imported as next/link).
+            // Safe because react-router-dom is gone at this point; `to=` is invalid on next/link.
+            src = src.replace(/(<Link\b[^>]*?)\bto=/gs, '$1href=');
+
+            if (src !== orig) {
+              fs.writeFileSync(file, src);
+              console.log('Fix C3 — updated: ' + file);
+            }
+          }
+
+          walk('src');
+          NODEJS
+
+      # ─── FIX D: Strip BrowserRouter ──────────────────────────────────────────
+      - name: "Fix D — Remove BrowserRouter"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          find src -type f -name "*.tsx" | while read -r file; do
+            grep -q 'BrowserRouter' "$file" || continue
+            sed -i 's/,\s*BrowserRouter\b//g' "$file"
+            sed -i 's/\bBrowserRouter\s*,\s*//g' "$file"
+            sed -i 's/{ BrowserRouter }//g' "$file"
+            sed -i 's|<BrowserRouter>||g; s|</BrowserRouter>||g' "$file"
+            echo "Removed BrowserRouter from: $file"
+          done
+
+      # ─── FIX F: Rename .jfif → .jpg ──────────────────────────────────────────
+      # Must run before Fix I so image tags already reference .jpg paths.
+      - name: "Fix F — Rename .jfif image files to .jpg"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          find . -name "*.jfif" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.next/*" \
+            -not -path "*/dist/*" | while read -r f; do
+            mv "$f" "${f%.jfif}.jpg"
+            echo "Renamed: $f"
+          done
+          find src public -type f \
+            \( -name "*.tsx" -o -name "*.ts" -o -name "*.css" -o -name "*.html" \) \
+            2>/dev/null | xargs -r sed -i 's/\.jfif/.jpg/g'
+
+      # ─── FIX I: Replace <img> with next/image ────────────────────────────────
+      # Rewrites all <img> tags to <Image> from next/image.
+      # Strategy: fill prop for all container images (all use w-full h-full or
+      # positioned parents). Logo/fixed-size images get explicit width/height.
+      # Collects external image hostnames → /tmp/image-hostnames.json for Fix E.
+      - name: "Fix I — Migrate <img> tags to next/image"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          const hostnames = new Set();
+          let totalReplaced = 0;
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist', 'app'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (/\.tsx$/.test(entry.name)) processFile(full);
+            }
+          }
+
+          function processFile(file) {
+            let src = fs.readFileSync(file, 'utf8');
+            // Multiline img tag match
+            const imgRe = /<img\s([^>]*?)\/>/gs;
+            let changed = false;
+
+            src = src.replace(imgRe, (match, attrs) => {
+              changed = true;
+              totalReplaced++;
+
+              // Extract attribute values — returns {value, isExpr} to preserve quoting.
+              // Uses balanced-brace counting so template literals like alt={`${x}`}
+              // are extracted correctly (simple [^}]+ regex stops at the first } inside ${}).
+              const getAttr = (name) => {
+                const re = new RegExp('(?:^|\\s)' + name + '=\\{');
+                const m = re.exec(attrs);
+                if (m) {
+                  const openBrace = attrs.indexOf('{', m.index);
+                  let depth = 1, i = openBrace + 1;
+                  while (i < attrs.length && depth > 0) {
+                    if (attrs[i] === '{') depth++;
+                    else if (attrs[i] === '}') depth--;
+                    i++;
+                  }
+                  return { value: attrs.slice(openBrace + 1, i - 1).trim(), isExpr: true };
+                }
+                const strM = attrs.match(new RegExp('(?:^|\\s)' + name + '=["\']([^"\']+)["\']'));
+                if (strM) return { value: strM[1].trim(), isExpr: false };
+                return { value: '', isExpr: false };
+              };
+              const srcInfo     = getAttr('src');
+              const altInfo     = getAttr('alt');
+              const classInfo   = getAttr('className');
+              const loadingInfo = getAttr('loading');
+              const srcVal     = srcInfo.value;
+              const altVal     = altInfo.value;
+              const classVal   = classInfo.value;
+              const loadingVal = loadingInfo.value;
+
+              // Collect external hostnames
+              const urlMatch = srcVal.match(/https?:\/\/([^/'"]+)/);
+              if (urlMatch) hostnames.add(urlMatch[1]);
+
+              // Determine if fill or fixed — use space-delimited class matching to avoid
+              // false positives from 'max-h-full' / 'max-w-full' matching 'h-full' / 'w-full'.
+              // Include Tailwind arbitrary heights (e.g. h-[120%]) so hero/parallax imgs get fill, not 180×64.
+              const hasExactClass = (cls) => (' ' + classVal + ' ').includes(' ' + cls + ' ');
+              const hasArbitraryHeight = /\bh-\[[^\]]+\]/.test(classVal);
+              const isFill = (hasExactClass('w-full') && hasExactClass('h-full'))
+                          || hasExactClass('h-full')
+                          || (hasExactClass('w-full') && hasArbitraryHeight);
+              // Clean className: remove w-full and h-full (incompatible with fill); strip arbitrary h-[…] too
+              const cleanClass = classVal
+                .replace(/(^| )w-full( |$)/g, ' ')
+                .replace(/(^| )h-full( |$)/g, ' ')
+                .replace(/(^| )h-\[[^\]]+\]( |$)/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+              const isPriority = loadingVal === 'eager';
+              // sizes: full-width for external/background images, responsive for cards
+              const isBackground = classVal.includes('absolute') || attrs.includes('inset-0')
+                || srcVal.startsWith('https://') || srcVal.startsWith('http://');
+              const sizes = isBackground
+                ? '"100vw"'
+                : '"(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"';
+
+              // Rebuild src/alt JSX attributes with correct quoting
+              const srcAttr = srcInfo.isExpr ? 'src={' + srcVal + '}' : 'src={"' + srcVal + '"}';
+              const altAttr = altVal
+                ? (altInfo.isExpr ? 'alt={' + altVal + '}' : 'alt="' + altVal + '"')
+                : 'alt=""';
+
+              if (isFill) {
+                const parts = [
+                  srcAttr,
+                  altAttr,
+                  'fill',
+                  cleanClass ? 'className="' + cleanClass + '"' : '',
+                  'sizes=' + sizes,
+                  isPriority ? 'priority' : '',
+                ].filter(Boolean).join('\n          ');
+                return '<Image\n          ' + parts + '\n        />';
+              } else {
+                // Fixed size (logo pattern)
+                const parts = [
+                  srcAttr,
+                  altAttr,
+                  'width={180}',
+                  'height={64}',
+                  classVal ? 'className="' + classVal + ' w-auto"' : '',
+                  isPriority ? 'priority' : '',
+                ].filter(Boolean).join('\n          ');
+                return '<Image\n          ' + parts + '\n        />';
+              }
+            });
+
+            if (changed) {
+              // Inject next/image import if not already present.
+              // MUST go after "use client" directive (if present) — placing it before
+              // causes "use client must be the first line" build errors.
+              if (!src.includes("from 'next/image'") && !src.includes('from "next/image"')) {
+                if (/^["']use client["']/.test(src)) {
+                  src = src.replace(/^(["']use client["'];?\n)/, "$1import Image from 'next/image'\n");
+                } else {
+                  src = "import Image from 'next/image'\n" + src;
+                }
+              }
+              fs.writeFileSync(file, src);
+              console.log('Migrated img tags in: ' + file);
+            }
+          }
+
+          walk('src');
+          fs.writeFileSync('/tmp/image-hostnames.json', JSON.stringify([...hostnames]));
+          console.log('Fix I complete — ' + totalReplaced + ' img tags replaced');
+          console.log('External image hostnames: ' + ([...hostnames].join(', ') || 'none'));
+          NODEJS
+
+      # ─── FIX E: Write next.config.mjs ────────────────────────────────────────
+      # Runs AFTER Fix I so it can read the collected external hostnames and
+      # inject remotePatterns for next/image.
+      - name: "Fix E — Write SSR-compatible next.config.mjs"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs = require('fs');
+
+          // Remove stale Next.js config files that may conflict with the clean .mjs we write
+          ['next.config.js', 'next.config.ts', 'next.config.cjs'].forEach(f => {
+            if (fs.existsSync(f)) { fs.unlinkSync(f); console.log('Removed stale config: ' + f); }
+          });
+
+          let hostnames = [];
+          if (fs.existsSync('/tmp/image-hostnames.json')) {
+            hostnames = JSON.parse(fs.readFileSync('/tmp/image-hostnames.json', 'utf8'));
+          }
+
+          const configLines = [
+            '/** @type {import(\'next\').NextConfig} */',
+            'const nextConfig = {',
+            '  typescript: {',
+            '    ignoreBuildErrors: true, // intentional training wheels',
+            '  },',
+          ];
+          if (hostnames.length > 0) {
+            configLines.push('  images: {');
+            configLines.push('    remotePatterns: [');
+            hostnames.forEach(h => {
+              configLines.push("      { protocol: 'https', hostname: '" + h + "', pathname: '/**' },");
+            });
+            configLines.push('    ],');
+            configLines.push('  },');
+          }
+          configLines.push('};', '', 'export default nextConfig;', '');
+          fs.writeFileSync('next.config.mjs', configLines.join('\n'));
+
+          console.log('Wrote next.config.mjs' + (hostnames.length ? ' with remotePatterns for: ' + hostnames.join(', ') : ''));
+          NODEJS
+
+      # ─── FIX J: Generate SEO files ───────────────────────────────────────────
+      # Generates src/app/sitemap.ts and src/app/robots.ts.
+      # Uses siteUrl from lovable.migrate.json; falls back to https://example.com.
+      - name: "Fix J — Generate sitemap.ts and robots.ts"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs = require('fs');
+
+          const cfg = JSON.parse(fs.readFileSync('lovable.migrate.json', 'utf8'));
+          const siteUrl = cfg.siteUrl || 'https://example.com';
+          if (!cfg.siteUrl) console.warn('WARNING: siteUrl missing from lovable.migrate.json — using placeholder');
+
+          // Read extracted routes
+          const routeData = JSON.parse(fs.readFileSync('/tmp/routes.json', 'utf8'));
+          const paths = routeData.fallback
+            ? ['/']
+            : (routeData.routes || []).map(r => r.path);
+
+          // Build sitemap entry lines using string concatenation (no template literals)
+          const routeLines = paths.map(p => {
+            const priority = p === '/' ? '1.0' : '0.8';
+            const freq = p === '/' ? 'weekly' : 'monthly';
+            return "    { url: `${baseUrl}" + p + "`, lastModified: new Date().toISOString(), changeFrequency: '" + freq + "', priority: " + priority + ' },';
+          });
+
+          // sitemap.ts
+          const sitemapLines = [
+            "import { MetadataRoute } from 'next'",
+            '',
+            'export default function sitemap(): MetadataRoute.Sitemap {',
+            '  const baseUrl = ' + JSON.stringify(siteUrl),
+            '  return [',
+          ].concat(routeLines).concat([
+            '  ]',
+            '}',
+            '',
+          ]);
+          fs.writeFileSync('src/app/sitemap.ts', sitemapLines.join('\n'));
+
+          // robots.ts
+          fs.writeFileSync('src/app/robots.ts', [
+            "import { MetadataRoute } from 'next'",
+            '',
+            'export default function robots(): MetadataRoute.Robots {',
+            '  return {',
+            "    rules: { userAgent: '*', allow: '/' },",
+            '    sitemap: ' + JSON.stringify(siteUrl + '/sitemap.xml') + ',',
+            '  }',
+            '}',
+            '',
+          ].join('\n'));
+
+          console.log('Fix J complete — sitemap (' + paths.length + ' routes) + robots.ts');
+          NODEJS
+
+      # ─── FIX K: Remove stale Vite vercel.json ───────────────────────────────
+      # Lovable commits a vercel.json with outputDirectory:"dist" (Vite build output).
+      # Next.js outputs to .next — Vercel auto-detects this when vercel.json is absent.
+      - name: "Fix K — Remove stale Vite vercel.json"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          if [ -f "vercel.json" ]; then
+            rm vercel.json
+            echo "Removed stale vercel.json (had Vite outputDirectory:dist)"
+          else
+            echo "No vercel.json found — nothing to remove"
+          fi
+
+      # ─── 6. INSTALL DEPENDENCIES ─────────────────────────────────────────────
+      - name: Install dependencies
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: npm install
+
+      # ─── 7. VALIDATE BUILD ───────────────────────────────────────────────────
+      - name: Build validation
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: npm run build
+
+      # ─── 8. CONFIGURE GIT ────────────────────────────────────────────────────
+      - name: Configure Git
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # ─── 9. PUSH TO nextjs-deploy ────────────────────────────────────────────
+      - name: Push to nextjs-deploy branch
+        if: steps.check_flag.outputs.enabled == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout -B nextjs-deploy
+          git add -A
+          git commit -m "chore: auto-migrate to Next.js [$(date +'%Y-%m-%d %H:%M')]" \
+            || echo "No changes to commit"
+          git push origin nextjs-deploy --force
+
+      # ─── SKIP NOTICE ─────────────────────────────────────────────────────────
+      - name: Skip notice
+        if: steps.check_flag.outputs.enabled == 'false'
+        run: echo "lovable.migrate.json not found — skipping migration for this repo."
