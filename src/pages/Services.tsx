@@ -116,8 +116,8 @@ const ImageCarousel = ({ images, alt }: { images: string[]; alt: string }) => {
 
   if (images.length === 1) {
     return (
-      <div className="overflow-hidden">
-        <img src={images[0]} alt={alt} className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" width={800} height={600} />
+      <div className="relative overflow-hidden aspect-[4/3]">
+        <img src={images[0]} alt={alt} className="w-full h-full object-cover" loading="lazy" width={800} height={600} />
       </div>
     );
   }

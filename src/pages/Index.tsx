@@ -165,7 +165,7 @@ const Index = () => {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="text-center"
               >
-                <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center">
+                <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center relative">
                   <img src={item.image} alt={item.title} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <h3 className="font-serif text-xl mb-3">{item.title}</h3>

@@ -123,7 +123,7 @@ const BlogsReviews = () => {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="bg-card border border-border overflow-hidden group hover:border-accent/50 transition-colors"
               >
-                <div className="aspect-[16/10] overflow-hidden">
+                <div className="aspect-[16/10] overflow-hidden relative">
                   <img
                     src={blog.image}
                     alt={blog.alt}

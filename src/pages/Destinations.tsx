@@ -84,11 +84,11 @@ const Destinations = () => {
               transition={{ duration: 0.7 }}
               className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "" : ""}`}
             >
-              <div className={`overflow-hidden ${i % 2 === 1 ? "lg:order-2" : ""}`}>
+              <div className={`relative overflow-hidden aspect-[16/10] ${i % 2 === 1 ? "lg:order-2" : ""}`}>
                 <img
                   src={dest.image}
                   alt={dest.alt}
-                  className="w-full h-auto object-cover aspect-[16/10]"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                   width={800}
                   height={600}
