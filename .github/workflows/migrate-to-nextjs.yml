@@ -758,6 +758,84 @@ jobs:
           console.log('External image hostnames: ' + ([...hostnames].join(', ') || 'none'));
           NODEJS
 
+      # ─── FIX L: Convert motion.img → motion(Image) ──────────────────────────
+      # Fix I converts <img> to <Image fill> but skips <motion.img> (Framer Motion).
+      # In Next.js, static asset imports return StaticImageData objects, not strings.
+      # A plain <img src={obj}> renders src="[object Object]" — images go blank.
+      # This step converts every <motion.img> to <MotionImage> (motion wrapped
+      # next/image), which accepts StaticImageData natively and preserves animations.
+      - name: "Fix L — Convert motion.img carousel images to motion(Image)"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist', 'app'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (/\.tsx$/.test(entry.name)) processFile(full);
+            }
+          }
+
+          function processFile(file) {
+            let src = fs.readFileSync(file, 'utf8');
+            if (!src.includes('<motion.img')) return;
+            const orig = src;
+
+            // Replace each <motion.img .../>  with <MotionImage fill .../>
+            src = src.replace(/<motion\.img\n?([\s\S]*?)\/>/g, (match, attrs) => {
+              // Strip width/height (fill handles sizing)
+              let a = attrs
+                .replace(/[ \t]*width=\{[^}]+\}\n?/g, '')
+                .replace(/[ \t]*height=\{[^}]+\}\n?/g, '')
+                .replace(/[ \t]*width="[^"]*"\n?/g, '')
+                .replace(/[ \t]*height="[^"]*"\n?/g, '');
+
+              // Remove w-full and h-full from className — fill covers the container
+              a = a.replace(/(className=")([^"]*)(")/, (_, open, cls, close) => {
+                const cleaned = cls
+                  .replace(/(^| )w-full( |$)/g, ' ')
+                  .replace(/(^| )h-full( |$)/g, ' ')
+                  .replace(/\s+/g, ' ')
+                  .trim();
+                return cleaned ? open + cleaned + close : '';
+              });
+
+              // Append fill + sizes before closing
+              a = a.replace(/\s+$/, '') + '\n          fill\n          sizes="100vw"\n        ';
+              return '<MotionImage\n' + a + '/>';
+            });
+
+            if (src === orig) return;
+
+            // Inject next/image import after 'use client' directive or at top
+            if (!src.includes("from 'next/image'") && !src.includes('from "next/image"')) {
+              if (/^["']use client["']/.test(src)) {
+                src = src.replace(/^(["']use client["'];?\n)/, "$1import Image from 'next/image'\n");
+              } else {
+                src = "import Image from 'next/image'\n" + src;
+              }
+            }
+
+            // Insert `const MotionImage = motion(Image)` after the last import line
+            if (!src.includes('MotionImage')) {
+              const lastImport = src.lastIndexOf('\nimport ');
+              if (lastImport !== -1) {
+                const eol = src.indexOf('\n', lastImport + 1);
+                src = src.slice(0, eol + 1) + '\nconst MotionImage = motion(Image)\n' + src.slice(eol + 1);
+              }
+            }
+
+            fs.writeFileSync(file, src);
+            console.log('Fix L — motion.img → MotionImage: ' + file);
+          }
+
+          walk('src');
+          NODEJS
+
       # ─── FIX E: Write next.config.mjs ────────────────────────────────────────
       # Runs AFTER Fix I so it can read the collected external hostnames and
       # inject remotePatterns for next/image.
@@ -869,6 +947,19 @@ jobs:
           }
           EOF
           echo "Wrote vercel.json with framework:nextjs"
+
+      # ─── FIX M: Use logo as favicon ──────────────────────────────────────────
+      # Next.js App Router auto-detects src/app/icon.png as the site favicon.
+      # Copy the project logo there so every page gets the correct browser tab icon.
+      - name: "Fix M — Copy logo as Next.js app favicon"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          if [ -f "src/assets/logo.png" ]; then
+            cp src/assets/logo.png src/app/icon.png
+            echo "Copied src/assets/logo.png → src/app/icon.png (favicon)"
+          else
+            echo "No logo.png in src/assets — skipping favicon"
+          fi
 
       # ─── 6. INSTALL DEPENDENCIES ─────────────────────────────────────────────
       - name: Install dependencies
