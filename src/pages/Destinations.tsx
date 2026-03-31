@@ -74,11 +74,11 @@ const countries: Country[] = [
     name: "Tanzania",
     flag: "🇹🇿",
     destinations: [
-      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: ph },
-      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: ph },
-      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: ph },
-      { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: ph },
-      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: ph },
+      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: kilimanjaroImg },
+      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: darImg },
+      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: zanzibarImg },
+      { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: lakeManyaraImg },
+      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: arushaImg },
     ],
   },
   {
