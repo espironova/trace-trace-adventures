@@ -4,116 +4,32 @@ import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
 import VehicleImageCarousel from "@/components/VehicleImageCarousel";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
-import fleetSedan from "@/assets/fleet-sedan.jpg";
-import fleetNoahBoot from "@/assets/fleet-noah-boot.jpg";
-import fleetCoaster from "@/assets/fleet-coaster.jpg";
-import fleetCoasterIntBlue from "@/assets/fleet-coaster-int-blue.jpg";
-import fleetCoasterInt2 from "@/assets/fleet-coaster-int-2.jpg";
-import fleetVan from "@/assets/fleet-van.jpg";
-import fleetNv350Interior from "@/assets/fleet-nv350-interior.jpg";
-import fleetNv350Int2 from "@/assets/fleet-nv350-int-2.jpg";
-import fleetHiace from "@/assets/fleet-hiace.jpg";
-import fleetHiaceInterior from "@/assets/fleet-hiace-interior.jpg";
-import fleetFord from "@/assets/fleet-ford.jpg";
-import fleetBus from "@/assets/fleet-bus.jpg";
-import fleetMercedesInterior from "@/assets/fleet-mercedes-interior.jpg";
-import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
-import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
-import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
-import fleetGoldenInterior from "@/assets/fleet-golden-interior.jpg";
-import fleetGoldenInt2 from "@/assets/fleet-golden-int-2.jpg";
-import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
-import fleetIsuzuRear from "@/assets/fleet-isuzu-rear.jpg";
-import fleetIsuzuInterior from "@/assets/fleet-isuzu-interior.jpg";
+import { fleetUnits, fleetHeroSlides, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
-
-const vehicles = [
-  {
-    name: "Toyota Noah",
-    images: [fleetSedan, fleetNoahBoot],
-    alt: "White Toyota Noah sedan for airport transfers and city transport in Nairobi",
-    capacity: "1–6 passengers",
-    idealFor: "Airport transfers, business trips, city tours",
-    features: ["Air conditioning", "Comfortable seating", "Luggage space", "Fuel efficient"],
-  },
-  {
-    name: "Ford Ranger 4x4",
-    images: [fleetFord],
-    alt: "Ford Ranger 4x4 pickup for off-road adventures and safari in Kenya",
-    capacity: "2–4 passengers",
-    idealFor: "Off-road adventures, safari expeditions, rough terrain",
-    features: ["Four-wheel drive", "Rugged off-road capability", "Spacious cabin", "Tow-ready"],
-  },
-  {
-    name: "Toyota Land Cruiser",
-    images: [fleetLandcruiser],
-    alt: "Toyota Land Cruiser 4x4 safari vehicle for guided tours in Maasai Mara Kenya",
-    capacity: "4–6 passengers",
-    idealFor: "Safari expeditions, luxury tours, rough terrain",
-    features: ["Four-wheel drive", "Pop-up roof", "Fridge/cooler box", "Professional guide seat"],
-  },
-  {
-    name: "Toyota Hiace",
-    images: [fleetHiace, fleetHiaceInterior],
-    alt: "Toyota Hiace safari van for tour groups and safari trips in Kenya",
-    capacity: "7–14 passengers",
-    idealFor: "Safari tours, group travel, sightseeing",
-    features: ["Pop-up roof option", "Extended leg room", "Charging ports", "Large luggage area"],
-  },
-  {
-    name: "Nissan NV350",
-    images: [fleetVan, fleetNv350Interior, fleetNv350Int2],
-    alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
-    capacity: "8–14 passengers",
-    idealFor: "Group travel, hotel shuttles, family trips",
-    features: ["Sliding doors", "Spacious interior", "Air conditioning", "Comfortable seating"],
-  },
-  {
-    name: "Toyota Coaster",
-    images: [fleetCoaster, fleetCoasterIntBlue, fleetCoasterInt2],
-    alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
-    capacity: "25–29 passengers",
-    idealFor: "Large groups, corporate events, conferences",
-    features: ["Reclining seats", "PA system", "Air conditioning", "Generous luggage compartment"],
-  },
-  {
-    name: "Isuzu Coaster",
-    images: [fleetIsuzu, fleetIsuzuRear, fleetIsuzuInterior],
-    alt: "Isuzu Coaster bus for group transport and corporate shuttles in Kenya",
-    capacity: "25–29 passengers",
-    idealFor: "Group transport, school trips, corporate shuttles",
-    features: ["Comfortable seating", "Air conditioning", "Spacious interior", "Reliable performance"],
-  },
-  {
-    name: "Mercedes Tour Bus",
-    images: [fleetBus, fleetMercedesInterior, fleetBusInterior],
-    alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
-    capacity: "33–45 passengers",
-    idealFor: "Long-distance transfers, corporate events, wedding transport",
-    features: ["Reclining seats", "Air conditioning", "Entertainment system", "Generous luggage bay"],
-  },
-  {
-    name: "Golden Dragon Bus",
-    images: [fleetGoldenDragon, fleetGoldenInterior, fleetGoldenInt2],
-    alt: "Golden Dragon luxury bus for long distance transport in Kenya",
-    capacity: "45–55 passengers",
-    idealFor: "Large group transfers, intercity travel, events",
-    features: ["Luxury reclining seats", "Air conditioning", "Spacious luggage bay", "Entertainment system"],
-  },
-];
 
 const Fleet = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingVehicleType, setBookingVehicleType] = useState<string | undefined>(undefined);
   const [heroIndex, setHeroIndex] = useState(0);
 
   const nextHero = useCallback(() => {
-    setHeroIndex((prev) => (prev + 1) % vehicles.length);
+    setHeroIndex((prev) => (prev + 1) % fleetHeroSlides.length);
   }, []);
 
   useEffect(() => {
     const timer = setInterval(nextHero, 3500);
     return () => clearInterval(timer);
   }, [nextHero]);
+
+  const openBooking = (unit: FleetUnit) => {
+    setBookingVehicleType(fleetBookingLabel(unit));
+    setBookingOpen(true);
+  };
+
+  const closeBooking = () => {
+    setBookingOpen(false);
+    setBookingVehicleType(undefined);
+  };
 
   return (
     <Layout>
@@ -149,20 +65,21 @@ const Fleet = () => {
                 transition={{ duration: 0.8 }}
                 className="absolute inset-0"
               >
-                <img src={vehicles[heroIndex].images[0]} alt={vehicles[heroIndex].alt} className="w-full h-full object-cover rounded-sm" />
+                <img src={fleetHeroSlides[heroIndex].images[0]} alt={fleetHeroSlides[heroIndex].alt} className="w-full h-full object-cover rounded-sm" />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
-                  <p className="font-serif text-xl text-white">{vehicles[heroIndex].name}</p>
-                  <p className="font-sans text-sm text-accent">{vehicles[heroIndex].capacity}</p>
+                  <p className="font-serif text-xl text-white">{fleetHeroSlides[heroIndex].modelName}</p>
+                  <p className="font-sans text-sm text-white/80 mt-0.5">{fleetHeroSlides[heroIndex].registration}</p>
+                  <p className="font-sans text-sm text-accent">{fleetHeroSlides[heroIndex].capacity}</p>
                 </div>
               </motion.div>
             </AnimatePresence>
 
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-              {vehicles.map((_, i) => (
+              {fleetHeroSlides.map((slide, i) => (
                 <button
-                  key={i}
+                  key={slide.id}
                   onClick={() => setHeroIndex(i)}
-                  aria-label={`Show ${vehicles[i].name}`}
+                  aria-label={`Show ${slide.modelName}`}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     i === heroIndex ? "bg-heroGold scale-125" : "bg-white/40 hover:bg-white/60"
                   }`}
@@ -177,18 +94,19 @@ const Fleet = () => {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {vehicles.map((v, i) => (
+            {fleetUnits.map((v, i) => (
               <motion.div
-                key={v.name}
+                key={v.id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
+                transition={{ duration: 0.5, delay: Math.min(i * 0.05, 0.5) }}
                 className="bg-card border border-border overflow-hidden group"
               >
                 <VehicleImageCarousel images={v.images} alt={v.alt} />
                 <div className="p-6">
-                  <h3 className="font-serif text-xl mb-2 text-foreground">{v.name}</h3>
+                  <h3 className="font-serif text-xl mb-1 text-foreground">{v.modelName}</h3>
+                  <p className="font-sans text-sm text-muted-foreground mb-2">{v.registration}</p>
                   <p className="font-sans text-sm text-accent font-bold mb-3">{v.capacity}</p>
                   <p className="font-sans text-sm text-muted-foreground mb-4">Ideal for: {v.idealFor}</p>
                   <ul className="space-y-1 mb-6">
@@ -199,7 +117,8 @@ const Fleet = () => {
                     ))}
                   </ul>
                   <button
-                    onClick={() => setBookingOpen(true)}
+                    type="button"
+                    onClick={() => openBooking(v)}
                     className="inline-flex items-center gap-2 text-accent font-sans text-sm uppercase tracking-wider font-bold hover:gap-3 transition-all"
                   >
                     Hire This Vehicle <ArrowRight className="w-4 h-4" />
@@ -211,7 +130,7 @@ const Fleet = () => {
         </div>
       </section>
 
-      <BookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <BookingModal open={bookingOpen} onClose={closeBooking} initialVehicleType={bookingVehicleType} />
     </Layout>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Phone, MapPin, Calendar, Car, UserCheck } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -6,6 +6,8 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 interface BookingModalProps {
   open: boolean;
   onClose: () => void;
+  /** Prefills vehicle type (e.g. from Fleet card: model + registration). */
+  initialVehicleType?: string;
 }
 
 const vehicleTypes = [
@@ -13,13 +15,14 @@ const vehicleTypes = [
   "Toyota Hiace (Safari Van)",
   "Nissan NV350 (Van)",
   "Toyota Coaster (Bus)",
+  "Isuzu Coaster (Bus)",
   "Ford Ranger 4x4",
   "Toyota Land Cruiser (Safari)",
   "Mercedes Tour Bus",
   "Golden Dragon Bus",
 ];
 
-const BookingModal = ({ open, onClose }: BookingModalProps) => {
+const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -29,6 +32,18 @@ const BookingModal = ({ open, onClose }: BookingModalProps) => {
     vehicleType: "",
     driver: "",
   });
+
+  const vehicleOptions = useMemo(() => {
+    if (initialVehicleType && !vehicleTypes.includes(initialVehicleType)) {
+      return [initialVehicleType, ...vehicleTypes];
+    }
+    return vehicleTypes;
+  }, [initialVehicleType]);
+
+  useEffect(() => {
+    if (!open || !initialVehicleType) return;
+    setForm((prev) => ({ ...prev, vehicleType: initialVehicleType }));
+  }, [open, initialVehicleType]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -167,7 +182,7 @@ const BookingModal = ({ open, onClose }: BookingModalProps) => {
                   className="w-full border border-border bg-background px-4 py-3 font-sans text-sm text-foreground focus:outline-none focus:border-accent transition-colors appearance-none"
                 >
                   <option value="">Select a vehicle</option>
-                  {vehicleTypes.map((v) => (
+                  {vehicleOptions.map((v) => (
                     <option key={v} value={v}>{v}</option>
                   ))}
                 </select>

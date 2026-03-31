@@ -30,7 +30,7 @@ const ROUTE_SEO: Record<string, SeoEntry> = {
   "/fleet": {
     title: "Our Fleet | Vehicles for Safari, Airport & Group Travel — Track & Trace Adventures",
     description:
-      "Explore our Nairobi fleet: sedans, 4x4 Land Cruisers, safari vans, Hiace, Coaster, and luxury coaches for airport runs, safaris, and long-distance travel.",
+      "Browse our licensed Nairobi fleet by vehicle and registration: sedans, 4x4s, safari vans, coasters, and luxury coaches for airport runs, safaris, and long-distance travel.",
   },
   "/destinations": {
     title: "Destinations | Maasai Mara, Amboseli & East Africa — Track & Trace Adventures",
