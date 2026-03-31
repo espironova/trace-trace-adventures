@@ -107,16 +107,7 @@ const Fleet = () => {
                 transition={{ duration: 0.5, delay: Math.min(i * 0.05, 0.5) }}
                 className="bg-card border border-border overflow-hidden group"
               >
-                <div className="aspect-[4/3] overflow-hidden relative">
-                  <img
-                    src={v.images[0]}
-                    alt={v.alt}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                    width={800}
-                    height={600}
-                  />
-                </div>
+                <VehicleImageCarousel images={v.images} alt={v.alt} />
                 <div className="p-6">
                   <h3 className="font-serif text-xl mb-1 text-foreground">{v.modelName}</h3>
                   <p className="font-sans text-sm text-muted-foreground mb-2">{v.registration}</p>
