@@ -35,7 +35,7 @@ const serviceData = [
     description: "Enjoy seamless, stress-free airport transfers with Track & Trace Adventures. We serve both Jomo Kenyatta International Airport (JKIA) and Wilson Airport with professional, reliable pickup and drop-off services.",
     features: [
       "Meet & greet service at arrivals",
-      "Real-time flight tracking — we adjust to delays",
+      "Real-time flight tracking; we adjust to delays",
       "Comfortable, air-conditioned vehicles",
       "Fixed pricing with no hidden fees",
       "Available 24/7 for early morning and late-night flights",
