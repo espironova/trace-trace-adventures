@@ -20,7 +20,7 @@ const ROUTE_SEO: Record<string, SeoEntry> = {
   "/about": {
     title: "About Us | Track & Trace Adventures — Car Hire in Nairobi, Kenya",
     description:
-      "Learn about Track & Trace Adventures: 20+ years of car hire, airport transfers, and safari transport across East Africa. Licensed fleet, expert drivers, based in Nairobi.",
+      "Learn about Track & Trace Adventures: 20+ years of car hire in East Africa, education for children in need, licensed fleet and expert drivers—based in Nairobi.",
   },
   "/services": {
     title: "Our Services | Airport Transfers, Safari Tours & Car Hire — Track & Trace Adventures",

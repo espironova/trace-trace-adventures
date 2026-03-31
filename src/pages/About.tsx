@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
-import { Shield, Users, Clock, Award, Star } from "lucide-react";
+import { Shield, Users, Clock, Award, Star, GraduationCap } from "lucide-react";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
@@ -127,8 +127,30 @@ const About = () => {
         </div>
       </section>
 
-      {/* Vision & Mission */}
+      {/* Giving back — community & education */}
       <section className="py-24 bg-muted">
+        <div className="container mx-auto px-4">
+          <motion.div
+            {...fadeInUp}
+            className="max-w-3xl mx-auto text-center border border-border bg-card p-10 md:p-12"
+          >
+            <GraduationCap className="w-10 h-10 mx-auto mb-4 text-accent" aria-hidden />
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Giving Back</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">Education for Children in Need</h2>
+            <div className="space-y-4 font-sans text-foreground/80 leading-relaxed text-left md:text-center">
+              <p>
+                Beyond the road, we believe in investing in the communities that welcome our travellers. Giving back means supporting access to education for the most vulnerable children—those who need it most—so they can build a stronger future for themselves and for Kenya.
+              </p>
+              <p>
+                This commitment is part of who we are: the same care we bring to every journey extends to helping lift up young lives through learning.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Vision & Mission */}
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
             <motion.div {...fadeInUp} className="text-center border border-border bg-card p-10">
@@ -148,7 +170,7 @@ const About = () => {
       </section>
 
       {/* Values */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
