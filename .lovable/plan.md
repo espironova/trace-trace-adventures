@@ -1,89 +1,135 @@
-# Update Track & Trace Adventures Website
 
-## Summary
 
-Integrate the uploaded company logo, real fleet photos, PDF content, brand colors from the logo, rename Reviews to Blogs & Reviews, and convert the hero to a carousel using the fleet photos.
+# Track and Trace Adventures — Major Update Plan
 
-## Brand Colors (from logo)
+This is a large update touching nearly every page. Here is the breakdown:
 
-The logo uses these colors that will replace the current palette:
+---
 
-- **Deep Brown** (#5C3A1E) — primary (borders, dark sections)
-- **Olive Gold** (#8B7D2A) — accent (CTAs, highlights) — the green-gold ring
-- **Dark Brown** (#3D2B1F) — text/foreground
-- **Cream/Off-white** (#F5F0E8) — backgrounds
+## 1. Rebrand from "Kenya" to "East Africa"
 
-## Changes
+Update all references across the site where "Kenya" appears in general branding context to "East Africa". This affects:
+- **HeroSection.tsx**: "Your Gateway to Kenya's Greatest Adventures" → "East Africa's"
+- **Index.tsx**: Services description, CTA banner ("Ready to Explore Kenya?"), "Why Us" section (local expertise text), destinations section header
+- **Services.tsx**: Page subtitle, safari tour descriptions
+- **About.tsx**: Story text, vision/mission, values section
+- **Destinations.tsx**: Header text
+- **Footer, Header** if they contain Kenya-only references
 
-### 1. Add Logo & Favicon
+*Note: Specific Kenya locations (like "Nairobi") remain unchanged — only generic "Kenya" branding gets updated to "East Africa".*
 
-- Copy `WhatsApp_Image_2026-03-25_at_12.06.04.jpeg` to `public/logo.png` (favicon) and `src/assets/logo.png` (header)
-- Update `index.html` favicon link
-- Update `Header.tsx` to display the logo image instead of text, sized appropriately alongside the text name
+---
 
-### 2. Update Color Palette
+## 2. Add New Services (Home + Services pages)
 
-- Update `src/index.css` CSS variables to match the logo's olive-gold and deep brown tones for both light and dark modes
+Add 5 new service categories to **both** the homepage services grid and the Services page:
 
-### 3. Copy Fleet Photos to Assets
+1. **Hotel-to-Hotel Transfers** — Within Nairobi city transfers
+2. **Corporate Cocktail Transport** — Event and cocktail transport
+3. **Conference Transport** — Corporate conferences and meetings
+4. **International Schools Transport** — Sports, education trips, co-curricular activities
+5. **Dinner Transport** — Evening event pickups (6pm-11pm)
 
-Copy all uploaded vehicle photos to `src/assets/`:
+Each will have a title, description, icon, feature list, and use existing fleet images as backgrounds. The homepage will show a curated selection (perhaps 6 cards in a 2x3 grid), and the Services page will have full detailed sections for all services.
 
-- `WhatsApp_Image_2026-03-25_at_12.16.28.jpeg` → `fleet-sedan.jpg` (Toyota Noah)
-- `WhatsApp_Image_2026-03-25_at_12.16.32.jpeg` → `fleet-coaster.jpg` (Toyota Coaster bus)
-- `WhatsApp_Image_2026-03-25_at_12.16.33_1.jpeg` → `fleet-van.jpg` (Nissan NV350 van)
-- `WhatsApp_Image_2026-03-25_at_12.16.36_1.jpeg` → `fleet-hiace.jpg` (Toyota Hiace rear)
-- `WhatsApp_Image_2026-03-25_at_12.16.38.jpeg` → `fleet-ford.jpg` (Ford Ranger 4x4)
-- `WhatsApp_Image_2026-03-25_at_12.16.39.jpeg` → `fleet-bus.jpg` (Mercedes bus)
-- `WhatsApp_Image_2026-03-25_at_12.16.49.jpeg` → `fleet-landcruiser.jpg` (Land Cruiser safari)
-- `WhatsApp_Image_2026-03-25_at_12.16.42.jpeg` → `fleet-interior.jpg` (bus interior)
+---
 
-### 4. Hero Section Carousel
+## 3. About Page — 20 Years Badge
 
-- Replace the single static hero image with a carousel that cycles through the fleet photos
-- Each slide has a text overlay matching a service: "Airport Transfers", "Car Hire", "Safari Tours", "Long-Distance Transport"
-- Auto-advances every 5 seconds with smooth crossfade animation
-- Keep "Book Now" and "Our Services" CTAs
-  &nbsp;
+- Add a prominent "20 Years" badge/icon in the hero or story section of the About page
+- Use a styled circular or shield-shaped badge with "20+" and "Years of Excellence" text
+- Built with Tailwind CSS + Lucide icons (no external image needed)
+- Update the existing "10+ Years" references to "20+ Years" across the site
 
-### 5. Update Fleet Page with Real Photos
+---
 
-- Replace generated images in `Fleet.tsx` with the uploaded fleet photos
-- Update vehicle names to match actual fleet: Toyota Noah, Toyota Coaster, Nissan NV350, Toyota Hiace, Ford Ranger, Mercedes Tour Bus, Toyota Land Cruiser
+## 4. Rate Calculator + Rate Sheet
 
-### 6. Update Content from PDF
+### Rate Calculator
+Create a new **RateCalculator** component placed on:
+- A dedicated section on the homepage (after destinations or before CTA)
+- The Services page
+- Optionally the Contact page
 
-- **About page**: Update vision ("To provide exceptional transportation solutions in Kenya, ensuring every journey is reliable, comfortable, and unforgettable") and mission text from PDF
-- **About page**: Update company description — "over 10 years of experience", "diverse fleet of well-maintained vehicles"
-- **Services page**: Add "Travel Consultations" as a 5th service from the PDF ("Personalized guidance from our expert travel consultants")
-- **Home page tagline**: Use "Car Hire Company for Destination Lovers" from the PDF in appropriate spots
-- Add additional phone numbers from logo: 0736 257 553, 0722 178 334 to Contact page and footer
+The calculator form will include:
+- **Vehicle type** dropdown (8-Pax Safari, 8-Pax Van, 14-Pax Coaster, 22-Pax Mercedes Shuttle, 33/37-Pax Mercedes Bus, 45-Pax Bus)
+- **Service type** dropdown (Long distance, Full-day disposal, Airport transfer, Hotel-to-hotel, Dinner, Corporate cocktail, Standby)
+- **For long distance**: a km input field (min 120km)
+- **Number of days** (for applicable services)
+- A "Calculate" button that shows the estimated cost
+- Results display with driver's allowance shown separately as an additional cost
 
-### 7. Rename Reviews → Blogs & Reviews
+### Rate data (from the uploaded PDF):
 
-- Rename route from `/reviews` to `/blogs-reviews`
-- Update `Header.tsx` nav link label to "Blogs & Reviews"
-- Update `Footer.tsx` link
-- Add 4-6 sample blog posts (cards with title, excerpt, date, category) above the reviews section in a new combined layout
-- Blog topics: "Top 5 Safari Destinations in Kenya", "Airport Transfer Tips for First-Time Visitors", "Why Hire a 4x4 for Your Kenya Adventure", "Best Time to Visit Maasai Mara"
+```text
+Vehicle Types & Rates:
+- 8-Pax Safari: Long dist 25,000/day | Full-day 25,000 | Airport 15,000 | Hotel 10,000 | Dinner 10,000 | Cocktail 10,000 | Standby 10,000
+- 8-Pax Van: Long dist 130/km | Full-day 20,000 | Airport 10,000 | Hotel 12,000 | Dinner 10,000 | Cocktail 12,000 | Standby 12,000
+- 14-Pax Coaster: Long dist 60/km | Full-day 12,000 | Airport 7,000 | Hotel 8,000 | Dinner 8,000 | Cocktail 10,000 | Standby 10,000
+- 22-Pax Mercedes: Long dist 100/km | Full-day 17,000 | Airport 12,000 | Hotel 12,000 | Dinner 12,000 | Cocktail 12,000 | Standby 12,000
+- 33/37-Pax Bus: Long dist 130/km | Full-day 20,000 | Airport 15,000 | Hotel 15,000 | Dinner 15,000 | Cocktail 15,000 | Standby 15,000
+- 45-Pax Bus: Long dist 150/km | Full-day 30,000 | Airport 18,000 | Hotel 18,000 | Dinner 18,000 | Cocktail 15,000 | Standby 25,000
 
-### 8. Replace Generated Images Across Site
+Driver Allowances: 2,500 | 2,000 | 2,000 | 2,500 | 3,000 | 4,000
+```
 
-- **Services page**: Use fleet photos as service images (sedan for airport transfers, Land Cruiser for safari, van for car hire, bus for long distance)
-- **Home page service cards**: Same mapping
-- Keep destination/landscape images (Maasai Mara, Amboseli, etc.) as-is since no landscape photos were provided
+### Rate Sheet
+A styled table/card view showing all rates in a readable format, placed below the calculator as a reference section. Includes a note about excluded costs (driver allowance, park entrance fees, parking fees).
 
-### Files Modified
+---
 
-- `index.html` — favicon
-- `src/index.css` — brand color variables
-- `src/components/Header.tsx` — logo image + nav link rename
-- `src/components/Footer.tsx` — nav link rename + extra phone numbers
-- `src/components/HeroSection.tsx` — full carousel rewrite
-- `src/pages/Index.tsx` — update service card images
-- `src/pages/Fleet.tsx` — real fleet photos and vehicle names
-- `src/pages/About.tsx` — PDF content (vision, mission, about text)
-- `src/pages/Services.tsx` — real photos + add Travel Consultations
-- `src/pages/Reviews.tsx` — rename to BlogsReviews, add blog section
-- `src/App.tsx` — update route path
-- `src/pages/Contact.tsx` — add extra phone numbers
+## 5. Homepage Destinations — 4 East Africa Cards
+
+Replace the current 3 Kenya-only destination cards with 4 cards representing East Africa:
+- **Maasai Mara, Kenya** 🇰🇪
+- **Arusha, Tanzania** 🇹🇿
+- **Kampala, Uganda** 🇺🇬
+- **Kigali, Rwanda** 🇷🇼
+
+Each with a placeholder/stock-style image (using existing assets or placeholder), country flag emoji, short description, and link to the destinations page.
+
+---
+
+## 6. Destinations Page — Country Sections with Carousels
+
+Completely restructure the Destinations page:
+
+### Structure
+- Hero section (updated for East Africa)
+- **4 country tabs/sections** with flag emojis:
+  - 🇰🇪 **Kenya** (17 destinations): Mombasa, Diani Beach, Watamu, Malindi, Lake Elementaita, Lake Naivasha, Lake Nakuru, Hell's Gate, Maasai Mara, Amboseli, Mount Kenya, Aberdare, Kisumu, 14 Falls, Ngare Ndare, Camp Dunda, Nanyuki
+  - 🇹🇿 **Tanzania** (5): Mount Kilimanjaro, Dar es Salaam, Zanzibar, Lake Manyara, Arusha
+  - 🇺🇬 **Uganda** (5): Bwindi Impenetrable, Murchison Falls, Rwenzori Mountains, Kampala, Jinja
+  - 🇷🇼 **Rwanda** (4): Kigali, Lake Kivu, Nyungwe Forest, Akagera
+
+### Each country section
+- Country header with flag
+- Animated carousel of destination cards (Framer Motion)
+- Each card: destination name, short description, and a "Book This Trip" CTA
+- Use existing images where available, placeholder for new destinations
+
+---
+
+## Files to Create/Modify
+
+| File | Action |
+|------|--------|
+| `src/components/RateCalculator.tsx` | **Create** — calculator form + rate sheet |
+| `src/pages/Index.tsx` | **Modify** — East Africa text, new services, 4 destination cards, add calculator section |
+| `src/pages/Services.tsx` | **Modify** — East Africa text, add 5 new service sections |
+| `src/pages/About.tsx` | **Modify** — 20 years badge, East Africa text |
+| `src/pages/Destinations.tsx` | **Rewrite** — country sections with carousels, all destinations |
+| `src/components/HeroSection.tsx` | **Modify** — East Africa text |
+| `src/components/Footer.tsx` | **Modify** — East Africa references if present |
+
+---
+
+## Technical Notes
+
+- Rate data will be hardcoded as a TypeScript constant (no backend needed)
+- Calculator uses React state for form + computed result display
+- Destination carousels reuse the existing Framer Motion carousel pattern from Services page
+- New destinations without images will use `public/placeholder.svg` until real images are added
+- The 20-years badge is a pure CSS/Tailwind component with Lucide Award icon
+- All new services content written with professional marketing copy matching existing tone
+
