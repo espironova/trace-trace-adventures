@@ -11,7 +11,7 @@ const Footer = () => {
               Track & Trace <span className="text-accent italic">Adventures</span>
             </h3>
             <p className="text-sm leading-relaxed opacity-80 font-sans">
-              Car Hire Company for Destination Lovers. Over 20 years of experience providing exceptional transportation solutions across East Africa — airport transfers, safari tours, car hire, and long-distance transport.
+              Car Hire Company for Destination Lovers. Over 20 years of experience providing exceptional transportation solutions across East Africa: airport transfers, safari tours, car hire, and long-distance transport.
             </p>
           </div>
 
