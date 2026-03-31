@@ -1,26 +1,25 @@
 
 
-# Add Uploaded Destination Images
+# Add 9 More Destination Images
 
-Copy 10 uploaded images to `src/assets/` and wire them into the Destinations page and Homepage, replacing placeholder references.
+Copy the uploaded images to `src/assets/` and update `Destinations.tsx` to use them, plus update the Arusha image on the Homepage.
 
 ## Image Mapping
 
-| Uploaded File | Asset Name | Used For |
+| Uploaded File | Asset Name | Destination |
 |---|---|---|
-| `Aberdare_National_Park.jfif` | `aberdare.jfif` | Destinations: Aberdare National Park |
-| `Akagera_National_Park.jfif` | `akagera.jfif` | Destinations: Akagera National Park |
-| `Lake_Kivu.jpg` | `lake-kivu.jpg` | Destinations: Lake Kivu |
-| `Nyungwe_Forest.jfif` | `nyungwe.jfif` | Destinations: Nyungwe Forest |
-| `Kigali_City.jpg` | `kigali.jpg` | Destinations: Kigali + Homepage: Kigali card |
-| `Murchison_falls.jpg` | `murchison-falls.jpg` | Destinations: Murchison Falls |
-| `jinja_city.jpg` | `jinja.jpg` | Destinations: Jinja |
-| `Mt_Rwenzori.jpeg` | `rwenzori.jpeg` | Destinations: Rwenzori Mountains |
-| `Kampala.jfif` | `kampala.jfif` | Destinations: Kampala + Homepage: Kampala card |
-| `Bwindi_Impenetrable_National_Park.jpg` | `bwindi.jpg` | Destinations: Bwindi Impenetrable |
+| `Mt_Kilimanjaro.jpg` | `kilimanjaro.jpg` | Tanzania: Mount Kilimanjaro |
+| `dar-es-salaam.webp` | `dar-es-salaam.webp` | Tanzania: Dar es Salaam |
+| `Zanzibar_beaches_and_Culture.jpg` | `zanzibar.jpg` | Tanzania: Zanzibar |
+| `Lake_Manyara.jpg` | `lake-manyara.jpg` | Tanzania: Lake Manyara |
+| `Arusha-Tanzania.webp` | `arusha.webp` | Tanzania: Arusha + Homepage: Arusha card |
+| `14-falls.gif` | `14-falls.gif` | Kenya: 14 Falls |
+| `Nanyuki_equator.jpg` | `nanyuki.jpg` | Kenya: Nanyuki |
+| `Ngare-Ndare-.jpg` | `ngare-ndare.jpg` | Kenya: Ngare Ndare |
+| `Camp_Dunda.jpg` | `camp-dunda.jpg` | Kenya: Camp Dunda |
 
 ## Files Modified
 
-1. **`src/pages/Destinations.tsx`** -- Add 10 imports, replace `ph` references for the 10 matching destinations (Kenya: Aberdare; Uganda: all 5; Rwanda: all 4)
-2. **`src/pages/Index.tsx`** -- Add 2 imports (Kigali, Kampala), replace placeholder strings for those homepage destination cards
+1. **`src/pages/Destinations.tsx`** -- Add 9 imports, replace `ph` with real images for 9 destinations
+2. **`src/pages/Index.tsx`** -- Import Arusha image, replace placeholder on the Arusha homepage card
 
