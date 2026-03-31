@@ -9,6 +9,8 @@ import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
+import kampalaImg from "@/assets/kampala.jfif";
+import kigaliImg from "@/assets/kigali.jpg";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
