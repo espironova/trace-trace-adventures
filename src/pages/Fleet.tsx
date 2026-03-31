@@ -119,7 +119,11 @@ const Fleet = () => {
     <Layout>
       {/* Hero */}
       <section className="relative py-24 min-h-[500px] flex items-center overflow-hidden">
-        <img src={bgFleetHero} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+        <img
+          src={bgFleetHero}
+          alt="Track & Trace vehicle fleet on the road: sedans, vans, and coaches for hire in Kenya"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
         <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">

@@ -18,10 +18,30 @@ const fadeInUp = {
 };
 
 const whyUs = [
-  { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely." },
-  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers." },
-  { image: icon24h, title: "24/7 Availability", desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready." },
-  { image: iconExpertise, title: "Local Expertise", desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa." },
+  {
+    image: iconDrivers,
+    title: "Experienced Drivers",
+    desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely.",
+    alt: "Illustration representing licensed drivers for Nairobi airport and safari transport",
+  },
+  {
+    image: iconFleet,
+    title: "Well-Maintained Fleet",
+    desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers.",
+    alt: "Illustration representing a serviced vehicle fleet for hire in Kenya",
+  },
+  {
+    image: icon24h,
+    title: "24/7 Availability",
+    desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready.",
+    alt: "Icon representing 24-hour car hire and transfer availability in East Africa",
+  },
+  {
+    image: iconExpertise,
+    title: "Local Expertise",
+    desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa.",
+    alt: "Icon representing local travel expertise across Kenya, Tanzania, Uganda, and Rwanda",
+  },
 ];
 
 const partners = [
@@ -171,7 +191,7 @@ const About = () => {
                 className="text-center"
               >
                 <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center relative">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-contain" loading="lazy" />
+                  <img src={item.image} alt={item.alt} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <h3 className="font-serif text-xl mb-3">{item.title}</h3>
                 <p className="font-sans text-sm opacity-80 leading-relaxed">{item.desc}</p>

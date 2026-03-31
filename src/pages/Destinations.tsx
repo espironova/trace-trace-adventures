@@ -163,9 +163,8 @@ const Destinations = () => {
       <section className="relative py-24 text-center overflow-hidden">
         <img
           src={bgDestinations}
-          alt=""
+          alt="East African safari destinations: savanna and wildlife landscapes"
           className="absolute inset-0 w-full h-full object-cover"
-          aria-hidden="true"
         />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 container mx-auto px-4">
