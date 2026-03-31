@@ -38,7 +38,7 @@ const services = [
   },
   {
     title: "Car Hire & Van Hire",
-    desc: "Self-drive and chauffeur-driven vehicles for every need — from sedans to 4x4 Land Cruisers and tour vans.",
+    desc: "Self-drive and chauffeur-driven vehicles for every need, from sedans to 4x4 Land Cruisers and tour vans.",
     image: fleetVan,
     link: "/services",
     alt: "Nissan NV350 van available for hire across East Africa",
