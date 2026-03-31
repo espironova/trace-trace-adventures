@@ -53,7 +53,7 @@ const countries: Country[] = [
       { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: ph },
       { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: ph },
       { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
-      { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: ph },
+      { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
       { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
       { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: ph },
       { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ph },
