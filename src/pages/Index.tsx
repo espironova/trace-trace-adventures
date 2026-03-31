@@ -31,14 +31,14 @@ const services = [
   },
   {
     title: "Safari Tours",
-    desc: "Guided safari adventures to East Africa's iconic national parks — Maasai Mara, Serengeti, Bwindi, and beyond.",
+    desc: "Guided safari adventures to East Africa's iconic national parks: Maasai Mara, Serengeti, Bwindi, and beyond.",
     image: fleetLandcruiser,
     link: "/services",
     alt: "Toyota Land Cruiser safari vehicle for guided tours across East Africa",
   },
   {
     title: "Car Hire & Van Hire",
-    desc: "Self-drive and chauffeur-driven vehicles for every need — from sedans to 4x4 Land Cruisers and tour vans.",
+    desc: "Self-drive and chauffeur-driven vehicles for every need, from sedans to 4x4 Land Cruisers and tour vans.",
     image: fleetVan,
     link: "/services",
     alt: "Nissan NV350 van available for hire across East Africa",
@@ -59,7 +59,7 @@ const services = [
   },
   {
     title: "Schools & Group Transport",
-    desc: "Reliable transport for international schools — sports events, education trips, co-curricular activities, and field excursions.",
+    desc: "Reliable transport for international schools: sports events, education trips, co-curricular activities, and field excursions.",
     image: fleetInterior,
     link: "/services",
     alt: "Comfortable bus interior for school and group transport",
@@ -84,7 +84,7 @@ const testimonials = [
 
 const whyUs = [
   { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely." },
-  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected — from comfortable sedans to rugged 4x4 Land Cruisers." },
+  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers." },
   { image: icon24h, title: "24/7 Availability", desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready." },
   { image: iconExpertise, title: "Local Expertise", desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa." },
 ];
@@ -128,7 +128,7 @@ const Index = () => {
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</p>
             <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Our Services</h2>
             <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
-              From airport pickups to unforgettable safaris — we provide comprehensive transport solutions across East Africa with professional drivers and a well-maintained fleet.
+              From airport pickups to unforgettable safaris, we provide comprehensive transport solutions across East Africa with professional drivers and a well-maintained fleet.
             </p>
           </motion.div>
 
@@ -306,7 +306,7 @@ const Index = () => {
           <motion.div {...fadeInUp}>
             <h2 className="font-serif text-3xl md:text-5xl mb-4">Ready to Explore East Africa?</h2>
             <p className="font-sans text-lg opacity-80 max-w-xl mx-auto mb-8">
-              Whether it's an airport pickup, a weekend safari, or a cross-border journey — we're ready to take you there.
+              Whether it's an airport pickup, a weekend safari, or a cross-border journey, we're ready to take you there.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button

@@ -35,7 +35,7 @@ const serviceData = [
     description: "Enjoy seamless, stress-free airport transfers with Track & Trace Adventures. We serve both Jomo Kenyatta International Airport (JKIA) and Wilson Airport with professional, reliable pickup and drop-off services.",
     features: [
       "Meet & greet service at arrivals",
-      "Real-time flight tracking — we adjust to delays",
+      "Real-time flight tracking; we adjust to delays",
       "Comfortable, air-conditioned vehicles",
       "Fixed pricing with no hidden fees",
       "Available 24/7 for early morning and late-night flights",
@@ -49,7 +49,7 @@ const serviceData = [
     subtitle: "Guided Adventures Across East Africa",
     images: [fleetLandcruiser, fleetFord, fleetHiace],
     alt: "Toyota Land Cruiser safari vehicle for guided safari tour across East Africa",
-    description: "Explore East Africa's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to gorilla trekking in Bwindi — we create unforgettable wildlife experiences across Kenya, Tanzania, Uganda, and Rwanda.",
+    description: "Explore East Africa's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to gorilla trekking in Bwindi, we create unforgettable wildlife experiences across Kenya, Tanzania, Uganda, and Rwanda.",
     features: [
       "Custom safari itineraries tailored to your interests",
       "4x4 Land Cruisers with pop-up roofs for game viewing",
@@ -66,7 +66,7 @@ const serviceData = [
     subtitle: "Self-Drive & Chauffeur-Driven",
     images: [fleetVan, fleetVanInterior, fleetCoasterExt],
     alt: "Nissan NV350 van for car hire in Nairobi",
-    description: "A diverse selection of vehicles for hire, ranging from comfortable sedans to spacious SUVs. Whether you need a sedan for business, a 4x4 for adventure, or a van for group travel — we've got the right vehicle at the right price.",
+    description: "A diverse selection of vehicles for hire, ranging from comfortable sedans to spacious SUVs. Whether you need a sedan for business, a 4x4 for adventure, or a van for group travel, we've got the right vehicle at the right price.",
     features: [
       "Self-drive and chauffeur-driven options",
       "Fleet includes sedans, SUVs, 4x4s, safari vans, and minibuses",
@@ -105,7 +105,7 @@ const serviceData = [
       "Door-to-door service between any Nairobi hotels",
       "Comfortable sedans, vans, and minibuses available",
       "Professional, smartly dressed drivers",
-      "Fixed, transparent pricing — no metered surprises",
+      "Fixed, transparent pricing with no metered surprises",
       "Available for individuals, couples, and groups",
       "Perfect for business travelers and tourists alike",
     ],
@@ -168,7 +168,7 @@ const serviceData = [
     subtitle: "Evening Event Pickups (6PM–11PM)",
     images: [fleetSedan, fleetNoahBoot],
     alt: "Sedan for evening dinner event transport in Nairobi",
-    description: "Enjoy a worry-free evening out with our dedicated dinner transport service. We provide reliable pickups and drop-offs for dinner events, restaurant outings, and evening social gatherings across Nairobi — so you can enjoy the night without worrying about the drive home.",
+    description: "Enjoy a worry-free evening out with our dedicated dinner transport service. We provide reliable pickups and drop-offs for dinner events, restaurant outings, and evening social gatherings across Nairobi so you can enjoy the night without worrying about the drive home.",
     features: [
       "Evening service window: 6 PM to 11 PM",
       "Pick up from home, hotel, or office to your dinner venue",
@@ -185,7 +185,7 @@ const serviceData = [
     subtitle: "Expert Guidance for Your Journey",
     images: [fleetLandcruiser],
     alt: "Travel consultation planning session for East Africa adventure",
-    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect East African adventure — from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
+    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect East African adventure, from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
     features: [
       "One-on-one consultation with experienced travel advisors",
       "Custom itinerary planning for any budget",
@@ -260,7 +260,7 @@ const Services = () => {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Our Services</motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
-            Comprehensive transport solutions across East Africa — from airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
+            Comprehensive transport solutions across East Africa. From airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
           </motion.p>
         </div>
       </section>

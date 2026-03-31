@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
-import bgFleetHero from "@/assets/bg-fleet-hero.jpg";
+import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetCoaster from "@/assets/fleet-coaster.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
@@ -115,7 +115,7 @@ const Fleet = () => {
               Our Fleet
             </motion.h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-white/80 max-w-lg">
-              A diverse fleet of well-maintained vehicles for every journey — from comfortable sedans to rugged 4x4 Land Cruisers.
+              A diverse fleet of well-maintained vehicles for every journey, from comfortable sedans to rugged 4x4 Land Cruisers.
             </motion.p>
           </div>
 
