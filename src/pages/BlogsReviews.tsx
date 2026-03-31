@@ -92,7 +92,7 @@ const BlogsReviews = () => {
     <Layout>
       <section className="bg-primary text-primary-foreground py-24 text-center">
         <div className="container mx-auto px-4">
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Insights & Testimonials</motion.p>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Insights & Testimonials</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Blogs & Reviews</motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
             Travel tips, destination guides, and real stories from our clients across Kenya.

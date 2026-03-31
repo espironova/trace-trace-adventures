@@ -6,6 +6,7 @@ import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
+import fleetHiace from "@/assets/fleet-hiace.jpg";
 import BookingModal from "@/components/BookingModal";
 
 const slides = [
@@ -34,8 +35,8 @@ const slides = [
     subtitle: "Comfortable intercity and cross-border travel in style",
   },
   {
-    image: fleetSedan,
-    alt: "Vehicle for Kenya SGR station pickup and drop-off at Nairobi and Mombasa termini",
+    image: fleetHiace,
+    alt: "Toyota Hiace van for Kenya SGR station pickup and drop-off for groups and luggage",
     label: "SGR Transfers",
     subtitle:
       "Road connections to Nairobi Terminus, Syokimau, and Mombasa Terminus—vehicles sized for your group and luggage",
@@ -103,7 +104,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl mx-auto mb-6"
           >
-            Your Gateway to East Africa's <span className="italic text-[#F4C430]">Greatest Adventures</span>
+            Your Gateway to East Africa's <span className="italic text-heroGold">Greatest Adventures</span>
           </motion.h1>
 
           <AnimatePresence mode="wait">
@@ -115,7 +116,7 @@ const HeroSection = () => {
               transition={{ duration: 0.5 }}
               className="mb-10"
             >
-              <p className="font-sans text-lg md:text-xl text-[#F4C430] font-bold uppercase tracking-[0.2em] mb-2">
+              <p className="font-sans text-lg md:text-xl text-heroGold font-bold uppercase tracking-[0.2em] mb-2">
                 {slides[current].label}
               </p>
               <p className="font-sans text-base md:text-lg text-white/80 max-w-2xl mx-auto">
@@ -152,7 +153,7 @@ const HeroSection = () => {
               onClick={() => setCurrent(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i === current ? "bg-[#F4C430] scale-125" : "bg-white/40 hover:bg-white/60"
+                i === current ? "bg-heroGold scale-125" : "bg-white/40 hover:bg-white/60"
               }`}
             />
           ))}

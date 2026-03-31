@@ -34,6 +34,9 @@
 
     --radius: 0.25rem;
 
+    /* Bright gold for hero eyebrows and home hero accents (#F4C430) */
+    --hero-gold: 46 90% 57%;
+
     --safari-gold: 50 55% 35%;
     --safari-brown: 24 52% 24%;
     --safari-cream: 36 30% 95%;
@@ -70,6 +73,7 @@
     --border: 24 20% 20%;
     --input: 24 20% 20%;
     --ring: 50 55% 35%;
+    --hero-gold: 46 90% 57%;
   }
 }
 

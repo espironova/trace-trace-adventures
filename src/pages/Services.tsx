@@ -16,6 +16,7 @@ import fleetFord from "@/assets/fleet-ford.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
 import { Plane, Map, Car, Bus, Train, Compass, ArrowRight, ChevronLeft, ChevronRight, Building, GlassWater, Users, GraduationCap, UtensilsCrossed } from "lucide-react";
+import { repeatAfterUnique } from "@/lib/utils";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -99,8 +100,8 @@ const serviceData = [
     icon: Train,
     title: "SGR Transfers",
     subtitle: "Kenya Standard Gauge Railway",
-    images: [fleetSedan, fleetVan, fleetNoahBoot],
-    alt: "Comfortable vehicle for SGR station pickup and drop-off in Nairobi and Mombasa",
+    images: repeatAfterUnique([fleetHiace, fleetVan, fleetNoahBoot], 4),
+    alt: "Toyota Hiace van for SGR station pickup and drop-off in Nairobi and Mombasa",
     description:
       "Connect seamlessly with Kenya's SGR service. We provide reliable road transfers to and from Nairobi Terminus (Syokimau), Mombasa Terminus, and other station access points—so your train journey starts and ends without stress. Whether you're a solo traveler, family, or group, we match you with the right vehicle and schedule.",
     features: [
@@ -280,7 +281,7 @@ const Services = () => {
         <div className="absolute -top-24 left-[15%] h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
         <div className="absolute bottom-0 right-[10%] h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
         <div className="relative z-10 container mx-auto px-4">
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</motion.p>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4 text-primary-foreground drop-shadow-sm">
             Our Services
           </motion.h1>

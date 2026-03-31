@@ -47,6 +47,7 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        heroGold: "hsl(var(--hero-gold))",
         safari: {
           gold: "hsl(var(--safari-gold))",
           brown: "hsl(var(--safari-brown))",

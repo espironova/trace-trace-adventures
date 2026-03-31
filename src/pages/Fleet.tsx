@@ -124,7 +124,7 @@ const Fleet = () => {
 
         <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="text-center md:text-left">
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">
               Our Vehicles
             </motion.p>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-white mb-4">
@@ -160,7 +160,7 @@ const Fleet = () => {
                   onClick={() => setHeroIndex(i)}
                   aria-label={`Show ${vehicles[i].name}`}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i === heroIndex ? "bg-accent scale-125" : "bg-white/40 hover:bg-white/60"
+                    i === heroIndex ? "bg-heroGold scale-125" : "bg-white/40 hover:bg-white/60"
                   }`}
                 />
               ))}

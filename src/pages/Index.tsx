@@ -9,6 +9,7 @@ import fleetVan from "@/assets/fleet-van.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
+import fleetHiace from "@/assets/fleet-hiace.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import kampalaImg from "@/assets/kampala.jfif";
 import kigaliImg from "@/assets/kigali.jpg";
@@ -54,9 +55,9 @@ const services = [
   {
     title: "SGR Transfers",
     desc: "Road connections to and from Kenya SGR stations—Nairobi Terminus, Syokimau, Mombasa Terminus—with vehicles sized for your group and luggage.",
-    image: fleetSedan,
+    image: fleetHiace,
     link: "/services#sgr-transfers",
-    alt: "Vehicle for SGR station pickup and drop-off in Kenya",
+    alt: "Toyota Hiace van for SGR station pickup and drop-off in Kenya",
   },
   {
     title: "Conference & Corporate Transport",
@@ -165,7 +166,7 @@ const Index = () => {
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="font-serif text-xl md:text-2xl text-white mb-2">{service.title}</h3>
                     <p className="font-sans text-sm text-white/70 leading-relaxed max-w-md">{service.desc}</p>
-                    <span className="inline-flex items-center gap-2 mt-3 text-[#F4C430] text-sm font-sans uppercase tracking-wider font-bold group-hover:gap-3 transition-all">
+                    <span className="inline-flex items-center gap-2 mt-3 text-heroGold text-sm font-sans uppercase tracking-wider font-bold group-hover:gap-3 transition-all">
                       Learn More <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -236,7 +237,7 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-[#F4C430] mb-1">{dest.country}</p>
+                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-heroGold mb-1">{dest.country}</p>
                     <h3 className="font-serif text-2xl text-white">{dest.name}</h3>
                     <p className="font-sans text-xs text-white/70 mt-1">{dest.desc}</p>
                   </div>
