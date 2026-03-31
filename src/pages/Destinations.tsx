@@ -19,6 +19,15 @@ import kigaliImg from "@/assets/kigali.jpg";
 import lakekivuImg from "@/assets/lake-kivu.jpg";
 import nyungweImg from "@/assets/nyungwe.jfif";
 import akageraImg from "@/assets/akagera.jfif";
+import kilimanjaroImg from "@/assets/kilimanjaro.jpg";
+import darImg from "@/assets/dar-es-salaam.webp";
+import zanzibarImg from "@/assets/zanzibar.jpg";
+import lakeManyaraImg from "@/assets/lake-manyara.jpg";
+import arushaImg from "@/assets/arusha.webp";
+import fourteenFallsImg from "@/assets/14-falls.gif";
+import nanyukiImg from "@/assets/nanyuki.jpg";
+import ngareNdareImg from "@/assets/ngare-ndare.jpg";
+import campDundaImg from "@/assets/camp-dunda.jpg";
 
 type Destination = {
   name: string;
@@ -55,21 +64,21 @@ const countries: Country[] = [
       { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
       { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
       { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
-      { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: ph },
-      { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ph },
-      { name: "Camp Dunda", description: "An adventurous bush camp experience in the heart of Kenya's wild terrain.", image: ph },
-      { name: "Nanyuki", description: "A charming highland town at the foot of Mount Kenya — gateway to Laikipia conservancies.", image: ph },
+      { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: fourteenFallsImg },
+      { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ngareNdareImg },
+      { name: "Camp Dunda", description: "An adventurous bush camp experience in the heart of Kenya's wild terrain.", image: campDundaImg },
+      { name: "Nanyuki", description: "A charming highland town at the foot of Mount Kenya — gateway to Laikipia conservancies.", image: nanyukiImg },
     ],
   },
   {
     name: "Tanzania",
     flag: "🇹🇿",
     destinations: [
-      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: ph },
-      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: ph },
-      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: ph },
-      { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: ph },
-      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: ph },
+      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: kilimanjaroImg },
+      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: darImg },
+      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: zanzibarImg },
+      { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: lakeManyaraImg },
+      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: arushaImg },
     ],
   },
   {
