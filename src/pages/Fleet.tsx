@@ -2,21 +2,35 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
+import VehicleImageCarousel from "@/components/VehicleImageCarousel";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import fleetSedan from "@/assets/fleet-sedan.jpg";
+import fleetNoahBoot from "@/assets/fleet-noah-boot.jpg";
 import fleetCoaster from "@/assets/fleet-coaster.jpg";
+import fleetCoasterIntBlue from "@/assets/fleet-coaster-int-blue.jpg";
+import fleetCoasterInt2 from "@/assets/fleet-coaster-int-2.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
+import fleetNv350Interior from "@/assets/fleet-nv350-interior.jpg";
+import fleetNv350Int2 from "@/assets/fleet-nv350-int-2.jpg";
 import fleetHiace from "@/assets/fleet-hiace.jpg";
+import fleetHiaceInterior from "@/assets/fleet-hiace-interior.jpg";
 import fleetFord from "@/assets/fleet-ford.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
+import fleetMercedesInterior from "@/assets/fleet-mercedes-interior.jpg";
+import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
+import fleetGoldenInterior from "@/assets/fleet-golden-interior.jpg";
+import fleetGoldenInt2 from "@/assets/fleet-golden-int-2.jpg";
+import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
+import fleetIsuzuRear from "@/assets/fleet-isuzu-rear.jpg";
+import fleetIsuzuInterior from "@/assets/fleet-isuzu-interior.jpg";
 import { ArrowRight } from "lucide-react";
 
 const vehicles = [
   {
     name: "Toyota Noah",
-    image: fleetSedan,
+    images: [fleetSedan, fleetNoahBoot],
     alt: "White Toyota Noah sedan for airport transfers and city transport in Nairobi",
     capacity: "1–6 passengers",
     idealFor: "Airport transfers, business trips, city tours",
@@ -24,7 +38,7 @@ const vehicles = [
   },
   {
     name: "Toyota Coaster",
-    image: fleetCoaster,
+    images: [fleetCoaster, fleetCoasterIntBlue, fleetCoasterInt2],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -32,7 +46,7 @@ const vehicles = [
   },
   {
     name: "Nissan NV350",
-    image: fleetVan,
+    images: [fleetVan, fleetNv350Interior, fleetNv350Int2],
     alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
     capacity: "8–14 passengers",
     idealFor: "Group travel, hotel shuttles, family trips",
@@ -40,7 +54,7 @@ const vehicles = [
   },
   {
     name: "Toyota Hiace",
-    image: fleetHiace,
+    images: [fleetHiace, fleetHiaceInterior],
     alt: "Toyota Hiace safari van for tour groups and safari trips in Kenya",
     capacity: "7–14 passengers",
     idealFor: "Safari tours, group travel, sightseeing",
@@ -48,7 +62,7 @@ const vehicles = [
   },
   {
     name: "Ford Ranger 4x4",
-    image: fleetFord,
+    images: [fleetFord],
     alt: "Ford Ranger 4x4 pickup for off-road adventures and safari in Kenya",
     capacity: "2–4 passengers",
     idealFor: "Off-road adventures, safari expeditions, rough terrain",
@@ -56,7 +70,7 @@ const vehicles = [
   },
   {
     name: "Mercedes Tour Bus",
-    image: fleetBus,
+    images: [fleetBus, fleetMercedesInterior, fleetBusInterior],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -64,7 +78,7 @@ const vehicles = [
   },
   {
     name: "Toyota Land Cruiser",
-    image: fleetLandcruiser,
+    images: [fleetLandcruiser],
     alt: "Toyota Land Cruiser 4x4 safari vehicle for guided tours in Maasai Mara Kenya",
     capacity: "4–6 passengers",
     idealFor: "Safari expeditions, luxury tours, rough terrain",
@@ -72,11 +86,19 @@ const vehicles = [
   },
   {
     name: "Golden Dragon Bus",
-    image: fleetGoldenDragon,
+    images: [fleetGoldenDragon, fleetGoldenInterior, fleetGoldenInt2],
     alt: "Golden Dragon luxury bus for long distance transport in Kenya",
     capacity: "45–55 passengers",
     idealFor: "Large group transfers, intercity travel, events",
     features: ["Luxury reclining seats", "Air conditioning", "Spacious luggage bay", "Entertainment system"],
+  },
+  {
+    name: "Isuzu Coaster",
+    images: [fleetIsuzu, fleetIsuzuRear, fleetIsuzuInterior],
+    alt: "Isuzu Coaster bus for group transport and corporate shuttles in Kenya",
+    capacity: "25–29 passengers",
+    idealFor: "Group transport, school trips, corporate shuttles",
+    features: ["Comfortable seating", "Air conditioning", "Spacious interior", "Reliable performance"],
   },
 ];
 
@@ -95,18 +117,12 @@ const Fleet = () => {
 
   return (
     <Layout>
-      {/* Hero with background image + animated fleet showcase */}
+      {/* Hero */}
       <section className="relative py-24 min-h-[500px] flex items-center overflow-hidden">
-        <img
-          src={bgFleetHero}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          aria-hidden="true"
-        />
+        <img src={bgFleetHero} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
         <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          {/* Left: Text */}
           <div className="text-center md:text-left">
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">
               Our Vehicles
@@ -119,7 +135,6 @@ const Fleet = () => {
             </motion.p>
           </div>
 
-          {/* Right: Animated vehicle showcase */}
           <div className="relative h-[280px] md:h-[340px]">
             <AnimatePresence mode="wait">
               <motion.div
@@ -130,11 +145,7 @@ const Fleet = () => {
                 transition={{ duration: 0.8 }}
                 className="absolute inset-0"
               >
-                <img
-                  src={vehicles[heroIndex].image}
-                  alt={vehicles[heroIndex].alt}
-                  className="w-full h-full object-cover rounded-sm"
-                />
+                <img src={vehicles[heroIndex].images[0]} alt={vehicles[heroIndex].alt} className="w-full h-full object-cover rounded-sm" />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
                   <p className="font-serif text-xl text-white">{vehicles[heroIndex].name}</p>
                   <p className="font-sans text-sm text-accent">{vehicles[heroIndex].capacity}</p>
@@ -142,7 +153,6 @@ const Fleet = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Dots */}
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
               {vehicles.map((_, i) => (
                 <button
@@ -172,16 +182,7 @@ const Fleet = () => {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-card border border-border overflow-hidden group"
               >
-                <div className="aspect-[4/3] overflow-hidden relative">
-                  <img
-                    src={v.image}
-                    alt={v.alt}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                    width={800}
-                    height={600}
-                  />
-                </div>
+                <VehicleImageCarousel images={v.images} alt={v.alt} />
                 <div className="p-6">
                   <h3 className="font-serif text-xl mb-2 text-foreground">{v.name}</h3>
                   <p className="font-sans text-sm text-accent font-bold mb-3">{v.capacity}</p>
