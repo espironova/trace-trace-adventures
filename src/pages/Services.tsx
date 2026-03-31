@@ -49,7 +49,7 @@ const serviceData = [
     subtitle: "Guided Adventures Across East Africa",
     images: [fleetLandcruiser, fleetFord, fleetHiace],
     alt: "Toyota Land Cruiser safari vehicle for guided safari tour across East Africa",
-    description: "Explore East Africa's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to gorilla trekking in Bwindi — we create unforgettable wildlife experiences across Kenya, Tanzania, Uganda, and Rwanda.",
+    description: "Explore East Africa's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to gorilla trekking in Bwindi, we create unforgettable wildlife experiences across Kenya, Tanzania, Uganda, and Rwanda.",
     features: [
       "Custom safari itineraries tailored to your interests",
       "4x4 Land Cruisers with pop-up roofs for game viewing",
