@@ -84,7 +84,7 @@ const testimonials = [
 
 const whyUs = [
   { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely." },
-  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected — from comfortable sedans to rugged 4x4 Land Cruisers." },
+  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers." },
   { image: icon24h, title: "24/7 Availability", desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready." },
   { image: iconExpertise, title: "Local Expertise", desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa." },
 ];
