@@ -3,7 +3,7 @@ import fleetVan from "@/assets/fleet-van.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
-import fleetInterior from "@/assets/fleet-interior.jpg";
+import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
 import fleetHiace from "@/assets/fleet-hiace.jpg";
 /** Home page hero slideshow — single source for images with HeroSection copy. */
 export const homeHeroSlides = [
@@ -45,8 +45,8 @@ export const homeHeroSlides = [
     subtitle: "Professional transport for conferences, corporate events, and business travel",
   },
   {
-    image: fleetInterior,
-    alt: "Comfortable bus interior for school and group transport",
+    image: fleetIsuzu,
+    alt: "Isuzu Coaster bus for school and group transport in Kenya",
     label: "Schools & Group Transport",
     subtitle: "Reliable school trips, sports events, and group excursions across East Africa",
   },

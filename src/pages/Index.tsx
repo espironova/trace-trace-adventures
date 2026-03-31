@@ -8,7 +8,7 @@ import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
-import fleetInterior from "@/assets/fleet-interior.jpg";
+import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
 import fleetHiace from "@/assets/fleet-hiace.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import kampalaImg from "@/assets/kampala.jfif";
@@ -69,9 +69,9 @@ const services = [
   {
     title: "Schools & Group Transport",
     desc: "Reliable transport for international schools: sports events, education trips, co-curricular activities, and field excursions.",
-    image: fleetInterior,
+    image: fleetIsuzu,
     link: "/services",
-    alt: "Comfortable bus interior for school and group transport",
+    alt: "Isuzu Coaster bus for school and group transport in Kenya",
   },
 ];
 
