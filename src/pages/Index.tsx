@@ -11,6 +11,7 @@ import fleetInterior from "@/assets/fleet-interior.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import kampalaImg from "@/assets/kampala.jfif";
 import kigaliImg from "@/assets/kigali.jpg";
+import arushaImg from "@/assets/arusha.webp";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
