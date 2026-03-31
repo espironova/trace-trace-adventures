@@ -19,6 +19,15 @@ import kigaliImg from "@/assets/kigali.jpg";
 import lakekivuImg from "@/assets/lake-kivu.jpg";
 import nyungweImg from "@/assets/nyungwe.jfif";
 import akageraImg from "@/assets/akagera.jfif";
+import kilimanjaroImg from "@/assets/kilimanjaro.jpg";
+import darImg from "@/assets/dar-es-salaam.webp";
+import zanzibarImg from "@/assets/zanzibar.jpg";
+import lakeManyaraImg from "@/assets/lake-manyara.jpg";
+import arushaImg from "@/assets/arusha.webp";
+import fourteenFallsImg from "@/assets/14-falls.gif";
+import nanyukiImg from "@/assets/nanyuki.jpg";
+import ngareNdareImg from "@/assets/ngare-ndare.jpg";
+import campDundaImg from "@/assets/camp-dunda.jpg";
 
 type Destination = {
   name: string;
