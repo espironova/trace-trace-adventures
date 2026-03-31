@@ -1,62 +1,56 @@
 
 
-# Add New Vehicle + Multi-Angle Photo Animation for Fleet Page
+# Match Fleet Photos to Correct Units + Fix Descriptions
 
 ## Summary
-Add a new "Isuzu Coaster" vehicle to the fleet, assign multiple photos (interior/exterior) to each vehicle, and animate the vehicle cards to cycle through different angles automatically.
+Replace placeholder images with the real uploaded photos for each specific vehicle, fix the KDL 731T description (it's a Toyota Hiace, not a Nissan NV350), add the VehicleImageCarousel component (was planned but never created), and integrate it into the Fleet grid.
 
-## 1. Copy New Assets
+## 1. Copy Uploaded Photos
 
-| Uploaded File | Asset Path | Assigned To |
+Each photo replaces the primary (`-1.jpg`) image for that unit:
+
+| Uploaded | Target Asset | Unit |
 |---|---|---|
-| `fleet_of_cars.jpeg` | `src/assets/fleet-isuzu.jpg` | New vehicle: Isuzu Coaster (front exterior) |
-| `angle_2_fleet_of_cars.jpeg` | `src/assets/fleet-isuzu-rear.jpg` | Isuzu Coaster (rear exterior) |
-| `WhatsApp_...12.42.10_1.jpeg` | `src/assets/fleet-coaster-int-blue.jpg` | Toyota Coaster interior |
-| `WhatsApp_...12.42.09.jpeg` | `src/assets/fleet-isuzu-interior.jpg` | Isuzu Coaster interior |
-| `WhatsApp_...12.42.07.jpeg` | `src/assets/fleet-mercedes-interior.jpg` | Mercedes Tour Bus interior |
-| `WhatsApp_...12.42.04.jpeg` | `src/assets/fleet-coaster-int-2.jpg` | Toyota Coaster interior (alt) |
-| `WhatsApp_...12.41.58_1-2.jpeg` | `src/assets/fleet-golden-interior.jpg` | Golden Dragon Bus interior |
-| `WhatsApp_...12.41.58-2.jpeg` | `src/assets/fleet-hiace-interior.jpg` | Toyota Hiace interior |
-| `WhatsApp_...12.41.56_1-2.jpeg` | `src/assets/fleet-nv350-int-2.jpg` | Nissan NV350 interior |
-| `WhatsApp_...12.41.55_2.jpeg` | `src/assets/fleet-golden-int-2.jpg` | Golden Dragon Bus interior (alt) |
+| `KCU_249X.jpeg` | `fleet-unit-kcu-249x-1.jpg` | Mercedes KCU 249X |
+| `KCU_955S.jpeg` | `fleet-unit-kcu-955s-1.jpg` | Mercedes KCU 955S |
+| `KDR_982M.jpeg` | `fleet-unit-kdr-982m-1.jpg` | Mercedes KDR 982M |
+| `KDN_267X.jpeg` | `fleet-unit-kdn-267x-1.jpg` | Mercedes KDN 267X |
+| `KCT_963J.jpeg` | `fleet-unit-kct-963j-1.jpg` | Toyota Coaster KCT 963J |
+| `KCW_515Z.jpeg` | `fleet-unit-kcw-515z-1.jpg` | Toyota Coaster KCW 515Z |
+| `KCB_785T.jpeg` | `fleet-unit-kcb-785t-1.jpg` | Toyota Coaster KCB 785T |
+| `KCN_030M.jpeg` | `fleet-unit-kcn-030m-1.jpg` | Nissan NV350 KCN 030M |
+| `KCR_090X.jpeg` | `fleet-unit-kcr-090x-1.jpg` | Toyota Hiace KCR 090X (new primary) |
+| `KDL_731T.jpeg` | `fleet-unit-kdl-731t-1.jpg` | Toyota Hiace KDL 731T (fix model) |
 
-## 2. Update Vehicle Data Structure
+## 2. Fix KDL 731T Description (`src/data/fleet.ts`)
 
-Change each vehicle from `image: string` to `images: string[]` containing multiple angles:
+The photo clearly shows a Toyota Hiace (HIACE badge visible on rear). Change:
+- `modelKey`: `"nissan-nv350"` → `"toyota-hiace"`
+- `modelName`: `"Nissan NV350"` → `"Toyota Hiace"`
+- `capacity`: keep `"8–14 passengers"`
+- `idealFor`: update to match Hiace description (safari tours, group travel)
+- `features`: update to match Hiace features (pop-up roof option, extended leg room, etc.)
+- `alt`: update to reference Toyota Hiace
 
-- **Toyota Noah**: `[fleet-sedan.jpg, fleet-noah-boot.jpg]`
-- **Toyota Coaster**: `[fleet-coaster.jpg, fleet-coaster-int-blue.jpg, fleet-coaster-int-2.jpg]`
-- **Nissan NV350**: `[fleet-van.jpg, fleet-nv350-interior.jpg, fleet-nv350-int-2.jpg]`
-- **Toyota Hiace**: `[fleet-hiace.jpg, fleet-hiace-interior.jpg]`
-- **Ford Ranger 4x4**: `[fleet-ford.jpg]`
-- **Mercedes Tour Bus**: `[fleet-bus.jpg, fleet-mercedes-interior.jpg, fleet-bus-interior.jpg]`
-- **Toyota Land Cruiser**: `[fleet-landcruiser.jpg]`
-- **Golden Dragon Bus**: `[fleet-golden-dragon.jpg, fleet-golden-interior.jpg, fleet-golden-int-2.jpg]`
-- **Isuzu Coaster** (NEW): `[fleet-isuzu.jpg, fleet-isuzu-rear.jpg, fleet-isuzu-interior.jpg]`
+## 3. Update Hiace Unit Images (`src/data/fleet.ts`)
 
-## 3. New Vehicle Entry
+The KCR 090X unit currently uses generic `hiaceImages`. Update to use unit-specific uploaded photo as primary, plus existing interior shots.
 
-```
-name: "Isuzu Coaster"
-capacity: "25-29 passengers"
-idealFor: "Group transport, school trips, corporate shuttles"
-features: ["Comfortable seating", "Air conditioning", "Spacious interior", "Reliable performance"]
-```
+## 4. Create VehicleImageCarousel Component (`src/components/VehicleImageCarousel.tsx`)
 
-## 4. Animated Multi-Photo Vehicle Cards
-
-Each vehicle card in the grid gets a `VehicleImageCarousel` component:
-- Auto-cycles through the vehicle's `images` array every 3 seconds
+The component was planned previously but never created. Build it now:
+- Auto-cycles through vehicle `images[]` array every 3 seconds
 - Crossfade animation using `AnimatePresence`
-- Small dot indicators at bottom of image area showing current photo
-- On hover, pauses the auto-cycle
-- Smooth opacity transition between photos
+- Dot indicators at bottom of image area
+- Pauses on hover
 
-## 5. Hero Showcase Update
+## 5. Integrate Carousel into Fleet Grid (`src/pages/Fleet.tsx`)
 
-Update the hero showcase to also use the `images[0]` from each vehicle (first/primary image). No change to hero behavior, just adapt to the new data structure.
+Replace the static `<img src={v.images[0]}` in the vehicle grid cards with the new `<VehicleImageCarousel images={v.images} alt={v.alt} />` component.
 
 ## Files Modified
 
-1. **`src/pages/Fleet.tsx`** — New data structure with `images[]`, add Isuzu Coaster vehicle, add `VehicleImageCarousel` component with auto-cycling crossfade animation, update hero to use `images[0]`
+1. **`src/data/fleet.ts`** — Fix KDL 731T to Toyota Hiace, update KCR 090X images, add new import for KCR 090X photo
+2. **`src/components/VehicleImageCarousel.tsx`** — New component with auto-cycling crossfade carousel
+3. **`src/pages/Fleet.tsx`** — Replace static images in grid with VehicleImageCarousel
 
