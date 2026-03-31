@@ -1,62 +1,101 @@
 
 
-# Destinations Page Redesign + Fleet Hero + New Images
+# Multi-Page Updates: Partners Section, Fleet Hero, Destinations Cleanup, Blog Photos, Hyphens
 
 ## Summary
-
-Major redesign of the Destinations page layout, add background images to hero sections, update Fleet hero with animated design, add remaining destination images, and replace "Book Trip" with car-hire wording.
+Multiple changes across About, Destinations, Fleet, Blog, and Footer pages: add partners carousel, add "Why Track & Trace" section to About, swap images, remove destinations, clean up hyphens, and fix the About hero background.
 
 ---
 
-## 1. Copy Assets
+## 1. Copy New Assets
 
-- `Background_Destination.png` → `src/assets/bg-destinations.png` (Destinations hero background)
-- `Background_our_fleet_design_hero_section.JPG` → `src/assets/bg-fleet-hero.jpg` (Fleet hero background)
-- `Kisumu.jpg` → `src/assets/kisumu.jpg`
-- `mt_Kenya_Hiking_and_Climbing.avif` → `src/assets/mt-kenya.avif`
-- `Amboseli_National_Park.jpg` → update `src/assets/amboseli.jpg`
-- `Masai_Mara_National_Reserve.jpg` → update `src/assets/maasai-mara.jpg`
+| Uploaded File | Asset Path | Usage |
+|---|---|---|
+| `Our_Fleet_background_photo.jpg` | `src/assets/fleet-hero-bg.jpg` | Fleet page hero background |
+| `Tourism_Regulatory_Authority.png` | `src/assets/partner-tra.png` | Partners carousel |
+| `BNI.png` | `src/assets/partner-bni.png` | Partners carousel |
+| `Eagles_management_Consultant.jfif` | `src/assets/partner-eagles.jfif` | Partners carousel |
+| `mashariki_Shuttle.JPG` | `src/assets/partner-mashariki.jpg` | Partners carousel |
+| `WhatsApp_Image_2026-03-26_at_12.41.59_1.jpeg` | `src/assets/fleet-coaster-new.jpg` | Fleet page: Toyota Coaster (exterior shot) |
+| `WhatsApp_Image_2026-03-26_at_12.41.59.jpeg` | `src/assets/fleet-bus-interior.jpg` | Blog: replace an AI-generated photo |
+| `WhatsApp_Image_2026-03-26_at_12.41.58_1.jpeg` | `src/assets/fleet-bus-interior-2.jpg` | Blog: replace an AI-generated photo |
+| `WhatsApp_Image_2026-03-26_at_12.41.58.jpeg` | `src/assets/fleet-van-interior-new.jpg` | Blog/Fleet: van interior photo |
+| `WhatsApp_Image_2026-03-26_at_12.41.56_1.jpeg` | `src/assets/fleet-nv350-interior.jpg` | Blog/Fleet: NV350 interior |
 
-(Hells-Gate-National-2, lake-nakuru-2, Mombasa-2 are alternate shots — skip since we already have images for those destinations)
+## 2. About Page (`src/pages/About.tsx`)
 
-## 2. Destinations Page Redesign (`src/pages/Destinations.tsx`)
+**Hero background**: Replace `fleetInterior` with `bg-primary` solid color (deep brown brand color). No background image since none of the uploaded photos are suitable as a generic About hero.
 
-**Hero section**: Replace solid `bg-primary` with a full-bleed background image using `bg-destinations.png`, with a dark overlay for text readability.
+**Add "Why Track & Trace" section**: Copy the "Why Track & Trace / The Track & Trace Difference" section from the homepage (the 4-card grid with icons) and place it after the Values section, before the Partners section. Import the same icon assets.
 
-**Remove**: Destination counts (line 199: "X destinations") and country abbreviations.
+**Add Partners & Regulation section** (before Footer, after Why Track & Trace):
+- Title: "Partners & Regulation"
+- Subtitle: "Working with trusted partners and operating under recognized authorities."
+- Auto-scrolling horizontal logo carousel (CSS `@keyframes` marquee or Framer Motion)
+- Partner logos in rounded containers with soft shadows, wide spacing
+- Partners: BNI, Mashariki Shuttles, Tourism Regulatory Authority, Eagles Management Consultants
+- Loop infinitely with smooth continuous scroll
 
-**Replace "Book Trip"** with **"Hire a Vehicle"** — fits the car hire business model.
+**Remove em dashes** from About page text. Rephrase sentences to use periods, commas, or semicolons instead.
 
-**New layout per country section**: Instead of carousels, each destination appears as a full-width row with:
-- **Left side (40%)**: Destination name, description text, and "Hire a Vehicle" CTA link
-- **Right side (60%)**: Large destination photo in a card format
-- Alternating layout: odd rows = text left / photo right, even rows = photo left / text right
-- Each destination animates in with Framer Motion `whileInView` (slide from left for text, slide from right for photo, meeting in the middle)
-- Country header remains (flag + country name) but without the count line
+## 3. Destinations Page (`src/pages/Destinations.tsx`)
 
-## 3. Fleet Page Hero Update (`src/pages/Fleet.tsx`)
+**Remove 3 destinations** from Kenya array:
+- Tsavo National Park
+- Nairobi National Park
+- Samburu National Reserve
 
-Replace the solid `bg-primary` hero with the uploaded background image (`bg-fleet-hero.jpg`). Add a dark gradient overlay. Within the hero, add an animated fleet showcase: auto-cycling through fleet vehicle images with crossfade transitions (similar to the homepage hero carousel pattern), showing each vehicle name as overlay text.
+Also remove their imports (`tsavoImg`, `nairobiImg`, `samburuImg`).
 
-## 4. Update Remaining Placeholder Destinations
+**Remove abbreviations**: Check if any KE, TZ, UG, RW abbreviations remain (from current code review they appear to already be removed, but will verify and clean up any remnants).
 
-Replace `ph` references:
-- Mount Kenya → `mt-kenya.avif`
-- Kisumu → `kisumu.jpg`
+## 4. Fleet Page (`src/pages/Fleet.tsx`)
 
-This eliminates all remaining placeholders on the Destinations page.
+**Replace hero background**: Change `bgFleetHero` import to use the new `Our_Fleet_background_photo.jpg` (wildlife safari photo with rhinos and zebras). Update the import path.
+
+**Add new vehicle photos**: Consider adding the uploaded coaster exterior photo as an updated Toyota Coaster image, and the interior shots where appropriate in the fleet grid.
+
+**Remove em dashes** from Fleet page text (capacity ranges like "1–6" use en dashes which are fine; replace "—" em dashes in descriptions).
+
+## 5. Blog Page (`src/pages/BlogsReviews.tsx`)
+
+**Replace AI-generated blog images** with the most appropriate real uploaded photos:
+- `blog-safari-destinations.jpg` → use `maasai-mara.jpg` (real Maasai Mara photo)
+- `blog-airport-tips.jpg` → use `fleet-sedan.jpg` (real Toyota Noah photo)
+- `blog-4x4-adventure.jpg` → use `fleet-landcruiser.jpg` (real Land Cruiser photo)
+- `blog-maasai-mara-season.jpg` → use `amboseli.jpg` (real Amboseli elephants photo)
+- `blog-long-distance.jpg` → use the new bus interior photo (`fleet-bus-interior.jpg`)
+
+## 6. Global Hyphen Cleanup
+
+Replace em dashes (—) with proper punctuation (periods, commas, semicolons, or "and") across all pages:
+- `About.tsx`
+- `Fleet.tsx`
+- `Index.tsx`
+- `Services.tsx`
+- `Destinations.tsx`
+- `Footer.tsx`
+- `BlogsReviews.tsx`
+- `Contact.tsx`
+- `RateCalculator.tsx`
 
 ---
 
 ## Files Modified
 
-1. **`src/pages/Destinations.tsx`** — Full redesign: background hero image, remove carousels, new split-layout per destination, remove counts, replace "Book Trip" with "Hire a Vehicle", add Kisumu + Mt Kenya images
-2. **`src/pages/Fleet.tsx`** — Hero section with background image + animated vehicle showcase carousel
-3. **`src/pages/Index.tsx`** — Update any "Book Trip" references to "Hire a Vehicle" if present
+1. **`src/pages/About.tsx`** — New hero (solid brand color), add "Why Track & Trace" section, add Partners carousel, remove hyphens
+2. **`src/pages/Destinations.tsx`** — Remove Tsavo, Nairobi NP, Samburu; remove any remaining abbreviations
+3. **`src/pages/Fleet.tsx`** — New hero background image, remove hyphens
+4. **`src/pages/BlogsReviews.tsx`** — Replace AI blog images with real fleet/destination photos
+5. **`src/pages/Index.tsx`** — Remove hyphens
+6. **`src/pages/Services.tsx`** — Remove hyphens
+7. **`src/pages/Contact.tsx`** — Remove hyphens
+8. **`src/components/Footer.tsx`** — Remove hyphens
+9. **`src/components/RateCalculator.tsx`** — Remove hyphens
 
 ## Technical Notes
 
-- The new destination layout uses CSS Grid (60/40 split) with `whileInView` animations for the meet-in-middle effect
-- Fleet hero uses `AnimatePresence` with crossfade for vehicle image cycling (reuses pattern from `HeroSection.tsx`)
-- Background images use `object-cover` with absolute positioning and gradient overlays
+- Partners carousel: CSS animation (`translateX` keyframes) for smooth infinite scroll, duplicating logos for seamless loop
+- Logo containers: `rounded-xl shadow-md bg-white p-6` with generous spacing for premium feel
+- "Why Track & Trace" reuses the same `whyUs` data and icon imports from `Index.tsx`
 
