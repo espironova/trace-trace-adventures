@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
-import { fleetHeroImageForModelKey } from "@/data/heroFleetImages";
-import { fleetUnits, fleetHeroSlides, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
+import { fleetUnits, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
 
 const Fleet = () => {
@@ -13,7 +12,7 @@ const Fleet = () => {
   const [heroIndex, setHeroIndex] = useState(0);
 
   const nextHero = useCallback(() => {
-    setHeroIndex((prev) => (prev + 1) % fleetHeroSlides.length);
+    setHeroIndex((prev) => (prev + 1) % fleetUnits.length);
   }, []);
 
   useEffect(() => {
@@ -66,24 +65,24 @@ const Fleet = () => {
                 className="absolute inset-0"
               >
                 <img
-                  src={fleetHeroImageForModelKey(fleetHeroSlides[heroIndex].modelKey, fleetHeroSlides[heroIndex].images[0])}
-                  alt={fleetHeroSlides[heroIndex].alt}
+                  src={fleetUnits[heroIndex].images[0]}
+                  alt={fleetUnits[heroIndex].alt}
                   className="w-full h-full object-cover rounded-sm"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
-                  <p className="font-serif text-xl text-white">{fleetHeroSlides[heroIndex].modelName}</p>
-                  <p className="font-sans text-sm text-white/80 mt-0.5">{fleetHeroSlides[heroIndex].registration}</p>
-                  <p className="font-sans text-sm text-accent">{fleetHeroSlides[heroIndex].capacity}</p>
+                  <p className="font-serif text-xl text-white">{fleetUnits[heroIndex].modelName}</p>
+                  <p className="font-sans text-sm text-white/80 mt-0.5">{fleetUnits[heroIndex].registration}</p>
+                  <p className="font-sans text-sm text-accent">{fleetUnits[heroIndex].capacity}</p>
                 </div>
               </motion.div>
             </AnimatePresence>
 
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-              {fleetHeroSlides.map((slide, i) => (
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-1.5 max-w-full px-2">
+              {fleetUnits.map((slide, i) => (
                 <button
                   key={slide.id}
                   onClick={() => setHeroIndex(i)}
-                  aria-label={`Show ${slide.modelName}`}
+                  aria-label={`Show ${slide.modelName} ${slide.registration}`}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     i === heroIndex ? "bg-heroGold scale-125" : "bg-white/40 hover:bg-white/60"
                   }`}
@@ -109,7 +108,7 @@ const Fleet = () => {
               >
                 <div className="aspect-[4/3] overflow-hidden relative">
                   <img
-                    src={fleetHeroImageForModelKey(v.modelKey, v.images[0])}
+                    src={v.images[0]}
                     alt={v.alt}
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"

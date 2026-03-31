@@ -230,18 +230,6 @@ export const fleetUnits: FleetUnit[] = [
   },
 ];
 
-/** One representative unit per model for the hero carousel (avoids 15 dots). Uses each model's first fleet row so registration and images stay aligned. */
-export const fleetHeroSlides: FleetUnit[] = (() => {
-  const seen = new Set<string>();
-  const out: FleetUnit[] = [];
-  for (const u of fleetUnits) {
-    if (seen.has(u.modelKey)) continue;
-    seen.add(u.modelKey);
-    out.push(u);
-  }
-  return out;
-})();
-
 export function fleetBookingLabel(unit: FleetUnit): string {
   return `${unit.modelName} — ${unit.registration}`;
 }
