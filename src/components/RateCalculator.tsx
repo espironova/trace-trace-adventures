@@ -106,7 +106,7 @@ const RateCalculator = () => {
 
               {needsKm && (
                 <div>
-                  <label className="block font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Distance (km) — minimum 120 km</label>
+                  <label className="block font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Distance (km), minimum 120 km</label>
                   <input type="number" min={120} value={km} onChange={(e) => { setKm(e.target.value); setResult(null); }} placeholder="e.g. 250" className="w-full bg-background border border-border px-4 py-3 font-sans text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-accent" />
                 </div>
               )}

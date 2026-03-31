@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react";
 import bgDestinations from "@/assets/bg-destinations.png";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import amboImg from "@/assets/amboseli.jpg";
-import nairobiImg from "@/assets/nairobi-park.jpg";
 import nakuruImg from "@/assets/lake-nakuru.jpg";
 import mombasaImg from "@/assets/mombasa.webp";
 import dianiImg from "@/assets/diani.jfif";
@@ -14,8 +13,6 @@ import malindiImg from "@/assets/malindi.webp";
 import elementaitaImg from "@/assets/lake-elementaita.jpg";
 import naivashaImg from "@/assets/lake-naivasha.jpg";
 import hellsGateImg from "@/assets/hells-gate.jpg";
-import tsavoImg from "@/assets/tsavo.jpg";
-import samburuImg from "@/assets/samburu.jpg";
 import aberdareImg from "@/assets/aberdare.jfif";
 import mtKenyaImg from "@/assets/mt-kenya.avif";
 import kisumuImg from "@/assets/kisumu.jpg";
@@ -55,13 +52,10 @@ const countries: Country[] = [
     name: "Kenya",
     flag: "🇰🇪",
     destinations: [
-      { name: "Maasai Mara National Reserve", description: "Home of the Great Wildebeest Migration and the Big Five — Kenya's most iconic safari destination.", image: maasaiImg },
+      { name: "Maasai Mara National Reserve", description: "Home of the Great Wildebeest Migration and the Big Five, Kenya's most iconic safari destination.", image: maasaiImg },
       { name: "Amboseli National Park", description: "Famous for its large elephant herds and breathtaking views of Mount Kilimanjaro.", image: amboImg },
       { name: "Lake Nakuru National Park", description: "A birdwatcher's paradise famous for flamingo colonies and rhino sightings.", image: nakuruImg },
-      { name: "Nairobi National Park", description: "The only national park in the world set against a city skyline — lions, giraffes, and more.", image: nairobiImg },
-      { name: "Tsavo National Park", description: "Kenya's largest park, known for red elephants, volcanic landscapes, and raw wilderness.", image: tsavoImg },
-      { name: "Samburu National Reserve", description: "Home to the Samburu Special Five — Grevy's zebra, reticulated giraffe, and gerenuk.", image: samburuImg },
-      { name: "Mombasa", description: "Kenya's coastal gem — white sandy beaches, historic Fort Jesus, and vibrant Swahili culture.", image: mombasaImg },
+      { name: "Mombasa", description: "Kenya's coastal gem with white sandy beaches, historic Fort Jesus, and vibrant Swahili culture.", image: mombasaImg },
       { name: "Diani Beach", description: "Award-winning tropical beach with crystal-clear waters, perfect for water sports and relaxation.", image: dianiImg },
       { name: "Watamu", description: "Marine national park with stunning coral reefs, sea turtles, and pristine beaches.", image: watamuImg },
       { name: "Malindi", description: "A blend of Swahili, Portuguese, and Italian heritage with beautiful marine parks.", image: malindiImg },
@@ -70,43 +64,43 @@ const countries: Country[] = [
       { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: hellsGateImg },
       { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: mtKenyaImg },
       { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
-      { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: kisumuImg },
+      { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria with vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: kisumuImg },
       { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: fourteenFallsImg },
       { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ngareNdareImg },
       { name: "Camp Dunda", description: "An adventurous bush camp experience in the heart of Kenya's wild terrain.", image: campDundaImg },
-      { name: "Nanyuki", description: "A charming highland town at the foot of Mount Kenya — gateway to Laikipia conservancies.", image: nanyukiImg },
+      { name: "Nanyuki", description: "A charming highland town at the foot of Mount Kenya and gateway to Laikipia conservancies.", image: nanyukiImg },
     ],
   },
   {
     name: "Tanzania",
     flag: "🇹🇿",
     destinations: [
-      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: kilimanjaroImg },
-      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: darImg },
-      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: zanzibarImg },
+      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain, a bucket-list climb.", image: kilimanjaroImg },
+      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis and gateway to Zanzibar and the southern safari circuit.", image: darImg },
+      { name: "Zanzibar", description: "The Spice Island with turquoise waters, white sand beaches, and historic Stone Town.", image: zanzibarImg },
       { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: lakeManyaraImg },
-      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: arushaImg },
+      { name: "Arusha", description: "The safari capital of East Africa and gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: arushaImg },
     ],
   },
   {
     name: "Uganda",
     flag: "🇺🇬",
     destinations: [
-      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: bwindiImg },
+      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas, a once-in-a-lifetime trekking experience.", image: bwindiImg },
       { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: murchisonImg },
       { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: rwenzoriImg },
-      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: kampalaImg },
-      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: jinjaImg },
+      { name: "Kampala", description: "Uganda's vibrant capital with bustling markets, nightlife, and the Kasubi Tombs.", image: kampalaImg },
+      { name: "Jinja", description: "The adventure capital of East Africa, source of the Nile, white-water rafting, and bungee jumping.", image: jinjaImg },
     ],
   },
   {
     name: "Rwanda",
     flag: "🇷🇼",
     destinations: [
-      { name: "Kigali", description: "Africa's cleanest city — the Genocide Memorial, vibrant arts scene, and excellent dining.", image: kigaliImg },
-      { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills — kayaking, beaches, and island hopping.", image: lakekivuImg },
+      { name: "Kigali", description: "Africa's cleanest city with the Genocide Memorial, vibrant arts scene, and excellent dining.", image: kigaliImg },
+      { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills for kayaking, beaches, and island hopping.", image: lakekivuImg },
       { name: "Nyungwe Forest National Park", description: "An ancient rainforest with chimpanzee trekking, canopy walks, and 300+ bird species.", image: nyungweImg },
-      { name: "Akagera National Park", description: "Rwanda's Big Five safari destination — lions, elephants, rhinos, and stunning lake scenery.", image: akageraImg },
+      { name: "Akagera National Park", description: "Rwanda's Big Five safari destination with lions, elephants, rhinos, and stunning lake scenery.", image: akageraImg },
     ],
   },
 ];
@@ -187,7 +181,7 @@ const Destinations = () => {
             Destinations
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-white/80 max-w-2xl mx-auto">
-            From the plains of the Maasai Mara to the gorilla forests of Bwindi — discover East Africa's most breathtaking destinations with the perfect vehicle.
+            From the plains of the Maasai Mara to the gorilla forests of Bwindi, discover East Africa's most breathtaking destinations with the perfect vehicle.
           </motion.p>
         </div>
       </section>

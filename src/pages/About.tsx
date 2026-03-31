@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
-import fleetInterior from "@/assets/fleet-interior.jpg";
 import { Shield, Users, Clock, Award, Star } from "lucide-react";
+import iconDrivers from "@/assets/icon-drivers.png";
+import iconFleet from "@/assets/icon-fleet.png";
+import icon24h from "@/assets/icon-24hours.png";
+import iconExpertise from "@/assets/icon-local-expertise.png";
+import partnerBni from "@/assets/partner-bni.png";
+import partnerTra from "@/assets/partner-tra.png";
+import partnerEagles from "@/assets/partner-eagles.jfif";
+import partnerMashariki from "@/assets/partner-mashariki.jpg";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -10,16 +17,28 @@ const fadeInUp = {
   transition: { duration: 0.7 },
 };
 
+const whyUs = [
+  { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely." },
+  { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers." },
+  { image: icon24h, title: "24/7 Availability", desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready." },
+  { image: iconExpertise, title: "Local Expertise", desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa." },
+];
+
+const partners = [
+  { name: "BNI", image: partnerBni },
+  { name: "Tourism Regulatory Authority", image: partnerTra },
+  { name: "Eagles Management Consultants", image: partnerEagles },
+  { name: "Mashariki Shuttles", image: partnerMashariki },
+];
+
 const About = () => {
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={fleetInterior} alt="Interior of Track and Trace Adventures tour bus showing comfortable seating" className="absolute inset-0 w-full h-full object-cover" width={1920} height={800} />
-        <div className="absolute inset-0 bg-black/50" />
+      {/* Hero with solid brand color */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-primary">
         <div className="relative z-10 text-center">
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-white/80 mb-3">About Us</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-white">Our Story</motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">About Us</motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-primary-foreground">Our Story</motion.h1>
         </div>
       </section>
 
@@ -35,10 +54,10 @@ const About = () => {
                   Track and Trace Adventures is a leading car hire service headquartered in Nairobi, Kenya, with over 20 years of experience serving clients across East Africa. We offer a diverse fleet of well-maintained vehicles, catering to various client needs, from individual travelers to large groups.
                 </p>
                 <p>
-                  Our dedicated team of professional drivers is trained to prioritize safety and customer satisfaction, ensuring that your travel experience with us is seamless and enjoyable. From executive sedans for airport transfers to rugged 4x4 Land Cruisers built for East Africa's wildest terrains — we have it all.
+                  Our dedicated team of professional drivers is trained to prioritize safety and customer satisfaction, ensuring that your travel experience with us is seamless and enjoyable. From executive sedans for airport transfers to rugged 4x4 Land Cruisers built for East Africa's wildest terrains, we have it all.
                 </p>
                 <p>
-                  Whether you need a JKIA airport pickup at 3 AM, a week-long safari through the Maasai Mara, conference transport for your corporate event, or a reliable van hire for your group — we deliver every time. We also offer personalized travel consultations to help you plan the perfect East African adventure.
+                  Whether you need a JKIA airport pickup at 3 AM, a week-long safari through the Maasai Mara, conference transport for your corporate event, or a reliable van hire for your group, we deliver every time. We also offer personalized travel consultations to help you plan the perfect East African adventure.
                 </p>
               </div>
             </motion.div>
@@ -50,7 +69,7 @@ const About = () => {
               transition={{ duration: 0.7 }}
               className="grid grid-cols-2 gap-4"
             >
-              {/* 20 Years Badge — prominent */}
+              {/* 20 Years Badge */}
               <div className="col-span-2 flex justify-center mb-2">
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -123,6 +142,67 @@ const About = () => {
                 <h3 className="font-serif text-xl mb-3 text-accent">{v.title}</h3>
                 <p className="font-sans text-sm text-foreground/80 leading-relaxed">{v.desc}</p>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Track & Trace */}
+      <section className="py-24 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Why Track & Trace</p>
+            <h2 className="font-serif text-3xl md:text-5xl mb-4">The Track & Trace Difference</h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {whyUs.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center relative">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-contain" loading="lazy" />
+                </div>
+                <h3 className="font-serif text-xl mb-3">{item.title}</h3>
+                <p className="font-sans text-sm opacity-80 leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Partners & Regulation */}
+      <section className="py-24 bg-background overflow-hidden">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Trusted Partnerships</p>
+            <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Partners & Regulation</h2>
+            <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
+              Working with trusted partners and operating under recognized authorities.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Auto-scrolling marquee carousel */}
+        <div className="relative">
+          <div className="flex animate-marquee">
+            {[...partners, ...partners].map((partner, i) => (
+              <div
+                key={`${partner.name}-${i}`}
+                className="flex-shrink-0 mx-8 bg-card rounded-xl shadow-md border border-border p-8 flex items-center justify-center min-w-[220px] h-[140px]"
+              >
+                <img
+                  src={partner.image}
+                  alt={partner.name}
+                  className="h-16 w-auto max-w-[160px] object-contain"
+                  loading="lazy"
+                />
+              </div>
             ))}
           </div>
         </div>

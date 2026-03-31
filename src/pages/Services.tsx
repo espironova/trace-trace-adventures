@@ -260,7 +260,7 @@ const Services = () => {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Our Services</motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
-            Comprehensive transport solutions across East Africa — from airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
+            Comprehensive transport solutions across East Africa. From airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
           </motion.p>
         </div>
       </section>

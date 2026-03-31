@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
-import blogSafari from "@/assets/blog-safari-destinations.jpg";
-import blogAirport from "@/assets/blog-airport-tips.jpg";
-import blog4x4 from "@/assets/blog-4x4-adventure.jpg";
-import blogMara from "@/assets/blog-maasai-mara-season.jpg";
-import blogLongDist from "@/assets/blog-long-distance.jpg";
+import maasaiImg from "@/assets/maasai-mara.jpg";
+import fleetSedan from "@/assets/fleet-sedan.jpg";
+import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
+import amboImg from "@/assets/amboseli.jpg";
+import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
 
 const blogs = [
   {
@@ -16,8 +16,8 @@ const blogs = [
     date: "March 15, 2026",
     category: "Destinations",
     readTime: "5 min read",
-    image: blogSafari,
-    alt: "Aerial view of Maasai Mara savanna with wildebeest herds migrating",
+    image: maasaiImg,
+    alt: "Wildebeest herds in the Maasai Mara savanna during the Great Migration",
   },
   {
     title: "Airport Transfer Tips for First-Time Visitors to Nairobi",
@@ -25,8 +25,8 @@ const blogs = [
     date: "March 8, 2026",
     category: "Travel Tips",
     readTime: "4 min read",
-    image: blogAirport,
-    alt: "Professional driver waiting at airport arrivals with name sign",
+    image: fleetSedan,
+    alt: "Toyota Noah sedan ready for airport transfer at JKIA Nairobi",
   },
   {
     title: "Why Hire a 4x4 for Your Kenya Adventure",
@@ -34,8 +34,8 @@ const blogs = [
     date: "February 28, 2026",
     category: "Car Hire",
     readTime: "6 min read",
-    image: blog4x4,
-    alt: "Toyota Land Cruiser driving on dusty safari road in Kenya",
+    image: fleetLandcruiser,
+    alt: "Toyota Land Cruiser on a dusty safari road in Kenya",
   },
   {
     title: "Best Time to Visit the Maasai Mara: A Seasonal Guide",
@@ -43,8 +43,8 @@ const blogs = [
     date: "February 15, 2026",
     category: "Safari Tours",
     readTime: "5 min read",
-    image: blogMara,
-    alt: "Wildebeest Great Migration river crossing in Maasai Mara",
+    image: amboImg,
+    alt: "Elephants with Mount Kilimanjaro in the background at Amboseli",
   },
   {
     title: "Nairobi to Mombasa: Your Long-Distance Travel Options",
@@ -52,18 +52,18 @@ const blogs = [
     date: "February 5, 2026",
     category: "Long Distance",
     readTime: "4 min read",
-    image: blogLongDist,
-    alt: "Tour bus driving through scenic Kenyan countryside highway",
+    image: fleetBusInterior,
+    alt: "Comfortable bus interior for long distance travel across Kenya",
   },
 ];
 
 const reviews = [
-  { name: "Sarah Mitchell", location: "London, UK", text: "Track & Trace picked us up from JKIA at midnight — the driver was already waiting with a name sign. Spotless vehicle, smooth ride to our hotel. Couldn't have asked for a better first impression of Kenya.", rating: 5, service: "Airport Transfer" },
-  { name: "James Kariuki", location: "Nairobi, Kenya", text: "Our 3-day Maasai Mara safari was absolutely life-changing. The Land Cruiser was in perfect condition, and our guide Joseph spotted animals we would have never seen on our own. Truly world-class.", rating: 5, service: "Safari Tour — Maasai Mara" },
-  { name: "Priya Deshmukh", location: "Mumbai, India", text: "Rented a safari van for a week-long family trip across Kenya. From Nairobi to Amboseli to Lake Nakuru — the vehicle handled everything beautifully. Great value for money.", rating: 5, service: "Car Hire — Safari Van" },
+  { name: "Sarah Mitchell", location: "London, UK", text: "Track & Trace picked us up from JKIA at midnight. The driver was already waiting with a name sign. Spotless vehicle, smooth ride to our hotel. Couldn't have asked for a better first impression of Kenya.", rating: 5, service: "Airport Transfer" },
+  { name: "James Kariuki", location: "Nairobi, Kenya", text: "Our 3-day Maasai Mara safari was absolutely life-changing. The Land Cruiser was in perfect condition, and our guide Joseph spotted animals we would have never seen on our own. Truly world-class.", rating: 5, service: "Safari Tour, Maasai Mara" },
+  { name: "Priya Deshmukh", location: "Mumbai, India", text: "Rented a safari van for a week-long family trip across Kenya. From Nairobi to Amboseli to Lake Nakuru, the vehicle handled everything beautifully. Great value for money.", rating: 5, service: "Car Hire, Safari Van" },
   { name: "Robert Ochieng", location: "Kisumu, Kenya", text: "Used Track & Trace for a Nairobi to Mombasa group transfer. The bus was comfortable, driver was professional, and we arrived right on schedule. My go-to for long-distance travel now.", rating: 5, service: "Long Distance Transfer" },
-  { name: "Emily Chen", location: "Singapore", text: "Booked an Amboseli safari with Track & Trace and it exceeded all expectations. Seeing elephants with Kilimanjaro in the background from our 4x4 roof hatch was a once-in-a-lifetime moment.", rating: 5, service: "Safari Tour — Amboseli" },
-  { name: "David Thompson", location: "Toronto, Canada", text: "I've used many car hire services across Africa, and Track & Trace stands out. The vehicles are genuinely well-maintained, the pricing is transparent, and the team is incredibly responsive on WhatsApp.", rating: 5, service: "Car Hire — Land Cruiser" },
+  { name: "Emily Chen", location: "Singapore", text: "Booked an Amboseli safari with Track & Trace and it exceeded all expectations. Seeing elephants with Kilimanjaro in the background from our 4x4 roof hatch was a once-in-a-lifetime moment.", rating: 5, service: "Safari Tour, Amboseli" },
+  { name: "David Thompson", location: "Toronto, Canada", text: "I've used many car hire services across Africa, and Track & Trace stands out. The vehicles are genuinely well-maintained, the pricing is transparent, and the team is incredibly responsive on WhatsApp.", rating: 5, service: "Car Hire, Land Cruiser" },
   { name: "Fatima Al-Rashid", location: "Dubai, UAE", text: "We hired a minibus for our corporate team building event. The driver was punctual, friendly, and knew exactly where to go. Excellent corporate transport option.", rating: 5, service: "Corporate Transport" },
   { name: "Michael Njoroge", location: "Nairobi, Kenya", text: "Track & Trace handled our wedding guest transport flawlessly. Three vehicles coordinated perfectly, all arrived on time, and our guests were thrilled.", rating: 5, service: "Event Transport" },
 ];
