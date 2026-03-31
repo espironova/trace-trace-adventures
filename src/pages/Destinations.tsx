@@ -76,11 +76,11 @@ const countries: Country[] = [
     name: "Uganda",
     flag: "🇺🇬",
     destinations: [
-      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: ph },
-      { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: ph },
-      { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: ph },
-      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: ph },
-      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: ph },
+      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: bwindiImg },
+      { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: murchisonImg },
+      { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: rwenzoriImg },
+      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: kampalaImg },
+      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: jinjaImg },
     ],
   },
   {
