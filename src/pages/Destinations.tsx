@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import bgDestinations from "@/assets/bg-destinations.png";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import amboImg from "@/assets/amboseli.jpg";
 import nairobiImg from "@/assets/nairobi-park.jpg";
@@ -17,6 +17,8 @@ import hellsGateImg from "@/assets/hells-gate.jpg";
 import tsavoImg from "@/assets/tsavo.jpg";
 import samburuImg from "@/assets/samburu.jpg";
 import aberdareImg from "@/assets/aberdare.jfif";
+import mtKenyaImg from "@/assets/mt-kenya.avif";
+import kisumuImg from "@/assets/kisumu.jpg";
 import bwindiImg from "@/assets/bwindi.jpg";
 import murchisonImg from "@/assets/murchison-falls.jpg";
 import rwenzoriImg from "@/assets/rwenzori.jpeg";
@@ -48,8 +50,6 @@ type Country = {
   destinations: Destination[];
 };
 
-const ph = "/placeholder.svg";
-
 const countries: Country[] = [
   {
     name: "Kenya",
@@ -68,9 +68,9 @@ const countries: Country[] = [
       { name: "Lake Elementaita", description: "A serene soda lake sanctuary for flamingos and pelicans, a UNESCO World Heritage site.", image: elementaitaImg },
       { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: naivashaImg },
       { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: hellsGateImg },
-      { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
+      { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: mtKenyaImg },
       { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
-      { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
+      { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: kisumuImg },
       { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: fourteenFallsImg },
       { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ngareNdareImg },
       { name: "Camp Dunda", description: "An adventurous bush camp experience in the heart of Kenya's wild terrain.", image: campDundaImg },
@@ -111,77 +111,88 @@ const countries: Country[] = [
   },
 ];
 
-const DestinationCarousel = ({ destinations: dests }: { destinations: Destination[] }) => {
-  const [index, setIndex] = useState(0);
-  const itemsPerView = typeof window !== "undefined" && window.innerWidth >= 1024 ? 4 : typeof window !== "undefined" && window.innerWidth >= 768 ? 3 : 1;
-  const maxIndex = Math.max(0, dests.length - itemsPerView);
-
-  const prev = () => setIndex((i) => Math.max(0, i - 1));
-  const next = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((i) => (i >= maxIndex ? 0 : i + 1));
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [maxIndex]);
+const DestinationRow = ({ dest, index }: { dest: Destination; index: number }) => {
+  const isEven = index % 2 === 0;
 
   return (
-    <div className="relative">
-      <div className="overflow-hidden">
-        <motion.div
-          className="flex gap-4"
-          animate={{ x: `-${index * (100 / itemsPerView + 1.2)}%` }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6 }}
+      className={`grid grid-cols-1 md:grid-cols-10 gap-6 md:gap-10 items-center ${
+        index > 0 ? "mt-16 md:mt-20" : ""
+      }`}
+    >
+      {/* Text Side */}
+      <motion.div
+        initial={{ x: isEven ? -80 : 80, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.7, delay: 0.1 }}
+        className={`md:col-span-4 flex flex-col justify-center ${
+          isEven ? "md:order-1" : "md:order-2"
+        }`}
+      >
+        <h3 className="font-serif text-2xl md:text-3xl text-foreground mb-3">{dest.name}</h3>
+        <p className="font-sans text-muted-foreground leading-relaxed mb-6">{dest.description}</p>
+        <Link
+          to="/contact"
+          className="inline-flex items-center gap-2 text-accent font-sans text-sm uppercase tracking-[0.2em] font-bold hover:gap-3 transition-all w-fit"
         >
-          {dests.map((dest) => (
-            <div key={dest.name} className="flex-shrink-0" style={{ width: `calc(${100 / itemsPerView}% - ${(itemsPerView - 1) * 16 / itemsPerView}px)` }}>
-              <div className="group relative overflow-hidden aspect-[3/4] bg-muted">
-                <img src={dest.image} alt={dest.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h3 className="font-serif text-lg text-white mb-1">{dest.name}</h3>
-                  <p className="font-sans text-xs text-white/70 leading-relaxed line-clamp-2">{dest.description}</p>
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center gap-1 mt-2 text-[#F4C430] text-xs font-sans uppercase tracking-wider font-bold"
-                  >
-                    Book Trip <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      </div>
+          Hire a Vehicle <ArrowRight className="w-4 h-4" />
+        </Link>
+      </motion.div>
 
-      {dests.length > itemsPerView && (
-        <>
-          <button onClick={prev} className="absolute -left-4 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-10 h-10 flex items-center justify-center shadow-lg hover:bg-accent transition-colors z-10" aria-label="Previous">
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button onClick={() => next()} className="absolute -right-4 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-10 h-10 flex items-center justify-center shadow-lg hover:bg-accent transition-colors z-10" aria-label="Next">
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </>
-      )}
-    </div>
+      {/* Image Side */}
+      <motion.div
+        initial={{ x: isEven ? 80 : -80, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        className={`md:col-span-6 ${isEven ? "md:order-2" : "md:order-1"}`}
+      >
+        <div className="overflow-hidden group">
+          <img
+            src={dest.image}
+            alt={dest.name}
+            className="w-full h-[300px] md:h-[420px] object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            width={800}
+            height={500}
+          />
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
 const Destinations = () => {
   return (
     <Layout>
-      <section className="bg-primary text-primary-foreground py-24 text-center">
-        <div className="container mx-auto px-4">
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Explore East Africa</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Destinations</motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
+      {/* Hero with background image */}
+      <section className="relative py-24 text-center overflow-hidden">
+        <img
+          src={bgDestinations}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 container mx-auto px-4">
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">
+            Explore East Africa
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-white mb-4">
+            Destinations
+          </motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-white/80 max-w-2xl mx-auto">
             From the plains of the Maasai Mara to the gorilla forests of Bwindi — discover East Africa's most breathtaking destinations with the perfect vehicle.
           </motion.p>
         </div>
       </section>
 
+      {/* Country sections with split layout */}
       {countries.map((country, ci) => (
         <section key={country.name} className={`py-20 ${ci % 2 === 0 ? "bg-background" : "bg-muted"}`}>
           <div className="container mx-auto px-4">
@@ -190,16 +201,17 @@ const Destinations = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="mb-10"
+              className="mb-12"
             >
               <h2 className="font-serif text-3xl md:text-4xl text-foreground">
                 <span className="mr-3 text-4xl">{country.flag}</span>
-                {country.name} Destinations
+                {country.name}
               </h2>
-              <p className="font-sans text-sm text-muted-foreground mt-2">{country.destinations.length} destinations</p>
             </motion.div>
 
-            <DestinationCarousel destinations={country.destinations} />
+            {country.destinations.map((dest, di) => (
+              <DestinationRow key={dest.name} dest={dest} index={di} />
+            ))}
           </div>
         </section>
       ))}
