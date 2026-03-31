@@ -1,17 +1,8 @@
 import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetNoahBoot from "@/assets/fleet-noah-boot.jpg";
-import fleetCoaster from "@/assets/fleet-coaster.jpg";
-import fleetCoasterIntBlue from "@/assets/fleet-coaster-int-blue.jpg";
-import fleetCoasterInt2 from "@/assets/fleet-coaster-int-2.jpg";
-import fleetVan from "@/assets/fleet-van.jpg";
-import fleetNv350Interior from "@/assets/fleet-nv350-interior.jpg";
-import fleetNv350Int2 from "@/assets/fleet-nv350-int-2.jpg";
 import fleetHiace from "@/assets/fleet-hiace.jpg";
 import fleetHiaceInterior from "@/assets/fleet-hiace-interior.jpg";
 import fleetFord from "@/assets/fleet-ford.jpg";
-import fleetBus from "@/assets/fleet-bus.jpg";
-import fleetMercedesInterior from "@/assets/fleet-mercedes-interior.jpg";
-import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
 import fleetGoldenInterior from "@/assets/fleet-golden-interior.jpg";
@@ -19,6 +10,36 @@ import fleetGoldenInt2 from "@/assets/fleet-golden-int-2.jpg";
 import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
 import fleetIsuzuRear from "@/assets/fleet-isuzu-rear.jpg";
 import fleetIsuzuInterior from "@/assets/fleet-isuzu-interior.jpg";
+
+import mercedesKcu249x1 from "@/assets/fleet-unit-kcu-249x-1.jpg";
+import mercedesKcu249x2 from "@/assets/fleet-unit-kcu-249x-2.jpg";
+import mercedesKcu249x3 from "@/assets/fleet-unit-kcu-249x-3.jpg";
+import mercedesKcu955s1 from "@/assets/fleet-unit-kcu-955s-1.jpg";
+import mercedesKcu955s2 from "@/assets/fleet-unit-kcu-955s-2.jpg";
+import mercedesKcu955s3 from "@/assets/fleet-unit-kcu-955s-3.jpg";
+import mercedesKdr982m1 from "@/assets/fleet-unit-kdr-982m-1.jpg";
+import mercedesKdr982m2 from "@/assets/fleet-unit-kdr-982m-2.jpg";
+import mercedesKdr982m3 from "@/assets/fleet-unit-kdr-982m-3.jpg";
+import mercedesKdn267x1 from "@/assets/fleet-unit-kdn-267x-1.jpg";
+import mercedesKdn267x2 from "@/assets/fleet-unit-kdn-267x-2.jpg";
+import mercedesKdn267x3 from "@/assets/fleet-unit-kdn-267x-3.jpg";
+
+import coasterKct963j1 from "@/assets/fleet-unit-kct-963j-1.jpg";
+import coasterKct963j2 from "@/assets/fleet-unit-kct-963j-2.jpg";
+import coasterKct963j3 from "@/assets/fleet-unit-kct-963j-3.jpg";
+import coasterKcw515z1 from "@/assets/fleet-unit-kcw-515z-1.jpg";
+import coasterKcw515z2 from "@/assets/fleet-unit-kcw-515z-2.jpg";
+import coasterKcw515z3 from "@/assets/fleet-unit-kcw-515z-3.jpg";
+import coasterKcb785t1 from "@/assets/fleet-unit-kcb-785t-1.jpg";
+import coasterKcb785t2 from "@/assets/fleet-unit-kcb-785t-2.jpg";
+import coasterKcb785t3 from "@/assets/fleet-unit-kcb-785t-3.jpg";
+
+import nissanKcn030m1 from "@/assets/fleet-unit-kcn-030m-1.jpg";
+import nissanKcn030m2 from "@/assets/fleet-unit-kcn-030m-2.jpg";
+import nissanKcn030m3 from "@/assets/fleet-unit-kcn-030m-3.jpg";
+import nissanKdl731t1 from "@/assets/fleet-unit-kdl-731t-1.jpg";
+import nissanKdl731t2 from "@/assets/fleet-unit-kdl-731t-2.jpg";
+import nissanKdl731t3 from "@/assets/fleet-unit-kdl-731t-3.jpg";
 
 export type FleetUnit = {
   id: string;
@@ -33,24 +54,21 @@ export type FleetUnit = {
   features: string[];
 };
 
-const mercedesImages = [fleetBus, fleetMercedesInterior, fleetBusInterior];
 const goldenImages = [fleetGoldenDragon, fleetGoldenInterior, fleetGoldenInt2];
 const fordImages = [fleetFord];
 const landCruiserImages = [fleetLandcruiser];
 const noahImages = [fleetSedan, fleetNoahBoot];
-const coasterImages = [fleetCoaster, fleetCoasterIntBlue, fleetCoasterInt2];
 const isuzuImages = [fleetIsuzu, fleetIsuzuRear, fleetIsuzuInterior];
 const hiaceImages = [fleetHiace, fleetHiaceInterior];
-const nissanImages = [fleetVan, fleetNv350Interior, fleetNv350Int2];
 
-/** One row per registered vehicle; same model reuses imagery. */
+/** One row per registered vehicle; each unit has its own image set (replace files under src/assets/fleet-unit-{id}-*.jpg to match that plate). */
 export const fleetUnits: FleetUnit[] = [
   {
     id: "kcu-249x",
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KCU 249X",
-    images: mercedesImages,
+    images: [mercedesKcu249x1, mercedesKcu249x2, mercedesKcu249x3],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -61,7 +79,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KCU 955S",
-    images: mercedesImages,
+    images: [mercedesKcu955s1, mercedesKcu955s2, mercedesKcu955s3],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -72,7 +90,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KDR 982M",
-    images: mercedesImages,
+    images: [mercedesKdr982m1, mercedesKdr982m2, mercedesKdr982m3],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -83,7 +101,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KDN 267X",
-    images: mercedesImages,
+    images: [mercedesKdn267x1, mercedesKdn267x2, mercedesKdn267x3],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -138,7 +156,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCT 963J",
-    images: coasterImages,
+    images: [coasterKct963j1, coasterKct963j2, coasterKct963j3],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -149,7 +167,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCW 515Z",
-    images: coasterImages,
+    images: [coasterKcw515z1, coasterKcw515z2, coasterKcw515z3],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -160,7 +178,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCB 785T",
-    images: coasterImages,
+    images: [coasterKcb785t1, coasterKcb785t2, coasterKcb785t3],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -193,7 +211,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "nissan-nv350",
     modelName: "Nissan NV350",
     registration: "KCN 030M",
-    images: nissanImages,
+    images: [nissanKcn030m1, nissanKcn030m2, nissanKcn030m3],
     alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
     capacity: "8–14 passengers",
     idealFor: "Group travel, hotel shuttles, family trips",
@@ -204,7 +222,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "nissan-nv350",
     modelName: "Nissan NV350",
     registration: "KDL 731T",
-    images: nissanImages,
+    images: [nissanKdl731t1, nissanKdl731t2, nissanKdl731t3],
     alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
     capacity: "8–14 passengers",
     idealFor: "Group travel, hotel shuttles, family trips",
@@ -212,7 +230,7 @@ export const fleetUnits: FleetUnit[] = [
   },
 ];
 
-/** One representative unit per model for the hero carousel (avoids 15 dots). */
+/** One representative unit per model for the hero carousel (avoids 15 dots). Uses each model's first fleet row so registration and images stay aligned. */
 export const fleetHeroSlides: FleetUnit[] = (() => {
   const seen = new Set<string>();
   const out: FleetUnit[] = [];
