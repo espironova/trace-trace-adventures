@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Phone, MapPin, Calendar, Car, UserCheck } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 interface BookingModalProps {
   open: boolean;
@@ -203,8 +204,9 @@ const BookingModal = ({ open, onClose }: BookingModalProps) => {
 
               <button
                 type="submit"
-                className="w-full bg-accent text-accent-foreground py-4 font-sans text-sm uppercase tracking-[0.2em] font-bold hover:bg-accent/90 transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 bg-accent text-accent-foreground py-4 font-sans text-sm uppercase tracking-[0.2em] font-bold hover:bg-accent/90 transition-colors"
               >
+                <WhatsAppIcon className="w-5 h-5 shrink-0" />
                 Send Booking via WhatsApp
               </button>
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
@@ -67,10 +68,10 @@ const services = [
 ];
 
 const destinations = [
-  { name: "Maasai Mara", country: "Kenya 🇰🇪", image: maasaiImg, desc: "Home of the Great Migration", alt: "Wildebeest migration in Maasai Mara golden grasslands Kenya" },
-  { name: "Arusha", country: "Tanzania 🇹🇿", image: arushaImg, desc: "Gateway to Serengeti & Kilimanjaro", alt: "Arusha Tanzania gateway to safari" },
-  { name: "Kampala", country: "Uganda 🇺🇬", image: kampalaImg, desc: "Pearl of Africa's vibrant capital", alt: "Kampala Uganda city view" },
-  { name: "Kigali", country: "Rwanda 🇷🇼", image: kigaliImg, desc: "The Land of a Thousand Hills", alt: "Kigali Rwanda green hills cityscape" },
+  { name: "Maasai Mara", country: "Kenya", image: maasaiImg, desc: "Home of the Great Migration", alt: "Wildebeest migration in Maasai Mara golden grasslands Kenya" },
+  { name: "Arusha", country: "Tanzania", image: arushaImg, desc: "Gateway to Serengeti & Kilimanjaro", alt: "Arusha Tanzania gateway to safari" },
+  { name: "Kampala", country: "Uganda", image: kampalaImg, desc: "Pearl of Africa's vibrant capital", alt: "Kampala Uganda city view" },
+  { name: "Kigali", country: "Rwanda", image: kigaliImg, desc: "The Land of a Thousand Hills", alt: "Kigali Rwanda green hills cityscape" },
 ];
 
 const testimonials = [
@@ -319,8 +320,9 @@ const Index = () => {
                 href="https://wa.me/254721521009"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary-foreground/40 px-10 py-4 font-sans text-sm uppercase tracking-[0.2em] hover:bg-primary-foreground/10 transition-colors"
+                className="inline-flex items-center justify-center gap-2 border border-primary-foreground/40 px-10 py-4 font-sans text-sm uppercase tracking-[0.2em] hover:bg-primary-foreground/10 transition-colors"
               >
+                <WhatsAppIcon className="w-5 h-5 shrink-0" />
                 WhatsApp Us
               </a>
             </div>

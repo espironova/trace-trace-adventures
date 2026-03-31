@@ -4,6 +4,8 @@ import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
+import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
+import fleetInterior from "@/assets/fleet-interior.jpg";
 import BookingModal from "@/components/BookingModal";
 
 const slides = [
@@ -30,6 +32,18 @@ const slides = [
     alt: "Mercedes tour bus for long-distance transport across East Africa",
     label: "Long-Distance Transport",
     subtitle: "Comfortable intercity and cross-border travel in style",
+  },
+  {
+    image: fleetCoasterExt,
+    alt: "Toyota Coaster for conference and corporate event transport",
+    label: "Conference & Corporate Transport",
+    subtitle: "Professional transport for conferences, corporate events, and business travel",
+  },
+  {
+    image: fleetInterior,
+    alt: "Comfortable bus interior for school and group transport",
+    label: "Schools & Group Transport",
+    subtitle: "Reliable school trips, sports events, and group excursions across East Africa",
   },
 ];
 

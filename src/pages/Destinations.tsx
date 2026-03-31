@@ -43,14 +43,12 @@ type Destination = {
 
 type Country = {
   name: string;
-  flag: string;
   destinations: Destination[];
 };
 
 const countries: Country[] = [
   {
     name: "Kenya",
-    flag: "🇰🇪",
     destinations: [
       { name: "Maasai Mara National Reserve", description: "Home of the Great Wildebeest Migration and the Big Five, Kenya's most iconic safari destination.", image: maasaiImg },
       { name: "Amboseli National Park", description: "Famous for its large elephant herds and breathtaking views of Mount Kilimanjaro.", image: amboImg },
@@ -73,7 +71,6 @@ const countries: Country[] = [
   },
   {
     name: "Tanzania",
-    flag: "🇹🇿",
     destinations: [
       { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain, a bucket-list climb.", image: kilimanjaroImg },
       { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis and gateway to Zanzibar and the southern safari circuit.", image: darImg },
@@ -84,7 +81,6 @@ const countries: Country[] = [
   },
   {
     name: "Uganda",
-    flag: "🇺🇬",
     destinations: [
       { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas, a once-in-a-lifetime trekking experience.", image: bwindiImg },
       { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: murchisonImg },
@@ -95,7 +91,6 @@ const countries: Country[] = [
   },
   {
     name: "Rwanda",
-    flag: "🇷🇼",
     destinations: [
       { name: "Kigali", description: "Africa's cleanest city with the Genocide Memorial, vibrant arts scene, and excellent dining.", image: kigaliImg },
       { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills for kayaking, beaches, and island hopping.", image: lakekivuImg },
@@ -197,10 +192,7 @@ const Destinations = () => {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <h2 className="font-serif text-3xl md:text-4xl text-foreground">
-                <span className="mr-3 text-4xl">{country.flag}</span>
-                {country.name}
-              </h2>
+              <h2 className="font-serif text-3xl md:text-4xl text-foreground">{country.name}</h2>
             </motion.div>
 
             {country.destinations.map((dest, di) => (

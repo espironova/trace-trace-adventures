@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone, Mail, Menu, X } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
 
@@ -37,9 +38,10 @@ const Header = () => {
             href="https://wa.me/254721521009"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-accent transition-colors"
+            className="inline-flex items-center gap-1.5 hover:opacity-90 transition-opacity"
           >
-            WhatsApp Us
+            <WhatsAppIcon className="w-3.5 h-3.5" />
+            <span className="text-primary-foreground">WhatsApp Us</span>
           </a>
         </div>
       </div>

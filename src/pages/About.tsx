@@ -34,11 +34,16 @@ const partners = [
 const About = () => {
   return (
     <Layout>
-      {/* Hero with solid brand color */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-primary">
-        <div className="relative z-10 text-center">
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/85 to-muted" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(244,196,48,0.22),transparent_55%)]" />
+        <div className="absolute -top-24 left-[15%] h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute bottom-0 right-[10%] h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="relative z-10 text-center px-4">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">About Us</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-primary-foreground">Our Story</motion.h1>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-primary-foreground drop-shadow-sm">
+            Our Story
+          </motion.h1>
         </div>
       </section>
 
@@ -194,14 +199,15 @@ const About = () => {
             {[...partners, ...partners].map((partner, i) => (
               <div
                 key={`${partner.name}-${i}`}
-                className="flex-shrink-0 mx-8 bg-card rounded-xl shadow-md border border-border p-8 flex items-center justify-center min-w-[220px] h-[140px]"
+                className="flex-shrink-0 mx-8 bg-card rounded-xl shadow-md border border-border p-8 flex flex-col items-center justify-center gap-3 min-w-[220px] min-h-[160px]"
               >
                 <img
                   src={partner.image}
                   alt={partner.name}
-                  className="h-16 w-auto max-w-[160px] object-contain"
+                  className="h-14 w-auto max-w-[160px] object-contain"
                   loading="lazy"
                 />
+                <p className="font-sans text-sm text-center text-foreground/90 font-medium leading-snug max-w-[200px]">{partner.name}</p>
               </div>
             ))}
           </div>

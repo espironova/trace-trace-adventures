@@ -83,9 +83,22 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans opacity-60">
-          <p>&copy; {new Date().getFullYear()} Track & Trace Adventures. All rights reserved.</p>
-          <p>Nairobi, Kenya · Serving All of East Africa · Available 24/7</p>
+        <div className="border-t border-primary-foreground/20 mt-12 pt-8 flex flex-col gap-4 text-xs font-sans opacity-60">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>&copy; {new Date().getFullYear()} Track & Trace Adventures. All rights reserved.</p>
+            <p>Nairobi, Kenya · Serving All of East Africa · Available 24/7</p>
+          </div>
+          <p className="text-center md:text-left">
+            Powered by{" "}
+            <a
+              href="https://www.espiranova.co.ke/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline font-medium opacity-90"
+            >
+              Espiranova
+            </a>
+          </p>
         </div>
       </div>
     </footer>

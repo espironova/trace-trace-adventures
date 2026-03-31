@@ -1,8 +1,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
+import RateCalculator from "@/components/RateCalculator";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const CONTACT_EMAIL = "info@tracktraceadventures.co.ke";
+
+const serviceLabels: Record<string, string> = {
+  "airport-transfer": "Airport Transfer",
+  "safari-tour": "Safari Tour",
+  "car-hire": "Car Hire / Van Hire",
+  "long-distance": "Long Distance Transfer",
+  "travel-consultation": "Travel Consultation",
+  "corporate": "Corporate Transport",
+  "leave-review": "Leave a review",
+  other: "Other",
+};
 
 const Contact = () => {
   const { toast } = useToast();
@@ -16,11 +30,16 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const serviceLabel = form.service ? serviceLabels[form.service] ?? form.service : "General inquiry";
+    const subject = encodeURIComponent(`Track & Trace — ${serviceLabel} — ${form.name}`);
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone || "(not provided)"}\nService: ${serviceLabel}\n\nMessage:\n${form.message}\n`
+    );
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
     toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting Track & Trace Adventures. We'll get back to you within 24 hours.",
+      title: "Opening your email",
+      description: "Complete and send the message in your email app to reach us.",
     });
-    setForm({ name: "", email: "", phone: "", service: "", message: "" });
   };
 
   return (
@@ -95,6 +114,7 @@ const Contact = () => {
                     <option value="long-distance">Long Distance Transfer</option>
                     <option value="travel-consultation">Travel Consultation</option>
                     <option value="corporate">Corporate Transport</option>
+                    <option value="leave-review">Leave a review</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
@@ -126,7 +146,7 @@ const Contact = () => {
             >
               <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">Contact Information</h2>
 
-              <div className="space-y-6 mb-10">
+              <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-5 h-5 text-accent mt-1 shrink-0" />
                   <div>
@@ -147,25 +167,27 @@ const Contact = () => {
                   <Mail className="w-5 h-5 text-accent mt-1 shrink-0" />
                   <div>
                     <p className="font-sans font-bold text-sm text-foreground">Email</p>
-                    <a href="mailto:info@tracktraceadventures.co.ke" className="font-sans text-sm text-accent hover:underline">info@tracktraceadventures.co.ke</a>
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-sans text-sm text-accent hover:underline">{CONTACT_EMAIL}</a>
                   </div>
                 </div>
               </div>
-
-              <div className="aspect-[4/3] w-full">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.978!2d36.8463!3d-1.2082!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTInMzAuMCJTIDM2wrA1MCc0Ni43IkU!5e0!3m2!1sen!2ske!4v1000000000000!5m2!1sen!2ske"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Track & Trace Adventures office location on Google Maps - Milestone Business Center, Northern Bypass Road, Nairobi, Kenya"
-                />
-              </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      <RateCalculator />
+
+      <section className="w-full bg-muted border-t border-border" aria-label="Office location map">
+        <div className="relative w-full h-[min(56vh,560px)] min-h-[320px]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.978!2d36.8463!3d-1.2082!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTInMzAuMCJTIDM2wrA1MCc0Ni43IkU!5e0!3m2!1sen!2ske!4v1000000000000!5m2!1sen!2ske"
+            className="absolute inset-0 h-full w-full border-0"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Track & Trace Adventures office location on Google Maps - Milestone Business Center, Northern Bypass Road, Nairobi, Kenya"
+          />
         </div>
       </section>
     </Layout>
