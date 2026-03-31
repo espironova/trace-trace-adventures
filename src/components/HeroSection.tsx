@@ -9,25 +9,25 @@ import BookingModal from "@/components/BookingModal";
 const slides = [
   {
     image: fleetSedan,
-    alt: "Toyota Noah sedan for airport transfers in Nairobi Kenya",
+    alt: "Toyota Noah sedan for airport transfers in Nairobi",
     label: "Airport Transfers",
     subtitle: "Seamless JKIA & Wilson Airport pickups with professional drivers",
   },
   {
     image: fleetVan,
-    alt: "Nissan NV350 van available for car hire in Nairobi Kenya",
+    alt: "Nissan NV350 van available for hire across East Africa",
     label: "Car Hire",
     subtitle: "Self-drive and chauffeur-driven vehicles for every occasion",
   },
   {
     image: fleetLandcruiser,
-    alt: "Toyota Land Cruiser for safari tours across Kenya",
+    alt: "Toyota Land Cruiser for safari tours across East Africa",
     label: "Safari Tours",
-    subtitle: "Guided adventures to Maasai Mara, Amboseli, and beyond",
+    subtitle: "Guided adventures to Maasai Mara, Serengeti, Bwindi, and beyond",
   },
   {
     image: fleetBus,
-    alt: "Mercedes tour bus for long-distance transport across Kenya",
+    alt: "Mercedes tour bus for long-distance transport across East Africa",
     label: "Long-Distance Transport",
     subtitle: "Comfortable intercity and cross-border travel in style",
   },
@@ -49,7 +49,6 @@ const HeroSection = () => {
   return (
     <>
       <section className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
-        {/* Background images with crossfade */}
         <AnimatePresence mode="popLayout">
           <motion.img
             key={current}
@@ -65,7 +64,6 @@ const HeroSection = () => {
           />
         </AnimatePresence>
 
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
 
         <div className="relative z-10 container mx-auto px-4 text-center">
@@ -84,10 +82,9 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl mx-auto mb-6"
           >
-            Your Gateway to Kenya's <span className="italic text-[#F4C430]">Greatest Adventures</span>
+            Your Gateway to East Africa's <span className="italic text-[#F4C430]">Greatest Adventures</span>
           </motion.h1>
 
-          {/* Animated service label */}
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
@@ -127,7 +124,6 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Dot indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
           {slides.map((_, i) => (
             <button

@@ -6,17 +6,15 @@ const Footer = () => {
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Company Info */}
           <div>
             <h3 className="font-serif text-2xl mb-4">
               Track & Trace <span className="text-accent italic">Adventures</span>
             </h3>
             <p className="text-sm leading-relaxed opacity-80 font-sans">
-              Car Hire Company for Destination Lovers. Over 10 years of experience providing exceptional transportation solutions across Kenya — airport transfers, safari tours, car hire, and long-distance transport.
+              Car Hire Company for Destination Lovers. Over 20 years of experience providing exceptional transportation solutions across East Africa — airport transfers, safari tours, car hire, and long-distance transport.
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h4 className="font-serif text-lg mb-4 text-accent">Quick Links</h4>
             <ul className="space-y-2 font-sans text-sm">
@@ -38,7 +36,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Services */}
           <div>
             <h4 className="font-serif text-lg mb-4 text-accent">Our Services</h4>
             <ul className="space-y-2 font-sans text-sm">
@@ -46,12 +43,13 @@ const Footer = () => {
               <li className="opacity-80">Safari Tours & Packages</li>
               <li className="opacity-80">Car Hire & Van Hire</li>
               <li className="opacity-80">Long Distance Transfers</li>
+              <li className="opacity-80">Hotel-to-Hotel Transfers</li>
+              <li className="opacity-80">Conference & Corporate Transport</li>
+              <li className="opacity-80">International Schools Transport</li>
               <li className="opacity-80">Travel Consultations</li>
-              <li className="opacity-80">Corporate Transport</li>
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
             <h4 className="font-serif text-lg mb-4 text-accent">Contact Us</h4>
             <ul className="space-y-3 font-sans text-sm">
@@ -87,7 +85,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans opacity-60">
           <p>&copy; {new Date().getFullYear()} Track & Trace Adventures. All rights reserved.</p>
-          <p>Nairobi, Kenya — Available 24/7</p>
+          <p>Nairobi, Kenya — Serving All of East Africa — Available 24/7</p>
         </div>
       </div>
     </footer>

@@ -6,9 +6,9 @@ import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
 import fleetBus from "@/assets/fleet-bus.jpg";
+import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
+import fleetInterior from "@/assets/fleet-interior.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
-import amboImg from "@/assets/amboseli.jpg";
-import nairobiImg from "@/assets/nairobi-park.jpg";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
@@ -16,6 +16,7 @@ import iconExpertise from "@/assets/icon-local-expertise.png";
 import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import BookingModal from "@/components/BookingModal";
+import RateCalculator from "@/components/RateCalculator";
 
 const services = [
   {
@@ -27,36 +28,51 @@ const services = [
   },
   {
     title: "Safari Tours",
-    desc: "Guided safari adventures to Kenya's iconic national parks — Maasai Mara, Amboseli, Lake Nakuru and beyond.",
+    desc: "Guided safari adventures to East Africa's iconic national parks — Maasai Mara, Serengeti, Bwindi, and beyond.",
     image: fleetLandcruiser,
     link: "/services",
-    alt: "Toyota Land Cruiser safari vehicle for guided tours across Kenya",
+    alt: "Toyota Land Cruiser safari vehicle for guided tours across East Africa",
   },
   {
     title: "Car Hire & Van Hire",
     desc: "Self-drive and chauffeur-driven vehicles for every need — from sedans to 4x4 Land Cruisers and tour vans.",
     image: fleetVan,
     link: "/services",
-    alt: "Nissan NV350 van available for hire in Nairobi Kenya",
+    alt: "Nissan NV350 van available for hire across East Africa",
   },
   {
     title: "Long Distance Transfers",
-    desc: "Comfortable intercity and cross-border transport across Kenya. Travel in style to any destination.",
+    desc: "Comfortable intercity and cross-border transport across East Africa. Travel in style to any destination.",
     image: fleetBus,
     link: "/services",
-    alt: "Mercedes tour bus for long distance transfers through Kenya",
+    alt: "Mercedes tour bus for long distance transfers across East Africa",
+  },
+  {
+    title: "Conference & Corporate Transport",
+    desc: "Professional transport for conferences, corporate cocktails, and business events. Punctual, elegant fleet at your service.",
+    image: fleetCoasterExt,
+    link: "/services",
+    alt: "Toyota Coaster for conference and corporate event transport",
+  },
+  {
+    title: "Schools & Group Transport",
+    desc: "Reliable transport for international schools — sports events, education trips, co-curricular activities, and field excursions.",
+    image: fleetInterior,
+    link: "/services",
+    alt: "Comfortable bus interior for school and group transport",
   },
 ];
 
 const destinations = [
-  { name: "Maasai Mara", image: maasaiImg, desc: "Home of the Great Migration", alt: "Wildebeest migration in Maasai Mara golden grasslands Kenya" },
-  { name: "Amboseli", image: amboImg, desc: "The Land of Giants", alt: "Elephants walking with Mount Kilimanjaro in background at Amboseli National Park Kenya" },
-  { name: "Nairobi National Park", image: nairobiImg, desc: "Wildlife meets the city", alt: "Giraffes and zebras with Nairobi city skyline in background at Nairobi National Park" },
+  { name: "Maasai Mara", country: "Kenya 🇰🇪", image: maasaiImg, desc: "Home of the Great Migration", alt: "Wildebeest migration in Maasai Mara golden grasslands Kenya" },
+  { name: "Arusha", country: "Tanzania 🇹🇿", image: "/placeholder.svg", desc: "Gateway to Serengeti & Kilimanjaro", alt: "Arusha Tanzania gateway to safari" },
+  { name: "Kampala", country: "Uganda 🇺🇬", image: "/placeholder.svg", desc: "Pearl of Africa's vibrant capital", alt: "Kampala Uganda city view" },
+  { name: "Kigali", country: "Rwanda 🇷🇼", image: "/placeholder.svg", desc: "The Land of a Thousand Hills", alt: "Kigali Rwanda green hills cityscape" },
 ];
 
 const testimonials = [
   { name: "Sarah M.", text: "Incredible airport pickup service! Driver was on time, vehicle was spotless, and the ride to the city was smooth. Highly recommend Track & Trace for JKIA transfers.", rating: 5, service: "Airport Transfer" },
-  { name: "James K.", text: "Our 3-day Maasai Mara safari was unforgettable. The Land Cruiser was well-equipped, and our guide knew every trail. Best safari experience in Kenya!", rating: 5, service: "Safari Tour" },
+  { name: "James K.", text: "Our 3-day Maasai Mara safari was unforgettable. The Land Cruiser was well-equipped, and our guide knew every trail. Best safari experience in East Africa!", rating: 5, service: "Safari Tour" },
   { name: "Priya D.", text: "Rented a safari van for a family trip to Amboseli. The vehicle was in excellent condition and the pricing was very fair. Will definitely use again.", rating: 5, service: "Car Hire" },
   { name: "Robert O.", text: "Used Track & Trace for a Nairobi to Mombasa transfer. Comfortable bus, professional driver, and arrived right on schedule. Outstanding service.", rating: 5, service: "Long Distance" },
   { name: "Emily C.", text: "Booked an Amboseli safari with Track & Trace and it exceeded all expectations. Seeing elephants with Kilimanjaro in the background was a once-in-a-lifetime moment.", rating: 5, service: "Safari Tour" },
@@ -64,10 +80,10 @@ const testimonials = [
 ];
 
 const whyUs = [
-  { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating Kenya's roads and national parks safely." },
+  { image: iconDrivers, title: "Experienced Drivers", desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely." },
   { image: iconFleet, title: "Well-Maintained Fleet", desc: "Every vehicle is regularly serviced and inspected — from comfortable sedans to rugged 4x4 Land Cruisers." },
   { image: icon24h, title: "24/7 Availability", desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready." },
-  { image: iconExpertise, title: "Local Expertise", desc: "Over 10 years of experience. Our team knows every route, hidden gem, and the best safari experiences in Kenya." },
+  { image: iconExpertise, title: "Local Expertise", desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa." },
 ];
 
 const fadeInUp = {
@@ -90,7 +106,6 @@ const Index = () => {
     return () => clearInterval(timer);
   }, [nextTestimonial]);
 
-  // Show 3 testimonials at a time on desktop
   const getVisibleTestimonials = () => {
     const visible = [];
     for (let i = 0; i < 3; i++) {
@@ -110,11 +125,11 @@ const Index = () => {
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</p>
             <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Our Services</h2>
             <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
-              From airport pickups to unforgettable safaris — we provide comprehensive transport solutions across Kenya with professional drivers and a well-maintained fleet.
+              From airport pickups to unforgettable safaris — we provide comprehensive transport solutions across East Africa with professional drivers and a well-maintained fleet.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, i) => (
               <motion.div
                 key={service.title}
@@ -133,7 +148,7 @@ const Index = () => {
                     height={600}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="font-serif text-xl md:text-2xl text-white mb-2">{service.title}</h3>
                     <p className="font-sans text-sm text-white/70 leading-relaxed max-w-md">{service.desc}</p>
                     <span className="inline-flex items-center gap-2 mt-3 text-[#F4C430] text-sm font-sans uppercase tracking-wider font-bold group-hover:gap-3 transition-all">
@@ -180,14 +195,14 @@ const Index = () => {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp} className="text-center mb-16">
-            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Explore Kenya</p>
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Explore East Africa</p>
             <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Popular Destinations</h2>
             <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
-              Discover Kenya's most breathtaking national parks and reserves. We'll get you there in comfort and style.
+              Discover East Africa's most breathtaking national parks, cities, and reserves. We'll get you there in comfort and style.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {destinations.map((dest, i) => (
               <motion.div
                 key={dest.name}
@@ -207,8 +222,9 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-[#F4C430] mb-1">{dest.desc}</p>
+                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-[#F4C430] mb-1">{dest.country}</p>
                     <h3 className="font-serif text-2xl text-white">{dest.name}</h3>
+                    <p className="font-sans text-xs text-white/70 mt-1">{dest.desc}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -226,8 +242,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Rate Calculator */}
+      <RateCalculator />
+
       {/* Testimonials Carousel */}
-      <section className="py-24 bg-muted overflow-hidden">
+      <section className="py-24 bg-background overflow-hidden">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp} className="text-center mb-16">
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Client Experiences</p>
@@ -262,7 +281,6 @@ const Index = () => {
               ))}
             </motion.div>
 
-            {/* Carousel dots */}
             <div className="flex justify-center gap-2 mt-8">
               {testimonials.map((_, i) => (
                 <button
@@ -283,9 +301,9 @@ const Index = () => {
       <section className="py-24 bg-primary text-primary-foreground text-center">
         <div className="container mx-auto px-4">
           <motion.div {...fadeInUp}>
-            <h2 className="font-serif text-3xl md:text-5xl mb-4">Ready to Explore Kenya?</h2>
+            <h2 className="font-serif text-3xl md:text-5xl mb-4">Ready to Explore East Africa?</h2>
             <p className="font-sans text-lg opacity-80 max-w-xl mx-auto mb-8">
-              Whether it's an airport pickup, a weekend safari, or a cross-country journey — we're ready to take you there.
+              Whether it's an airport pickup, a weekend safari, or a cross-border journey — we're ready to take you there.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
