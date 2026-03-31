@@ -168,7 +168,7 @@ const serviceData = [
     subtitle: "Evening Event Pickups (6PM–11PM)",
     images: [fleetSedan, fleetNoahBoot],
     alt: "Sedan for evening dinner event transport in Nairobi",
-    description: "Enjoy a worry-free evening out with our dedicated dinner transport service. We provide reliable pickups and drop-offs for dinner events, restaurant outings, and evening social gatherings across Nairobi — so you can enjoy the night without worrying about the drive home.",
+    description: "Enjoy a worry-free evening out with our dedicated dinner transport service. We provide reliable pickups and drop-offs for dinner events, restaurant outings, and evening social gatherings across Nairobi so you can enjoy the night without worrying about the drive home.",
     features: [
       "Evening service window: 6 PM to 11 PM",
       "Pick up from home, hotel, or office to your dinner venue",
