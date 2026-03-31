@@ -7,6 +7,13 @@ import maasaiImg from "@/assets/maasai-mara.jpg";
 import amboImg from "@/assets/amboseli.jpg";
 import nairobiImg from "@/assets/nairobi-park.jpg";
 import nakuruImg from "@/assets/lake-nakuru.jpg";
+import mombasaImg from "@/assets/mombasa.webp";
+import dianiImg from "@/assets/diani.jfif";
+import watamuImg from "@/assets/watamu.jfif";
+import malindiImg from "@/assets/malindi.webp";
+import elementaitaImg from "@/assets/lake-elementaita.jpg";
+import naivashaImg from "@/assets/lake-naivasha.jpg";
+import hellsGateImg from "@/assets/hells-gate.jpg";
 import tsavoImg from "@/assets/tsavo.jpg";
 import samburuImg from "@/assets/samburu.jpg";
 import aberdareImg from "@/assets/aberdare.jfif";
@@ -54,13 +61,13 @@ const countries: Country[] = [
       { name: "Nairobi National Park", description: "The only national park in the world set against a city skyline — lions, giraffes, and more.", image: nairobiImg },
       { name: "Tsavo National Park", description: "Kenya's largest park, known for red elephants, volcanic landscapes, and raw wilderness.", image: tsavoImg },
       { name: "Samburu National Reserve", description: "Home to the Samburu Special Five — Grevy's zebra, reticulated giraffe, and gerenuk.", image: samburuImg },
-      { name: "Mombasa", description: "Kenya's coastal gem — white sandy beaches, historic Fort Jesus, and vibrant Swahili culture.", image: ph },
-      { name: "Diani Beach", description: "Award-winning tropical beach with crystal-clear waters, perfect for water sports and relaxation.", image: ph },
-      { name: "Watamu", description: "Marine national park with stunning coral reefs, sea turtles, and pristine beaches.", image: ph },
-      { name: "Malindi", description: "A blend of Swahili, Portuguese, and Italian heritage with beautiful marine parks.", image: ph },
-      { name: "Lake Elementaita", description: "A serene soda lake sanctuary for flamingos and pelicans, a UNESCO World Heritage site.", image: ph },
-      { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: ph },
-      { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: ph },
+      { name: "Mombasa", description: "Kenya's coastal gem — white sandy beaches, historic Fort Jesus, and vibrant Swahili culture.", image: mombasaImg },
+      { name: "Diani Beach", description: "Award-winning tropical beach with crystal-clear waters, perfect for water sports and relaxation.", image: dianiImg },
+      { name: "Watamu", description: "Marine national park with stunning coral reefs, sea turtles, and pristine beaches.", image: watamuImg },
+      { name: "Malindi", description: "A blend of Swahili, Portuguese, and Italian heritage with beautiful marine parks.", image: malindiImg },
+      { name: "Lake Elementaita", description: "A serene soda lake sanctuary for flamingos and pelicans, a UNESCO World Heritage site.", image: elementaitaImg },
+      { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: naivashaImg },
+      { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: hellsGateImg },
       { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
       { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
       { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
