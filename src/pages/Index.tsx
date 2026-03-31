@@ -31,7 +31,7 @@ const services = [
   },
   {
     title: "Safari Tours",
-    desc: "Guided safari adventures to East Africa's iconic national parks — Maasai Mara, Serengeti, Bwindi, and beyond.",
+    desc: "Guided safari adventures to East Africa's iconic national parks: Maasai Mara, Serengeti, Bwindi, and beyond.",
     image: fleetLandcruiser,
     link: "/services",
     alt: "Toyota Land Cruiser safari vehicle for guided tours across East Africa",
