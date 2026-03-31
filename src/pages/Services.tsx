@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
+import RateCalculator from "@/components/RateCalculator";
 import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import fleetVan from "@/assets/fleet-van.jpg";
@@ -14,7 +15,7 @@ import fleetHiace from "@/assets/fleet-hiace.jpg";
 import fleetFord from "@/assets/fleet-ford.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
-import { Plane, Map, Car, Bus, Compass, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plane, Map, Car, Bus, Compass, ArrowRight, ChevronLeft, ChevronRight, Building, GlassWater, Users, GraduationCap, UtensilsCrossed } from "lucide-react";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -45,16 +46,16 @@ const serviceData = [
     id: "safari-tours",
     icon: Map,
     title: "Safari Tours",
-    subtitle: "Guided Adventures Across Kenya",
+    subtitle: "Guided Adventures Across East Africa",
     images: [fleetLandcruiser, fleetFord, fleetHiace],
-    alt: "Toyota Land Cruiser safari vehicle for guided safari tour in Maasai Mara Kenya",
-    description: "Explore Kenya's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to the elephants of Amboseli — we create unforgettable wildlife experiences.",
+    alt: "Toyota Land Cruiser safari vehicle for guided safari tour across East Africa",
+    description: "Explore East Africa's world-renowned national parks and game reserves with our guided safari tours. From the Great Migration in the Maasai Mara to gorilla trekking in Bwindi — we create unforgettable wildlife experiences across Kenya, Tanzania, Uganda, and Rwanda.",
     features: [
       "Custom safari itineraries tailored to your interests",
       "4x4 Land Cruisers with pop-up roofs for game viewing",
       "Experienced safari guides with local expertise",
       "Multi-day packages: 2-day, 3-day, 5-day, and 7-day safaris",
-      "Popular destinations: Maasai Mara, Amboseli, Lake Nakuru, Tsavo, Samburu",
+      "Popular destinations: Maasai Mara, Amboseli, Serengeti, Bwindi, Akagera",
       "All-inclusive options with accommodation and meals",
     ],
   },
@@ -64,7 +65,7 @@ const serviceData = [
     title: "Car Hire & Van Hire",
     subtitle: "Self-Drive & Chauffeur-Driven",
     images: [fleetVan, fleetVanInterior, fleetCoasterExt],
-    alt: "Nissan NV350 van for car hire in Nairobi Kenya",
+    alt: "Nissan NV350 van for car hire in Nairobi",
     description: "A diverse selection of vehicles for hire, ranging from comfortable sedans to spacious SUVs. Whether you need a sedan for business, a 4x4 for adventure, or a van for group travel — we've got the right vehicle at the right price.",
     features: [
       "Self-drive and chauffeur-driven options",
@@ -81,15 +82,100 @@ const serviceData = [
     title: "Long Distance Transfers",
     subtitle: "Intercity & Cross-Border Transport",
     images: [fleetBus, fleetGoldenDragon, fleetCoasterInterior, fleetInterior],
-    alt: "Mercedes tour bus for long distance transfers through Kenyan countryside",
-    description: "Travel comfortably between Kenya's cities and beyond with our long-distance transfer service. We connect Nairobi with Mombasa, Kisumu, Nakuru, Eldoret, and cross-border destinations in style.",
+    alt: "Mercedes tour bus for long distance transfers across East Africa",
+    description: "Travel comfortably between East Africa's cities and beyond with our long-distance transfer service. We connect Nairobi with Mombasa, Kisumu, Nakuru, Arusha, Kampala, Kigali, and cross-border destinations in style.",
     features: [
       "Nairobi to Mombasa, Kisumu, Nakuru, Eldoret, and more",
-      "Cross-border transfers to Tanzania and Uganda",
+      "Cross-border transfers to Tanzania, Uganda, and Rwanda",
       "Comfortable vehicles with reclining seats",
       "Professional, experienced long-haul drivers",
       "Flexible scheduling for individuals and groups",
       "Corporate and event transport packages available",
+    ],
+  },
+  {
+    id: "hotel-transfers",
+    icon: Building,
+    title: "Hotel-to-Hotel Transfers",
+    subtitle: "Within Nairobi City Transfers",
+    images: [fleetSedan, fleetVan],
+    alt: "Comfortable sedan for hotel-to-hotel transfer within Nairobi",
+    description: "Moving between hotels or from your hotel to a meeting, restaurant, or event venue? Our hotel-to-hotel transfer service provides prompt, comfortable, and affordable city transfers within Nairobi and its environs.",
+    features: [
+      "Door-to-door service between any Nairobi hotels",
+      "Comfortable sedans, vans, and minibuses available",
+      "Professional, smartly dressed drivers",
+      "Fixed, transparent pricing — no metered surprises",
+      "Available for individuals, couples, and groups",
+      "Perfect for business travelers and tourists alike",
+    ],
+  },
+  {
+    id: "corporate-cocktail",
+    icon: GlassWater,
+    title: "Corporate Cocktail Transport",
+    subtitle: "Event & Cocktail Transport",
+    images: [fleetCoasterExt, fleetBus],
+    alt: "Toyota Coaster for corporate cocktail event transport",
+    description: "Make a lasting impression at your corporate cocktail events with our premium transport service. We provide elegant, punctual vehicle solutions for corporate gatherings, cocktail parties, gala dinners, and networking events.",
+    features: [
+      "Luxury and executive vehicle options available",
+      "Group transport with coasters and buses for large events",
+      "Professional, uniformed drivers",
+      "On-time arrival guaranteed for event schedules",
+      "Flexible pickup and drop-off at multiple venues",
+      "Customizable packages for recurring corporate events",
+    ],
+  },
+  {
+    id: "conference-transport",
+    icon: Users,
+    title: "Conference Transport",
+    subtitle: "Corporate Conferences & Meetings",
+    images: [fleetBus, fleetGoldenDragon, fleetCoasterInterior],
+    alt: "Mercedes bus for conference delegate transport",
+    description: "Seamless transport logistics for conferences, seminars, and corporate meetings. Whether it's a 20-person workshop or a 500-delegate international conference, we coordinate fleet movements to keep your event running on time.",
+    features: [
+      "Multi-vehicle coordination for large conferences",
+      "Airport-to-venue shuttle services for delegates",
+      "Hotel-to-conference center daily transfers",
+      "Branded vehicle signage available on request",
+      "Dedicated transport coordinator for your event",
+      "Fleet ranging from 8-seater vans to 45-seater buses",
+    ],
+  },
+  {
+    id: "schools-transport",
+    icon: GraduationCap,
+    title: "International Schools Transport",
+    subtitle: "Sports, Education Trips & Co-Curricular Activities",
+    images: [fleetCoasterExt, fleetGoldenDragon, fleetInterior],
+    alt: "Bus for international school sports and education trips",
+    description: "Trusted by leading international schools across Nairobi, our schools transport service covers sports tournaments, educational field trips, co-curricular activities, and inter-school events. Safety, reliability, and punctuality are our top priorities.",
+    features: [
+      "Regular sports event and tournament transport",
+      "Educational field trips to national parks, museums, and reserves",
+      "Co-curricular activity transport (music, drama, art competitions)",
+      "Experienced drivers trained in child safety protocols",
+      "Fleet includes coasters, shuttles, and full-size buses",
+      "Long-term contracts available with discounted rates",
+    ],
+  },
+  {
+    id: "dinner-transport",
+    icon: UtensilsCrossed,
+    title: "Dinner Transport",
+    subtitle: "Evening Event Pickups (6PM–11PM)",
+    images: [fleetSedan, fleetNoahBoot],
+    alt: "Sedan for evening dinner event transport in Nairobi",
+    description: "Enjoy a worry-free evening out with our dedicated dinner transport service. We provide reliable pickups and drop-offs for dinner events, restaurant outings, and evening social gatherings across Nairobi — so you can enjoy the night without worrying about the drive home.",
+    features: [
+      "Evening service window: 6 PM to 11 PM",
+      "Pick up from home, hotel, or office to your dinner venue",
+      "Return drop-off service included",
+      "Perfect for couples, families, and group dining",
+      "Clean, comfortable, and air-conditioned vehicles",
+      "Ideal for date nights, birthday dinners, and celebrations",
     ],
   },
   {
@@ -98,12 +184,12 @@ const serviceData = [
     title: "Travel Consultations",
     subtitle: "Expert Guidance for Your Journey",
     images: [fleetLandcruiser],
-    alt: "Travel consultation planning session for Kenya safari adventure",
-    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect Kenyan adventure — from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
+    alt: "Travel consultation planning session for East Africa adventure",
+    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect East African adventure — from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
     features: [
       "One-on-one consultation with experienced travel advisors",
       "Custom itinerary planning for any budget",
-      "Destination recommendations based on your interests",
+      "Destination recommendations across Kenya, Tanzania, Uganda, and Rwanda",
       "Accommodation and activity booking assistance",
       "Group and corporate travel planning",
       "Seasonal advice for the best wildlife viewing",
@@ -174,7 +260,7 @@ const Services = () => {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Our Services</motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
-            Comprehensive transport solutions across Kenya — from airport pickups to multi-day safari adventures. Professional service, reliable vehicles, competitive prices.
+            Comprehensive transport solutions across East Africa — from airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
           </motion.p>
         </div>
       </section>
@@ -215,6 +301,8 @@ const Services = () => {
           </div>
         </section>
       ))}
+
+      <RateCalculator />
 
       <BookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </Layout>

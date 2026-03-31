@@ -1,117 +1,182 @@
-import { motion } from "framer-motion";
+import { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import maasaiImg from "@/assets/maasai-mara.jpg";
 import amboImg from "@/assets/amboseli.jpg";
 import nairobiImg from "@/assets/nairobi-park.jpg";
 import nakuruImg from "@/assets/lake-nakuru.jpg";
 import tsavoImg from "@/assets/tsavo.jpg";
 import samburuImg from "@/assets/samburu.jpg";
-import { ArrowRight } from "lucide-react";
 
-const destinations = [
+type Destination = {
+  name: string;
+  description: string;
+  image: string;
+};
+
+type Country = {
+  name: string;
+  flag: string;
+  destinations: Destination[];
+};
+
+const ph = "/placeholder.svg";
+
+const countries: Country[] = [
   {
-    name: "Maasai Mara National Reserve",
-    image: maasaiImg,
-    alt: "Wildebeest Great Migration across golden grasslands in Maasai Mara Kenya",
-    distance: "270 km from Nairobi (~5 hours)",
-    vehicle: "4x4 Land Cruiser or Safari Van",
-    description: "The crown jewel of Kenyan wildlife. Witness the Great Wildebeest Migration, spot the Big Five, and experience the vast, golden savanna that stretches to the horizon. Our guided tours include game drives, bush meals, and luxury camp stays.",
+    name: "Kenya",
+    flag: "🇰🇪",
+    destinations: [
+      { name: "Maasai Mara National Reserve", description: "Home of the Great Wildebeest Migration and the Big Five — Kenya's most iconic safari destination.", image: maasaiImg },
+      { name: "Amboseli National Park", description: "Famous for its large elephant herds and breathtaking views of Mount Kilimanjaro.", image: amboImg },
+      { name: "Lake Nakuru National Park", description: "A birdwatcher's paradise famous for flamingo colonies and rhino sightings.", image: nakuruImg },
+      { name: "Nairobi National Park", description: "The only national park in the world set against a city skyline — lions, giraffes, and more.", image: nairobiImg },
+      { name: "Tsavo National Park", description: "Kenya's largest park, known for red elephants, volcanic landscapes, and raw wilderness.", image: tsavoImg },
+      { name: "Samburu National Reserve", description: "Home to the Samburu Special Five — Grevy's zebra, reticulated giraffe, and gerenuk.", image: samburuImg },
+      { name: "Mombasa", description: "Kenya's coastal gem — white sandy beaches, historic Fort Jesus, and vibrant Swahili culture.", image: ph },
+      { name: "Diani Beach", description: "Award-winning tropical beach with crystal-clear waters, perfect for water sports and relaxation.", image: ph },
+      { name: "Watamu", description: "Marine national park with stunning coral reefs, sea turtles, and pristine beaches.", image: ph },
+      { name: "Malindi", description: "A blend of Swahili, Portuguese, and Italian heritage with beautiful marine parks.", image: ph },
+      { name: "Lake Elementaita", description: "A serene soda lake sanctuary for flamingos and pelicans, a UNESCO World Heritage site.", image: ph },
+      { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: ph },
+      { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: ph },
+      { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
+      { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: ph },
+      { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
+      { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: ph },
+      { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ph },
+      { name: "Camp Dunda", description: "An adventurous bush camp experience in the heart of Kenya's wild terrain.", image: ph },
+      { name: "Nanyuki", description: "A charming highland town at the foot of Mount Kenya — gateway to Laikipia conservancies.", image: ph },
+    ],
   },
   {
-    name: "Amboseli National Park",
-    image: amboImg,
-    alt: "Elephants walking in front of Mount Kilimanjaro at Amboseli National Park Kenya",
-    distance: "240 km from Nairobi (~4 hours)",
-    vehicle: "4x4 Land Cruiser",
-    description: "Famous for its large elephant herds and stunning views of Mount Kilimanjaro. Amboseli offers incredible wildlife photography opportunities with Africa's highest peak as the backdrop. Perfect for 2–3 day safari packages.",
+    name: "Tanzania",
+    flag: "🇹🇿",
+    destinations: [
+      { name: "Mount Kilimanjaro", description: "Africa's highest peak and the world's tallest free-standing mountain — a bucket-list climb.", image: ph },
+      { name: "Dar es Salaam", description: "Tanzania's bustling coastal metropolis — gateway to Zanzibar and the southern safari circuit.", image: ph },
+      { name: "Zanzibar", description: "The Spice Island — turquoise waters, white sand beaches, and historic Stone Town.", image: ph },
+      { name: "Lake Manyara", description: "A scenic park famous for tree-climbing lions, flamingos, and the Great Rift Valley escarpment.", image: ph },
+      { name: "Arusha", description: "The safari capital of East Africa — gateway to Serengeti, Ngorongoro Crater, and Kilimanjaro.", image: ph },
+    ],
   },
   {
-    name: "Lake Nakuru National Park",
-    image: nakuruImg,
-    alt: "Thousands of flamingos on Lake Nakuru with pink water and surrounding acacia trees",
-    distance: "160 km from Nairobi (~3 hours)",
-    vehicle: "Safari Van or Land Cruiser",
-    description: "A birdwatcher's paradise, Lake Nakuru is famous for its flamingo colonies that turn the lake pink. The park also hosts rhinos, lions, and leopards, making it a fantastic all-round wildlife destination.",
+    name: "Uganda",
+    flag: "🇺🇬",
+    destinations: [
+      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: ph },
+      { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: ph },
+      { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: ph },
+      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: ph },
+      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: ph },
+    ],
   },
   {
-    name: "Nairobi National Park",
-    image: nairobiImg,
-    alt: "Giraffes and zebras with Nairobi city skyline visible at Nairobi National Park",
-    distance: "7 km from Nairobi CBD",
-    vehicle: "Sedan or Safari Van",
-    description: "The only national park in the world set against a city skyline. Just minutes from downtown Nairobi, this park is home to lions, cheetahs, giraffes, and over 400 bird species. Perfect for a half-day game drive.",
-  },
-  {
-    name: "Tsavo National Park",
-    image: tsavoImg,
-    alt: "Red elephants and baobab trees at dramatic sunset in Tsavo National Park Kenya",
-    distance: "330 km from Nairobi (~5 hours)",
-    vehicle: "4x4 Land Cruiser",
-    description: "Kenya's largest national park, known for its famous red elephants, volcanic landscapes, and incredible diversity. Tsavo East and Tsavo West offer distinctly different experiences — vast open plains and rugged, hilly terrain.",
-  },
-  {
-    name: "Samburu National Reserve",
-    image: samburuImg,
-    alt: "Reticulated giraffe in dry savanna landscape at Samburu National Reserve Kenya",
-    distance: "350 km from Nairobi (~6 hours)",
-    vehicle: "4x4 Land Cruiser",
-    description: "Home to the 'Samburu Special Five' — Grevy's zebra, reticulated giraffe, Beisa oryx, Somali ostrich, and gerenuk. This remote, stunning reserve offers a true off-the-beaten-path safari experience.",
+    name: "Rwanda",
+    flag: "🇷🇼",
+    destinations: [
+      { name: "Kigali", description: "Africa's cleanest city — the Genocide Memorial, vibrant arts scene, and excellent dining.", image: ph },
+      { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills — kayaking, beaches, and island hopping.", image: ph },
+      { name: "Nyungwe Forest National Park", description: "An ancient rainforest with chimpanzee trekking, canopy walks, and 300+ bird species.", image: ph },
+      { name: "Akagera National Park", description: "Rwanda's Big Five safari destination — lions, elephants, rhinos, and stunning lake scenery.", image: ph },
+    ],
   },
 ];
+
+const DestinationCarousel = ({ destinations: dests }: { destinations: Destination[] }) => {
+  const [index, setIndex] = useState(0);
+  const itemsPerView = typeof window !== "undefined" && window.innerWidth >= 1024 ? 4 : typeof window !== "undefined" && window.innerWidth >= 768 ? 3 : 1;
+  const maxIndex = Math.max(0, dests.length - itemsPerView);
+
+  const prev = () => setIndex((i) => Math.max(0, i - 1));
+  const next = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((i) => (i >= maxIndex ? 0 : i + 1));
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [maxIndex]);
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden">
+        <motion.div
+          className="flex gap-4"
+          animate={{ x: `-${index * (100 / itemsPerView + 1.2)}%` }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          {dests.map((dest) => (
+            <div key={dest.name} className="flex-shrink-0" style={{ width: `calc(${100 / itemsPerView}% - ${(itemsPerView - 1) * 16 / itemsPerView}px)` }}>
+              <div className="group relative overflow-hidden aspect-[3/4] bg-muted">
+                <img src={dest.image} alt={dest.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <h3 className="font-serif text-lg text-white mb-1">{dest.name}</h3>
+                  <p className="font-sans text-xs text-white/70 leading-relaxed line-clamp-2">{dest.description}</p>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-1 mt-2 text-[#F4C430] text-xs font-sans uppercase tracking-wider font-bold"
+                  >
+                    Book Trip <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {dests.length > itemsPerView && (
+        <>
+          <button onClick={prev} className="absolute -left-4 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-10 h-10 flex items-center justify-center shadow-lg hover:bg-accent transition-colors z-10" aria-label="Previous">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button onClick={() => next()} className="absolute -right-4 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground w-10 h-10 flex items-center justify-center shadow-lg hover:bg-accent transition-colors z-10" aria-label="Next">
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
 
 const Destinations = () => {
   return (
     <Layout>
       <section className="bg-primary text-primary-foreground py-24 text-center">
         <div className="container mx-auto px-4">
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Explore Kenya</motion.p>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Explore East Africa</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Destinations</motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
-            From the plains of the Maasai Mara to the flamingo-lined shores of Lake Nakuru — discover Kenya's most breathtaking destinations with the perfect safari vehicle.
+            From the plains of the Maasai Mara to the gorilla forests of Bwindi — discover East Africa's most breathtaking destinations with the perfect vehicle.
           </motion.p>
         </div>
       </section>
 
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 space-y-20">
-          {destinations.map((dest, i) => (
+      {countries.map((country, ci) => (
+        <section key={country.name} className={`py-20 ${ci % 2 === 0 ? "bg-background" : "bg-muted"}`}>
+          <div className="container mx-auto px-4">
             <motion.div
-              key={dest.name}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7 }}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "" : ""}`}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-10"
             >
-              <div className={`relative overflow-hidden aspect-[16/10] ${i % 2 === 1 ? "lg:order-2" : ""}`}>
-                <img
-                  src={dest.image}
-                  alt={dest.alt}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                />
-              </div>
-              <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-                <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">{dest.name}</h2>
-                <div className="flex flex-wrap gap-4 mb-4 font-sans text-xs uppercase tracking-wider">
-                  <span className="bg-muted px-3 py-1 text-muted-foreground">{dest.distance}</span>
-                  <span className="bg-accent/10 text-accent px-3 py-1 font-bold">{dest.vehicle}</span>
-                </div>
-                <p className="font-sans text-foreground/80 leading-relaxed mb-6">{dest.description}</p>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors"
-                >
-                  Book This Trip <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+              <h2 className="font-serif text-3xl md:text-4xl text-foreground">
+                <span className="mr-3 text-4xl">{country.flag}</span>
+                {country.name} Destinations
+              </h2>
+              <p className="font-sans text-sm text-muted-foreground mt-2">{country.destinations.length} destinations</p>
             </motion.div>
-          ))}
-        </div>
-      </section>
+
+            <DestinationCarousel destinations={country.destinations} />
+          </div>
+        </section>
+      ))}
     </Layout>
   );
 };
