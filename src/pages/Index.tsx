@@ -128,7 +128,7 @@ const Index = () => {
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">What We Offer</p>
             <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Our Services</h2>
             <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
-              From airport pickups to unforgettable safaris — we provide comprehensive transport solutions across East Africa with professional drivers and a well-maintained fleet.
+              From airport pickups to unforgettable safaris, we provide comprehensive transport solutions across East Africa with professional drivers and a well-maintained fleet.
             </p>
           </motion.div>
 

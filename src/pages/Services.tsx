@@ -185,7 +185,7 @@ const serviceData = [
     subtitle: "Expert Guidance for Your Journey",
     images: [fleetLandcruiser],
     alt: "Travel consultation planning session for East Africa adventure",
-    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect East African adventure — from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
+    description: "Personalized guidance from our expert travel consultants. Let us help you plan the perfect East African adventure, from choosing the right destinations and vehicles to crafting custom itineraries that match your interests and budget.",
     features: [
       "One-on-one consultation with experienced travel advisors",
       "Custom itinerary planning for any budget",
