@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
-import VehicleImageCarousel from "@/components/VehicleImageCarousel";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
+import { fleetHeroImageForModelKey } from "@/data/heroFleetImages";
 import { fleetUnits, fleetHeroSlides, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
 
@@ -65,7 +65,11 @@ const Fleet = () => {
                 transition={{ duration: 0.8 }}
                 className="absolute inset-0"
               >
-                <img src={fleetHeroSlides[heroIndex].images[0]} alt={fleetHeroSlides[heroIndex].alt} className="w-full h-full object-cover rounded-sm" />
+                <img
+                  src={fleetHeroImageForModelKey(fleetHeroSlides[heroIndex].modelKey, fleetHeroSlides[heroIndex].images[0])}
+                  alt={fleetHeroSlides[heroIndex].alt}
+                  className="w-full h-full object-cover rounded-sm"
+                />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
                   <p className="font-serif text-xl text-white">{fleetHeroSlides[heroIndex].modelName}</p>
                   <p className="font-sans text-sm text-white/80 mt-0.5">{fleetHeroSlides[heroIndex].registration}</p>
@@ -103,7 +107,16 @@ const Fleet = () => {
                 transition={{ duration: 0.5, delay: Math.min(i * 0.05, 0.5) }}
                 className="bg-card border border-border overflow-hidden group"
               >
-                <VehicleImageCarousel images={v.images} alt={v.alt} />
+                <div className="aspect-[4/3] overflow-hidden relative">
+                  <img
+                    src={fleetHeroImageForModelKey(v.modelKey, v.images[0])}
+                    alt={v.alt}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    width={800}
+                    height={600}
+                  />
+                </div>
                 <div className="p-6">
                   <h3 className="font-serif text-xl mb-1 text-foreground">{v.modelName}</h3>
                   <p className="font-sans text-sm text-muted-foreground mb-2">{v.registration}</p>

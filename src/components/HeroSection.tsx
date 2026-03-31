@@ -1,66 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import fleetSedan from "@/assets/fleet-sedan.jpg";
-import fleetVan from "@/assets/fleet-van.jpg";
-import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
-import fleetBus from "@/assets/fleet-bus.jpg";
-import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
-import fleetInterior from "@/assets/fleet-interior.jpg";
-import fleetHiace from "@/assets/fleet-hiace.jpg";
+import { homeHeroSlides } from "@/data/heroFleetImages";
 import BookingModal from "@/components/BookingModal";
-
-const slides = [
-  {
-    image: fleetSedan,
-    alt: "Toyota Noah sedan for airport transfers in Nairobi",
-    label: "Airport Transfers",
-    subtitle: "Seamless JKIA & Wilson Airport pickups with professional drivers",
-  },
-  {
-    image: fleetVan,
-    alt: "Nissan NV350 van available for hire across East Africa",
-    label: "Car Hire",
-    subtitle: "Self-drive and chauffeur-driven vehicles for every occasion",
-  },
-  {
-    image: fleetLandcruiser,
-    alt: "Toyota Land Cruiser for safari tours across East Africa",
-    label: "Safari Tours",
-    subtitle: "Guided adventures to Maasai Mara, Serengeti, Bwindi, and beyond",
-  },
-  {
-    image: fleetBus,
-    alt: "Mercedes tour bus for long-distance transport across East Africa",
-    label: "Long-Distance Transport",
-    subtitle: "Comfortable intercity and cross-border travel in style",
-  },
-  {
-    image: fleetHiace,
-    alt: "Toyota Hiace van for Kenya SGR station pickup and drop-off for groups and luggage",
-    label: "SGR Transfers",
-    subtitle:
-      "Road connections to Nairobi Terminus, Syokimau, and Mombasa Terminus—vehicles sized for your group and luggage",
-  },
-  {
-    image: fleetCoasterExt,
-    alt: "Toyota Coaster for conference and corporate event transport",
-    label: "Conference & Corporate Transport",
-    subtitle: "Professional transport for conferences, corporate events, and business travel",
-  },
-  {
-    image: fleetInterior,
-    alt: "Comfortable bus interior for school and group transport",
-    label: "Schools & Group Transport",
-    subtitle: "Reliable school trips, sports events, and group excursions across East Africa",
-  },
-];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
   const [bookingOpen, setBookingOpen] = useState(false);
 
   const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % slides.length);
+    setCurrent((prev) => (prev + 1) % homeHeroSlides.length);
   }, []);
 
   useEffect(() => {
@@ -74,8 +22,8 @@ const HeroSection = () => {
         <AnimatePresence mode="popLayout">
           <motion.img
             key={current}
-            src={slides[current].image}
-            alt={slides[current].alt}
+            src={homeHeroSlides[current].image}
+            alt={homeHeroSlides[current].alt}
             className="absolute inset-0 w-full h-full object-cover"
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -117,10 +65,10 @@ const HeroSection = () => {
               className="mb-10"
             >
               <p className="font-sans text-lg md:text-xl text-heroGold font-bold uppercase tracking-[0.2em] mb-2">
-                {slides[current].label}
+                {homeHeroSlides[current].label}
               </p>
               <p className="font-sans text-base md:text-lg text-white/80 max-w-2xl mx-auto">
-                {slides[current].subtitle}
+                {homeHeroSlides[current].subtitle}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -147,7 +95,7 @@ const HeroSection = () => {
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
-          {slides.map((_, i) => (
+          {homeHeroSlides.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
