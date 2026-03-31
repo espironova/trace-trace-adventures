@@ -9,6 +9,16 @@ import nairobiImg from "@/assets/nairobi-park.jpg";
 import nakuruImg from "@/assets/lake-nakuru.jpg";
 import tsavoImg from "@/assets/tsavo.jpg";
 import samburuImg from "@/assets/samburu.jpg";
+import aberdareImg from "@/assets/aberdare.jfif";
+import bwindiImg from "@/assets/bwindi.jpg";
+import murchisonImg from "@/assets/murchison-falls.jpg";
+import rwenzoriImg from "@/assets/rwenzori.jpeg";
+import kampalaImg from "@/assets/kampala.jfif";
+import jinjaImg from "@/assets/jinja.jpg";
+import kigaliImg from "@/assets/kigali.jpg";
+import lakekivuImg from "@/assets/lake-kivu.jpg";
+import nyungweImg from "@/assets/nyungwe.jfif";
+import akageraImg from "@/assets/akagera.jfif";
 
 type Destination = {
   name: string;
