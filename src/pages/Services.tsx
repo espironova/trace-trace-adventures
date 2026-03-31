@@ -66,7 +66,7 @@ const serviceData = [
     subtitle: "Self-Drive & Chauffeur-Driven",
     images: [fleetVan, fleetVanInterior, fleetCoasterExt],
     alt: "Nissan NV350 van for car hire in Nairobi",
-    description: "A diverse selection of vehicles for hire, ranging from comfortable sedans to spacious SUVs. Whether you need a sedan for business, a 4x4 for adventure, or a van for group travel — we've got the right vehicle at the right price.",
+    description: "A diverse selection of vehicles for hire, ranging from comfortable sedans to spacious SUVs. Whether you need a sedan for business, a 4x4 for adventure, or a van for group travel, we've got the right vehicle at the right price.",
     features: [
       "Self-drive and chauffeur-driven options",
       "Fleet includes sedans, SUVs, 4x4s, safari vans, and minibuses",
