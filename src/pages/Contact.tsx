@@ -12,6 +12,7 @@ const serviceLabels: Record<string, string> = {
   "safari-tour": "Safari Tour",
   "car-hire": "Car Hire / Van Hire",
   "long-distance": "Long Distance Transfer",
+  "sgr-transfer": "SGR Transfers",
   "travel-consultation": "Travel Consultation",
   "corporate": "Corporate Transport",
   "leave-review": "Leave a review",
@@ -112,6 +113,7 @@ const Contact = () => {
                     <option value="safari-tour">Safari Tour</option>
                     <option value="car-hire">Car Hire / Van Hire</option>
                     <option value="long-distance">Long Distance Transfer</option>
+                    <option value="sgr-transfer">SGR Transfers</option>
                     <option value="travel-consultation">Travel Consultation</option>
                     <option value="corporate">Corporate Transport</option>
                     <option value="leave-review">Leave a review</option>

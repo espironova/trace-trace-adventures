@@ -62,7 +62,7 @@ const About = () => {
                   Our dedicated team of professional drivers is trained to prioritize safety and customer satisfaction, ensuring that your travel experience with us is seamless and enjoyable. From executive sedans for airport transfers to rugged 4x4 Land Cruisers built for East Africa's wildest terrains, we have it all.
                 </p>
                 <p>
-                  Whether you need a JKIA airport pickup at 3 AM, a week-long safari through the Maasai Mara, conference transport for your corporate event, or a reliable van hire for your group, we deliver every time. We also offer personalized travel consultations to help you plan the perfect East African adventure.
+                  Whether you need a JKIA airport pickup at 3 AM, a week-long safari through the Maasai Mara, conference transport for your corporate event, or a reliable van hire for your group, we deliver every time. Train travellers can count on us for road links to and from Kenya SGR stations, including Nairobi Terminus and Mombasa Terminus. We also offer personalized travel consultations to help you plan the perfect East African adventure.
                 </p>
               </div>
             </motion.div>

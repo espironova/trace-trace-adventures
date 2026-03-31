@@ -15,7 +15,7 @@ import fleetHiace from "@/assets/fleet-hiace.jpg";
 import fleetFord from "@/assets/fleet-ford.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
-import { Plane, Map, Car, Bus, Compass, ArrowRight, ChevronLeft, ChevronRight, Building, GlassWater, Users, GraduationCap, UtensilsCrossed } from "lucide-react";
+import { Plane, Map, Car, Bus, Train, Compass, ArrowRight, ChevronLeft, ChevronRight, Building, GlassWater, Users, GraduationCap, UtensilsCrossed } from "lucide-react";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -87,10 +87,29 @@ const serviceData = [
     features: [
       "Nairobi to Mombasa, Kisumu, Nakuru, Eldoret, and more",
       "Cross-border transfers to Tanzania, Uganda, and Rwanda",
+      "Complements SGR travel: road connections to and from railway stations",
       "Comfortable vehicles with reclining seats",
       "Professional, experienced long-haul drivers",
       "Flexible scheduling for individuals and groups",
       "Corporate and event transport packages available",
+    ],
+  },
+  {
+    id: "sgr-transfers",
+    icon: Train,
+    title: "SGR Transfers",
+    subtitle: "Kenya Standard Gauge Railway",
+    images: [fleetSedan, fleetVan, fleetNoahBoot],
+    alt: "Comfortable vehicle for SGR station pickup and drop-off in Nairobi and Mombasa",
+    description:
+      "Connect seamlessly with Kenya's SGR service. We provide reliable road transfers to and from Nairobi Terminus (Syokimau), Mombasa Terminus, and other station access points—so your train journey starts and ends without stress. Whether you're a solo traveler, family, or group, we match you with the right vehicle and schedule.",
+    features: [
+      "Pickup and drop-off timed around train departures and arrivals",
+      "Coverage for Nairobi Terminus, Syokimau, Mombasa Terminus, and related station routes",
+      "Luggage-friendly sedans, vans, and minibuses for individuals and groups",
+      "Advance booking recommended for weekends, holidays, and peak travel periods",
+      "Professional drivers familiar with station access and traffic patterns",
+      "Combine with hotel, airport, or long-distance transfers for a complete trip",
     ],
   },
   {

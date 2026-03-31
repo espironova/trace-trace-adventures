@@ -52,6 +52,13 @@ const services = [
     alt: "Mercedes tour bus for long distance transfers across East Africa",
   },
   {
+    title: "SGR Transfers",
+    desc: "Road connections to and from Kenya SGR stations—Nairobi Terminus, Syokimau, Mombasa Terminus—with vehicles sized for your group and luggage.",
+    image: fleetSedan,
+    link: "/services#sgr-transfers",
+    alt: "Vehicle for SGR station pickup and drop-off in Kenya",
+  },
+  {
     title: "Conference & Corporate Transport",
     desc: "Professional transport for conferences, corporate cocktails, and business events. Punctual, elegant fleet at your service.",
     image: fleetCoasterExt,
