@@ -148,6 +148,9 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
+                className={
+                  i === services.length - 1 && services.length % 3 === 1 ? "lg:col-start-2" : undefined
+                }
               >
                 <Link to={service.link} className="group block relative overflow-hidden aspect-[16/10]">
                   <img

@@ -34,6 +34,13 @@ const slides = [
     subtitle: "Comfortable intercity and cross-border travel in style",
   },
   {
+    image: fleetSedan,
+    alt: "Vehicle for Kenya SGR station pickup and drop-off at Nairobi and Mombasa termini",
+    label: "SGR Transfers",
+    subtitle:
+      "Road connections to Nairobi Terminus, Syokimau, and Mombasa Terminus—vehicles sized for your group and luggage",
+  },
+  {
     image: fleetCoasterExt,
     alt: "Toyota Coaster for conference and corporate event transport",
     label: "Conference & Corporate Transport",
