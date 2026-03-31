@@ -59,7 +59,7 @@ const services = [
   },
   {
     title: "Schools & Group Transport",
-    desc: "Reliable transport for international schools — sports events, education trips, co-curricular activities, and field excursions.",
+    desc: "Reliable transport for international schools: sports events, education trips, co-curricular activities, and field excursions.",
     image: fleetInterior,
     link: "/services",
     alt: "Comfortable bus interior for school and group transport",
