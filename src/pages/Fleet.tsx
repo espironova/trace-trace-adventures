@@ -5,6 +5,7 @@ import BookingModal from "@/components/BookingModal";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import { fleetUnits, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
+import VehicleImageCarousel from "@/components/VehicleImageCarousel";
 
 const Fleet = () => {
   const [bookingOpen, setBookingOpen] = useState(false);

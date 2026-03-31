@@ -10,6 +10,10 @@ import fleetGoldenInt2 from "@/assets/fleet-golden-int-2.jpg";
 import fleetIsuzu from "@/assets/fleet-isuzu.jpg";
 import fleetIsuzuRear from "@/assets/fleet-isuzu-rear.jpg";
 import fleetIsuzuInterior from "@/assets/fleet-isuzu-interior.jpg";
+import fleetMercedesInterior from "@/assets/fleet-mercedes-interior.jpg";
+import fleetCoasterIntBlue from "@/assets/fleet-coaster-int-blue.jpg";
+import fleetCoasterInt2 from "@/assets/fleet-coaster-int-2.jpg";
+import fleetNv350Int2 from "@/assets/fleet-nv350-int-2.jpg";
 
 import mercedesKcu249x1 from "@/assets/fleet-unit-kcu-249x-1.jpg";
 import mercedesKcu249x2 from "@/assets/fleet-unit-kcu-249x-2.jpg";
@@ -37,7 +41,9 @@ import coasterKcb785t3 from "@/assets/fleet-unit-kcb-785t-3.jpg";
 import nissanKcn030m1 from "@/assets/fleet-unit-kcn-030m-1.jpg";
 import nissanKcn030m2 from "@/assets/fleet-unit-kcn-030m-2.jpg";
 import nissanKcn030m3 from "@/assets/fleet-unit-kcn-030m-3.jpg";
-import nissanKdl731t1 from "@/assets/fleet-unit-kdl-731t-1.jpg";
+
+import hiaceKcr090x1 from "@/assets/fleet-unit-kcr-090x-1.jpg";
+import hiaceKdl731t1 from "@/assets/fleet-unit-kdl-731t-1.jpg";
 import nissanKdl731t2 from "@/assets/fleet-unit-kdl-731t-2.jpg";
 import nissanKdl731t3 from "@/assets/fleet-unit-kdl-731t-3.jpg";
 
@@ -59,16 +65,15 @@ const fordImages = [fleetFord];
 const landCruiserImages = [fleetLandcruiser];
 const noahImages = [fleetSedan, fleetNoahBoot];
 const isuzuImages = [fleetIsuzu, fleetIsuzuRear, fleetIsuzuInterior];
-const hiaceImages = [fleetHiace, fleetHiaceInterior];
 
-/** One row per registered vehicle; each unit has its own image set (replace files under src/assets/fleet-unit-{id}-*.jpg to match that plate). */
+/** One row per registered vehicle; each unit has its own image set. */
 export const fleetUnits: FleetUnit[] = [
   {
     id: "kcu-249x",
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KCU 249X",
-    images: [mercedesKcu249x1, mercedesKcu249x2, mercedesKcu249x3],
+    images: [mercedesKcu249x1, mercedesKcu249x2, mercedesKcu249x3, fleetMercedesInterior],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -79,7 +84,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KCU 955S",
-    images: [mercedesKcu955s1, mercedesKcu955s2, mercedesKcu955s3],
+    images: [mercedesKcu955s1, mercedesKcu955s2, mercedesKcu955s3, fleetMercedesInterior],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -90,7 +95,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KDR 982M",
-    images: [mercedesKdr982m1, mercedesKdr982m2, mercedesKdr982m3],
+    images: [mercedesKdr982m1, mercedesKdr982m2, mercedesKdr982m3, fleetMercedesInterior],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -101,7 +106,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "mercedes-tour-bus",
     modelName: "Mercedes Tour Bus",
     registration: "KDN 267X",
-    images: [mercedesKdn267x1, mercedesKdn267x2, mercedesKdn267x3],
+    images: [mercedesKdn267x1, mercedesKdn267x2, mercedesKdn267x3, fleetMercedesInterior],
     alt: "Mercedes tour bus for long-distance transfers and corporate transport in Kenya",
     capacity: "33–45 passengers",
     idealFor: "Long-distance transfers, corporate events, wedding transport",
@@ -156,7 +161,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCT 963J",
-    images: [coasterKct963j1, coasterKct963j2, coasterKct963j3],
+    images: [coasterKct963j1, coasterKct963j2, coasterKct963j3, fleetCoasterIntBlue, fleetCoasterInt2],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -167,7 +172,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCW 515Z",
-    images: [coasterKcw515z1, coasterKcw515z2, coasterKcw515z3],
+    images: [coasterKcw515z1, coasterKcw515z2, coasterKcw515z3, fleetCoasterIntBlue, fleetCoasterInt2],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -178,7 +183,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-coaster",
     modelName: "Toyota Coaster",
     registration: "KCB 785T",
-    images: [coasterKcb785t1, coasterKcb785t2, coasterKcb785t3],
+    images: [coasterKcb785t1, coasterKcb785t2, coasterKcb785t3, fleetCoasterIntBlue, fleetCoasterInt2],
     alt: "Toyota Coaster bus for group transport and corporate events in Kenya",
     capacity: "25–29 passengers",
     idealFor: "Large groups, corporate events, conferences",
@@ -200,7 +205,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "toyota-hiace",
     modelName: "Toyota Hiace",
     registration: "KCR 090X",
-    images: hiaceImages,
+    images: [hiaceKcr090x1, fleetHiace, fleetHiaceInterior],
     alt: "Toyota Hiace safari van for tour groups and safari trips in Kenya",
     capacity: "7–14 passengers",
     idealFor: "Safari tours, group travel, sightseeing",
@@ -211,7 +216,7 @@ export const fleetUnits: FleetUnit[] = [
     modelKey: "nissan-nv350",
     modelName: "Nissan NV350",
     registration: "KCN 030M",
-    images: [nissanKcn030m1, nissanKcn030m2, nissanKcn030m3],
+    images: [nissanKcn030m1, nissanKcn030m2, nissanKcn030m3, fleetNv350Int2],
     alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
     capacity: "8–14 passengers",
     idealFor: "Group travel, hotel shuttles, family trips",
@@ -219,14 +224,14 @@ export const fleetUnits: FleetUnit[] = [
   },
   {
     id: "kdl-731t",
-    modelKey: "nissan-nv350",
-    modelName: "Nissan NV350",
+    modelKey: "toyota-hiace",
+    modelName: "Toyota Hiace",
     registration: "KDL 731T",
-    images: [nissanKdl731t1, nissanKdl731t2, nissanKdl731t3],
-    alt: "Nissan NV350 van for car hire and group travel in Nairobi Kenya",
-    capacity: "8–14 passengers",
-    idealFor: "Group travel, hotel shuttles, family trips",
-    features: ["Sliding doors", "Spacious interior", "Air conditioning", "Comfortable seating"],
+    images: [hiaceKdl731t1, nissanKdl731t2, nissanKdl731t3, fleetHiaceInterior],
+    alt: "Toyota Hiace van for safari tours and group travel in Kenya",
+    capacity: "7–14 passengers",
+    idealFor: "Safari tours, group travel, sightseeing",
+    features: ["Pop-up roof option", "Extended leg room", "Charging ports", "Large luggage area"],
   },
 ];
 
