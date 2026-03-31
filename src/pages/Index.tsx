@@ -306,7 +306,7 @@ const Index = () => {
           <motion.div {...fadeInUp}>
             <h2 className="font-serif text-3xl md:text-5xl mb-4">Ready to Explore East Africa?</h2>
             <p className="font-sans text-lg opacity-80 max-w-xl mx-auto mb-8">
-              Whether it's an airport pickup, a weekend safari, or a cross-border journey — we're ready to take you there.
+              Whether it's an airport pickup, a weekend safari, or a cross-border journey, we're ready to take you there.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
