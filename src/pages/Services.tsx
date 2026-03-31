@@ -105,7 +105,7 @@ const serviceData = [
       "Door-to-door service between any Nairobi hotels",
       "Comfortable sedans, vans, and minibuses available",
       "Professional, smartly dressed drivers",
-      "Fixed, transparent pricing — no metered surprises",
+      "Fixed, transparent pricing with no metered surprises",
       "Available for individuals, couples, and groups",
       "Perfect for business travelers and tourists alike",
     ],
