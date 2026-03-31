@@ -9,6 +9,16 @@ import nairobiImg from "@/assets/nairobi-park.jpg";
 import nakuruImg from "@/assets/lake-nakuru.jpg";
 import tsavoImg from "@/assets/tsavo.jpg";
 import samburuImg from "@/assets/samburu.jpg";
+import aberdareImg from "@/assets/aberdare.jfif";
+import bwindiImg from "@/assets/bwindi.jpg";
+import murchisonImg from "@/assets/murchison-falls.jpg";
+import rwenzoriImg from "@/assets/rwenzori.jpeg";
+import kampalaImg from "@/assets/kampala.jfif";
+import jinjaImg from "@/assets/jinja.jpg";
+import kigaliImg from "@/assets/kigali.jpg";
+import lakekivuImg from "@/assets/lake-kivu.jpg";
+import nyungweImg from "@/assets/nyungwe.jfif";
+import akageraImg from "@/assets/akagera.jfif";
 
 type Destination = {
   name: string;
@@ -43,7 +53,7 @@ const countries: Country[] = [
       { name: "Lake Naivasha", description: "A freshwater lake teeming with hippos, birdlife, and surrounded by flower farms.", image: ph },
       { name: "Hell's Gate National Park", description: "Dramatic cliffs and gorges where you can cycle or hike among zebras and giraffes.", image: ph },
       { name: "Mount Kenya", description: "Africa's second-highest peak offering world-class trekking through diverse ecological zones.", image: ph },
-      { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: ph },
+      { name: "Aberdare National Park", description: "Misty mountain forests, waterfalls, and tree-top lodges for a unique safari experience.", image: aberdareImg },
       { name: "Kisumu", description: "Kenya's lakeside city on Lake Victoria — vibrant markets, Impala Sanctuary, and Kit Mikayi.", image: ph },
       { name: "14 Falls", description: "A spectacular series of waterfalls near Thika, perfect for a day trip from Nairobi.", image: ph },
       { name: "Ngare Ndare", description: "A pristine forest reserve with canopy walkways, waterfalls, and natural swimming pools.", image: ph },
@@ -66,21 +76,21 @@ const countries: Country[] = [
     name: "Uganda",
     flag: "🇺🇬",
     destinations: [
-      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: ph },
-      { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: ph },
-      { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: ph },
-      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: ph },
-      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: ph },
+      { name: "Bwindi Impenetrable National Park", description: "Home to half the world's mountain gorillas — a once-in-a-lifetime trekking experience.", image: bwindiImg },
+      { name: "Murchison Falls National Park", description: "The world's most powerful waterfall, where the Nile forces through a narrow gorge.", image: murchisonImg },
+      { name: "Rwenzori Mountains", description: "The legendary 'Mountains of the Moon' with snow-capped peaks on the equator.", image: rwenzoriImg },
+      { name: "Kampala", description: "Uganda's vibrant capital — bustling markets, nightlife, and the Kasubi Tombs.", image: kampalaImg },
+      { name: "Jinja", description: "The adventure capital of East Africa — source of the Nile, white-water rafting, and bungee jumping.", image: jinjaImg },
     ],
   },
   {
     name: "Rwanda",
     flag: "🇷🇼",
     destinations: [
-      { name: "Kigali", description: "Africa's cleanest city — the Genocide Memorial, vibrant arts scene, and excellent dining.", image: ph },
-      { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills — kayaking, beaches, and island hopping.", image: ph },
-      { name: "Nyungwe Forest National Park", description: "An ancient rainforest with chimpanzee trekking, canopy walks, and 300+ bird species.", image: ph },
-      { name: "Akagera National Park", description: "Rwanda's Big Five safari destination — lions, elephants, rhinos, and stunning lake scenery.", image: ph },
+      { name: "Kigali", description: "Africa's cleanest city — the Genocide Memorial, vibrant arts scene, and excellent dining.", image: kigaliImg },
+      { name: "Lake Kivu", description: "A stunning freshwater lake surrounded by lush hills — kayaking, beaches, and island hopping.", image: lakekivuImg },
+      { name: "Nyungwe Forest National Park", description: "An ancient rainforest with chimpanzee trekking, canopy walks, and 300+ bird species.", image: nyungweImg },
+      { name: "Akagera National Park", description: "Rwanda's Big Five safari destination — lions, elephants, rhinos, and stunning lake scenery.", image: akageraImg },
     ],
   },
 ];

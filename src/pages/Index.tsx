@@ -9,6 +9,8 @@ import fleetBus from "@/assets/fleet-bus.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
 import maasaiImg from "@/assets/maasai-mara.jpg";
+import kampalaImg from "@/assets/kampala.jfif";
+import kigaliImg from "@/assets/kigali.jpg";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
@@ -66,8 +68,8 @@ const services = [
 const destinations = [
   { name: "Maasai Mara", country: "Kenya 🇰🇪", image: maasaiImg, desc: "Home of the Great Migration", alt: "Wildebeest migration in Maasai Mara golden grasslands Kenya" },
   { name: "Arusha", country: "Tanzania 🇹🇿", image: "/placeholder.svg", desc: "Gateway to Serengeti & Kilimanjaro", alt: "Arusha Tanzania gateway to safari" },
-  { name: "Kampala", country: "Uganda 🇺🇬", image: "/placeholder.svg", desc: "Pearl of Africa's vibrant capital", alt: "Kampala Uganda city view" },
-  { name: "Kigali", country: "Rwanda 🇷🇼", image: "/placeholder.svg", desc: "The Land of a Thousand Hills", alt: "Kigali Rwanda green hills cityscape" },
+  { name: "Kampala", country: "Uganda 🇺🇬", image: kampalaImg, desc: "Pearl of Africa's vibrant capital", alt: "Kampala Uganda city view" },
+  { name: "Kigali", country: "Rwanda 🇷🇼", image: kigaliImg, desc: "The Land of a Thousand Hills", alt: "Kigali Rwanda green hills cityscape" },
 ];
 
 const testimonials = [
