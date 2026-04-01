@@ -169,13 +169,13 @@ const Destinations = () => {
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 container mx-auto px-4">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">
-            Explore East Africa
+          Discover East Africa’s Iconic Destinations
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-white mb-4">
             Destinations
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-white/80 max-w-2xl mx-auto">
-            From the plains of the Maasai Mara to the gorilla forests of Bwindi, discover East Africa's most breathtaking destinations with the perfect vehicle.
+            From the plains of the Maasai Mara to the snow-capped peaks of Mount Kilimanjaro, discover East Africa's most breathtaking destinations with the perfect vehicle.
           </motion.p>
         </div>
       </section>
