@@ -25,14 +25,14 @@ import RateCalculator from "@/components/RateCalculator";
 
 const services = [
   {
-    title: "Airport Transfers",
-    desc: "Seamless JKIA & Wilson Airport pickup and drop-off with flight tracking, meet & greet, and comfortable vehicles.",
+    title: "Airport Transfers (JKIA & Wilson)",
+    desc: "Fast, reliable pickups and drop-offs at Nairobi’s airports with flight tracking, meet & greet, and direct transfers to hotels, city centre or safari lodges.",
     image: fleetSedan,
     link: "/services",
     alt: "Toyota Noah sedan for professional airport transfer service in Nairobi",
   },
   {
-    title: "Safari Tours",
+    title: "Safari Tours & Packages",
     desc: "Guided safari adventures to East Africa's iconic national parks: Maasai Mara, Serengeti, Bwindi, and beyond.",
     image: fleetLandcruiser,
     link: "/services",
@@ -40,21 +40,21 @@ const services = [
   },
   {
     title: "Car Hire & Van Hire",
-    desc: "Self-drive and chauffeur-driven vehicles for every need, from sedans to 4x4 Land Cruisers and tour vans.",
+    desc: "Self-drive or chauffeur-driven cars, safari vans and minibuses in Nairobi. Flexible daily, weekly or long-term rates.",
     image: fleetVan,
     link: "/services",
     alt: "Nissan NV350 van available for hire across East Africa",
   },
   {
-    title: "Long Distance Transfers",
-    desc: "Comfortable intercity and cross-border transport across East Africa. Travel in style to any destination.",
+    title: "Long Distance & Cross-Border Transfers",
+    desc: "Comfortable, safe transfers from Nairobi to Arusha, Kampala, Kigali and across East Africa with border assistance.",
     image: fleetBus,
     link: "/services",
     alt: "Mercedes tour bus for long distance transfers across East Africa",
   },
   {
     title: "SGR Transfers",
-    desc: "Road connections to and from Kenya SGR stations—Nairobi Terminus, Syokimau, Mombasa Terminus—with vehicles sized for your group and luggage.",
+    desc: "Quick and convenient pickup and drop-off at Nairobi Terminus, Syokimau, and Mombasa Terminus—with vehicles sized for your group and luggage.",
     image: fleetHiace,
     link: "/services#sgr-transfers",
     alt: "Toyota Hiace van for SGR station pickup and drop-off in Kenya",
@@ -94,26 +94,26 @@ const testimonials = [
 const whyUs = [
   {
     image: iconDrivers,
-    title: "Experienced Drivers",
-    desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely.",
+    title: "Experienced, Licensed Drivers",
+    desc: "20+ years of experience navigating East Africa's roads and national parks safely.",
     alt: "Illustration representing licensed drivers for Nairobi airport and safari transport",
   },
   {
     image: iconFleet,
-    title: "Well-Maintained Fleet",
-    desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers.",
+    title: "Premium,Well-Maintained Fleet",
+    desc: "Spotless sedans, 4x4 Land Cruisers, safari vans and minibuses all regularly serviced.",
     alt: "Illustration representing a serviced vehicle fleet for hire in Kenya",
   },
   {
     image: icon24h,
     title: "24/7 Availability",
-    desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready.",
+    desc: "Late-night JKIA arrivals, early departures, emergency transfers we’re always ready.",
     alt: "Icon representing 24-hour car hire and transfer availability in East Africa",
   },
   {
     image: iconExpertise,
     title: "Local Expertise",
-    desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa.",
+    desc: "We know the best routes, hidden gems, and the best safari experiences across East Africa.",
     alt: "Icon representing local travel expertise across Kenya, Tanzania, Uganda, and Rwanda",
   },
 ];
