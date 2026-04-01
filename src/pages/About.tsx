@@ -79,10 +79,7 @@ const About = () => {
                   Track and Trace Adventures is a leading car hire service headquartered in Nairobi, Kenya, with over 20 years of experience serving clients across East Africa. We offer a diverse fleet of well-maintained vehicles, catering to various client needs, from individual travelers to large groups.
                 </p>
                 <p>
-                  Our dedicated team of professional drivers is trained to prioritize safety and customer satisfaction, ensuring that your travel experience with us is seamless and enjoyable. From executive sedans for airport transfers to rugged 4x4 Land Cruisers built for East Africa's wildest terrains, we have it all.
-                </p>
-                <p>
-                  Whether you need a JKIA airport pickup at 3 AM, a week-long safari through the Maasai Mara, conference transport for your corporate event, or a reliable van hire for your group, we deliver every time. Train travellers can count on us for road links to and from Kenya SGR stations, including Nairobi Terminus and Mombasa Terminus. We also offer personalized travel consultations to help you plan the perfect East African adventure.
+                  Our dedicated team of professional drivers are trained to prioritize safety and customer satisfaction, ensuring that your travel experience with us is seamless and enjoyable.
                 </p>
               </div>
             </motion.div>
@@ -135,14 +132,14 @@ const About = () => {
             className="max-w-3xl mx-auto text-center border border-border bg-card p-10 md:p-12"
           >
             <GraduationCap className="w-10 h-10 mx-auto mb-4 text-accent" aria-hidden />
-            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Giving Back</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">Education for Children in Need</h2>
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Beyond the Journey</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">Giving Back to the Community</h2>
             <div className="space-y-4 font-sans text-foreground/80 leading-relaxed text-left md:text-center">
               <p>
-                Beyond the road, we believe in investing in the communities that welcome our travellers. Giving back means supporting access to education for the most vulnerable children—those who need it most—so they can build a stronger future for themselves and for Kenya.
+              We believe every journey should leave a positive impact. As a trusted car hire company, our commitment goes beyond transportation. We invest in the communities that welcome our travellers, supporting meaningful and lasting change.
               </p>
               <p>
-                This commitment is part of who we are: the same care we bring to every journey extends to helping lift up young lives through learning.
+              One of our key initiatives focuses on improving access to education for children in need. By helping create opportunities for learning, we aim to empower young lives and contribute to a stronger future for communities across Kenya.
               </p>
             </div>
           </motion.div>
