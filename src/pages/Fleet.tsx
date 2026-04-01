@@ -33,10 +33,10 @@ const Fleet = () => {
 
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center md:text-left max-w-2xl">
-            <p className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Our Vehicles</p>
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Our Reliable Fleet</p>
             <h1 className="font-serif text-4xl md:text-6xl text-white mb-4">Our Fleet</h1>
             <p className="font-sans text-lg text-white/80 max-w-lg mx-auto md:mx-0">
-              A diverse fleet of well-maintained vehicles for every journey, from comfortable sedans to rugged 4x4 Land Cruisers.
+            Premium vehicles for Nairobi airport transfers, safari tours, and comfortable travel across Kenya & East Africa.
             </p>
           </div>
         </div>
