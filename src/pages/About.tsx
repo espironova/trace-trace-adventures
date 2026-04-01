@@ -231,7 +231,7 @@ const About = () => {
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent">Direction</p>
             <h2 className="mt-3 font-serif text-3xl text-foreground md:text-4xl">Vision &amp; Mission</h2>
             <p className="mt-4 font-sans text-muted-foreground">
-              What we aspire to—and how we show up every day across East Africa.
+              What we aspire to and how we show up every day across East Africa.
             </p>
           </motion.div>
 
