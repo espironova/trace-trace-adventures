@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
-import { Shield, Users, Clock, Award, Star, GraduationCap } from "lucide-react";
+import { Shield, Users, Clock, Award, Star, GraduationCap, Heart, BookOpen } from "lucide-react";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
@@ -9,6 +9,7 @@ import partnerBni from "@/assets/partner-bni.png";
 import partnerTra from "@/assets/partner-tra.png";
 import partnerEagles from "@/assets/partner-eagles.jfif";
 import partnerMashariki from "@/assets/partner-mashariki.jpg";
+import givingBackCommunity from "@/assets/giving-back-community.png";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -125,24 +126,74 @@ const About = () => {
       </section>
 
       {/* Giving back — community & education */}
-      <section className="py-24 bg-muted">
-        <div className="container mx-auto px-4">
-          <motion.div
-            {...fadeInUp}
-            className="max-w-3xl mx-auto text-center border border-border bg-card p-10 md:p-12"
-          >
-            <GraduationCap className="w-10 h-10 mx-auto mb-4 text-accent" aria-hidden />
-            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Beyond the Journey</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">Giving Back to the Community</h2>
-            <div className="space-y-4 font-sans text-foreground/80 leading-relaxed text-left md:text-center">
-              <p>
-              We believe every journey should leave a positive impact. As a trusted car hire company, our commitment goes beyond transportation. We invest in the communities that welcome our travellers, supporting meaningful and lasting change.
-              </p>
-              <p>
-              One of our key initiatives focuses on improving access to education for children in need. By helping create opportunities for learning, we aim to empower young lives and contribute to a stronger future for communities across Kenya.
-              </p>
-            </div>
-          </motion.div>
+      <section className="relative py-24 bg-muted overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_50%_at_100%_0%,rgba(244,196,48,0.08),transparent_50%)]" />
+        <div className="pointer-events-none absolute -left-32 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-primary/[0.06] blur-3xl" />
+        <div className="container relative mx-auto px-4">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <motion.div
+              initial={{ opacity: 0, x: -28 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative mx-auto max-w-xl lg:max-w-none">
+                <div
+                  className="absolute -inset-3 rounded-[1.35rem] bg-gradient-to-br from-accent/25 via-primary/10 to-transparent opacity-80 blur-2xl"
+                  aria-hidden
+                />
+                <div className="relative overflow-hidden rounded-2xl shadow-[0_24px_60px_-12px_hsl(24_30%_15%/0.25)] ring-1 ring-border/70">
+                  <img
+                    src={givingBackCommunity}
+                    alt="School children in Kenya smiling, representing our education and community support initiatives"
+                    className="aspect-[4/3] w-full object-cover object-[center_25%] sm:aspect-[16/10] lg:aspect-[5/4] lg:min-h-[380px]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/15 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-heroGold/50 to-transparent" />
+                  <p className="absolute bottom-5 left-5 right-5 font-sans text-sm leading-snug text-primary-foreground drop-shadow-md md:text-base">
+                    Investing in young learners and the communities that make every journey meaningful.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              {...fadeInUp}
+              className="space-y-6 lg:pl-2"
+            >
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-accent/35 bg-card shadow-sm">
+                <GraduationCap className="h-6 w-6 text-accent" aria-hidden />
+              </div>
+              <div>
+                <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent">Beyond the Journey</p>
+                <h2 className="mt-2 font-serif text-3xl text-foreground md:text-4xl lg:text-[2.5rem] lg:leading-tight">
+                  Giving Back to the Community
+                </h2>
+                <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-accent to-heroGold" />
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-sans text-sm text-foreground/90 shadow-sm">
+                  <Heart className="h-4 w-4 shrink-0 text-accent" aria-hidden />
+                  Local community impact
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-sans text-sm text-foreground/90 shadow-sm">
+                  <BookOpen className="h-4 w-4 shrink-0 text-accent" aria-hidden />
+                  Education access
+                </span>
+              </div>
+
+              <div className="space-y-4 border-l-2 border-accent/30 pl-6 font-sans leading-relaxed text-foreground/85">
+                <p>
+                  We believe every journey should leave a positive impact. As a trusted car hire company, our commitment goes beyond transportation. We invest in the communities that welcome our travellers, supporting meaningful and lasting change.
+                </p>
+                <p>
+                  One of our key initiatives focuses on improving access to education for children in need. By helping create opportunities for learning, we aim to empower young lives and contribute to a stronger future for communities across Kenya.
+                </p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
