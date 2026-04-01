@@ -13,7 +13,7 @@ import malindiImg from "@/assets/malindi.png";
 import elementaitaImg from "@/assets/lake-elementaita.jpg";
 import naivashaImg from "@/assets/lake-naivasha.jpg";
 import hellsGateImg from "@/assets/hells-gate.jpg";
-import aberdareImg from "@/assets/aberdare.jfif";
+import aberdareImg from "@/assets/aberdare-national-park.png";
 import mtKenyaImg from "@/assets/mt-kenya.avif";
 import kisumuImg from "@/assets/kisumu.jpg";
 import bwindiImg from "@/assets/bwindi.jpg";

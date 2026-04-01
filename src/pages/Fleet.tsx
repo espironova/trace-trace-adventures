@@ -1,25 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import { fleetUnits, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
 
+const heroFleet = fleetUnits[0];
 
 const Fleet = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingVehicleType, setBookingVehicleType] = useState<string | undefined>(undefined);
-  const [heroIndex, setHeroIndex] = useState(0);
-
-  const nextHero = useCallback(() => {
-    setHeroIndex((prev) => (prev + 1) % fleetUnits.length);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(nextHero, 3500);
-    return () => clearInterval(timer);
-  }, [nextHero]);
 
   const openBooking = (unit: FleetUnit) => {
     setBookingVehicleType(fleetBookingLabel(unit));
@@ -44,51 +35,25 @@ const Fleet = () => {
 
         <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="text-center md:text-left">
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">
-              Our Vehicles
-            </motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-white mb-4">
-              Our Fleet
-            </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-white/80 max-w-lg">
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Our Vehicles</p>
+            <h1 className="font-serif text-4xl md:text-6xl text-white mb-4">Our Fleet</h1>
+            <p className="font-sans text-lg text-white/80 max-w-lg">
               A diverse fleet of well-maintained vehicles for every journey, from comfortable sedans to rugged 4x4 Land Cruisers.
-            </motion.p>
+            </p>
           </div>
 
           <div className="relative h-[280px] md:h-[340px]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={heroIndex}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.8 }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={fleetUnits[heroIndex].images[0]}
-                  alt={fleetUnits[heroIndex].alt}
-                  className="w-full h-full object-cover rounded-sm"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
-                  <p className="font-serif text-xl text-white">{fleetUnits[heroIndex].modelName}</p>
-                  <p className="font-sans text-sm text-white/80 mt-0.5">{fleetUnits[heroIndex].registration}</p>
-                  <p className="font-sans text-sm text-accent">{fleetUnits[heroIndex].capacity}</p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-1.5 max-w-full px-2">
-              {fleetUnits.map((slide, i) => (
-                <button
-                  key={slide.id}
-                  onClick={() => setHeroIndex(i)}
-                  aria-label={`Show ${slide.modelName} ${slide.registration}`}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    i === heroIndex ? "bg-heroGold scale-125" : "bg-white/40 hover:bg-white/60"
-                  }`}
-                />
-              ))}
+            <div className="absolute inset-0">
+              <img
+                src={heroFleet.images[0]}
+                alt={heroFleet.alt}
+                className="w-full h-full object-cover rounded-sm"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
+                <p className="font-serif text-xl text-white">{heroFleet.modelName}</p>
+                <p className="font-sans text-sm text-white/80 mt-0.5">{heroFleet.registration}</p>
+                <p className="font-sans text-sm text-accent">{heroFleet.capacity}</p>
+              </div>
             </div>
           </div>
         </div>
