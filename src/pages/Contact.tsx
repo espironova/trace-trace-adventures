@@ -7,6 +7,9 @@ import { useToast } from "@/hooks/use-toast";
 
 const CONTACT_EMAIL = "info@tracktraceadventures.co.ke";
 
+const OFFICE_MAP_EMBED_SRC =
+  "https://www.google.com/maps?q=Milestone+Business+Center,+Northern+Bypass+Road,+Nairobi,+Kenya&output=embed&hl=en&z=16";
+
 const serviceLabels: Record<string, string> = {
   "airport-transfer": "Airport Transfer",
   "safari-tour": "Safari Tour",
@@ -183,7 +186,7 @@ const Contact = () => {
       <section className="w-full bg-muted border-t border-border" aria-label="Office location map">
         <div className="relative w-full h-[min(56vh,560px)] min-h-[320px]">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.978!2d36.8463!3d-1.2082!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTInMzAuMCJTIDM2wrA1MCc0Ni43IkU!5e0!3m2!1sen!2ske!4v1000000000000!5m2!1sen!2ske"
+            src={OFFICE_MAP_EMBED_SRC}
             className="absolute inset-0 h-full w-full border-0"
             allowFullScreen
             loading="lazy"

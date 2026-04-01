@@ -6,8 +6,6 @@ import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import { fleetUnits, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
 
-const heroFleet = fleetUnits[0];
-
 const Fleet = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingVehicleType, setBookingVehicleType] = useState<string | undefined>(undefined);
@@ -33,28 +31,13 @@ const Fleet = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
-        <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div className="text-center md:text-left">
+        <div className="relative z-10 container mx-auto px-4">
+          <div className="text-center md:text-left max-w-2xl">
             <p className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Our Vehicles</p>
             <h1 className="font-serif text-4xl md:text-6xl text-white mb-4">Our Fleet</h1>
-            <p className="font-sans text-lg text-white/80 max-w-lg">
+            <p className="font-sans text-lg text-white/80 max-w-lg mx-auto md:mx-0">
               A diverse fleet of well-maintained vehicles for every journey, from comfortable sedans to rugged 4x4 Land Cruisers.
             </p>
-          </div>
-
-          <div className="relative h-[280px] md:h-[340px]">
-            <div className="absolute inset-0">
-              <img
-                src={heroFleet.images[0]}
-                alt={heroFleet.alt}
-                className="w-full h-full object-cover rounded-sm"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-5">
-                <p className="font-serif text-xl text-white">{heroFleet.modelName}</p>
-                <p className="font-sans text-sm text-white/80 mt-0.5">{heroFleet.registration}</p>
-                <p className="font-sans text-sm text-accent">{heroFleet.capacity}</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
