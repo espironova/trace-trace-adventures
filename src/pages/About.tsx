@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
-import { Shield, Users, Clock, Award, Star, GraduationCap, Heart, BookOpen } from "lucide-react";
+import { Shield, Users, Clock, Award, Star, GraduationCap, Heart, BookOpen, Eye, Target } from "lucide-react";
 import iconDrivers from "@/assets/icon-drivers.png";
 import iconFleet from "@/assets/icon-fleet.png";
 import icon24h from "@/assets/icon-24hours.png";
@@ -139,21 +139,33 @@ const About = () => {
             >
               <div className="relative mx-auto max-w-xl lg:max-w-none">
                 <div
-                  className="absolute -inset-3 rounded-[1.35rem] bg-gradient-to-br from-accent/25 via-primary/10 to-transparent opacity-80 blur-2xl"
+                  className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-accent/20 blur-3xl"
                   aria-hidden
                 />
-                <div className="relative overflow-hidden rounded-2xl shadow-[0_24px_60px_-12px_hsl(24_30%_15%/0.25)] ring-1 ring-border/70">
+                <div
+                  className="pointer-events-none absolute -bottom-6 -right-10 h-48 w-48 rounded-full bg-primary/15 blur-3xl"
+                  aria-hidden
+                />
+                <div
+                  className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-white/40 via-accent/15 to-primary/10 backdrop-blur-md ring-1 ring-white/50 shadow-[0_8px_40px_-8px_hsl(24_30%_15%/0.2)] dark:from-white/5 dark:via-accent/10 dark:ring-white/10"
+                  aria-hidden
+                />
+                <div className="relative overflow-hidden rounded-[1.35rem] shadow-[0_24px_60px_-12px_hsl(24_30%_15%/0.28)] ring-1 ring-white/30 backdrop-blur-[2px] dark:ring-white/10">
                   <img
                     src={givingBackCommunity}
                     alt="School children in Kenya smiling, representing our education and community support initiatives"
                     className="aspect-[4/3] w-full object-cover object-[center_25%] sm:aspect-[16/10] lg:aspect-[5/4] lg:min-h-[380px]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/15 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-heroGold/50 to-transparent" />
-                  <p className="absolute bottom-5 left-5 right-5 font-sans text-sm leading-snug text-primary-foreground drop-shadow-md md:text-base">
-                    Investing in young learners and the communities that make every journey meaningful.
-                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-heroGold/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                    <div className="rounded-2xl border border-white/25 bg-white/15 px-4 py-3 backdrop-blur-md shadow-lg md:px-5 md:py-4">
+                      <p className="font-sans text-sm leading-snug text-primary-foreground drop-shadow-sm md:text-base">
+                        Investing in young learners and the communities that make every journey meaningful.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -198,21 +210,79 @@ const About = () => {
       </section>
 
       {/* Vision & Mission */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-            <motion.div {...fadeInUp} className="text-center border border-border bg-card p-10">
-              <h2 className="font-serif text-3xl md:text-4xl mb-6 text-accent">Our Vision</h2>
-              <p className="font-sans text-lg text-foreground/80 leading-relaxed">
-                To provide exceptional transportation solutions across East Africa, ensuring every journey is reliable, comfortable, and unforgettable.
-              </p>
-            </motion.div>
-            <motion.div {...fadeInUp} className="text-center border border-border bg-card p-10">
-              <h2 className="font-serif text-3xl md:text-4xl mb-6 text-accent">Our Mission</h2>
-              <p className="font-sans text-lg text-foreground/80 leading-relaxed">
-                To be the preferred car hire service in East Africa, offering top-notch vehicles and unparalleled customer service. We strive to exceed our clients' expectations by providing reliable, safe, and personalized transportation solutions that enhance their travel experiences.
-              </p>
-            </motion.div>
+      <section className="relative overflow-hidden py-24">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,hsl(var(--accent)/0.12),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_100%,hsl(var(--primary)/0.08),transparent_45%)]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -left-24 top-1/3 h-[420px] w-[420px] -translate-y-1/2 rounded-full bg-gradient-to-br from-accent/20 to-transparent opacity-70 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -right-20 bottom-0 h-[360px] w-[360px] rounded-full bg-gradient-to-tl from-heroGold/15 to-transparent opacity-60 blur-3xl"
+          aria-hidden
+        />
+        <div className="container relative mx-auto px-4">
+          <motion.div
+            {...fadeInUp}
+            className="mx-auto mb-14 max-w-2xl text-center"
+          >
+            <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent">Direction</p>
+            <h2 className="mt-3 font-serif text-3xl text-foreground md:text-4xl">Vision &amp; Mission</h2>
+            <p className="mt-4 font-sans text-muted-foreground">
+              What we aspire to—and how we show up every day across East Africa.
+            </p>
+          </motion.div>
+
+          <div className="mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
+            {[
+              {
+                title: "Our Vision",
+                icon: Eye,
+                body:
+                  "To provide exceptional transportation solutions across East Africa, ensuring every journey is reliable, comfortable, and unforgettable.",
+                accent: "from-accent/30 via-heroGold/20 to-primary/15",
+                blob: "left-0 top-0 -translate-x-1/4 -translate-y-1/4",
+              },
+              {
+                title: "Our Mission",
+                icon: Target,
+                body:
+                  "To be the preferred car hire service in East Africa, offering top-notch vehicles and unparalleled customer service. We strive to exceed our clients' expectations by providing reliable, safe, and personalized transportation solutions that enhance their travel experiences.",
+                accent: "from-primary/25 via-accent/20 to-heroGold/10",
+                blob: "right-0 bottom-0 translate-x-1/4 translate-y-1/4",
+              },
+            ].map((block, i) => (
+              <motion.div
+                key={block.title}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.65, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative flex min-h-[min(100%,420px)] md:min-h-[28rem]"
+              >
+                <div
+                  className={`pointer-events-none absolute ${block.blob} h-40 w-40 rounded-full bg-gradient-to-br ${block.accent} opacity-80 blur-2xl transition-opacity duration-500 group-hover:opacity-100`}
+                  aria-hidden
+                />
+                <div className="relative flex h-full w-full flex-col rounded-[1.75rem] border border-white/50 bg-gradient-to-br from-background/70 via-background/50 to-muted/40 p-8 shadow-[0_12px_48px_-12px_hsl(24_30%_15%/0.15)] backdrop-blur-xl dark:border-white/10 dark:from-card/40 dark:via-card/25 dark:to-card/15 md:p-10">
+                  <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full border border-accent/20 bg-gradient-to-br from-accent/10 to-transparent opacity-60" aria-hidden />
+                  <div className="mb-6 flex items-center gap-4">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/40 bg-white/30 shadow-inner backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
+                      <block.icon className="h-7 w-7 text-accent" strokeWidth={1.75} aria-hidden />
+                    </div>
+                    <div className="h-px flex-1 bg-gradient-to-r from-accent/40 via-heroGold/30 to-transparent" aria-hidden />
+                  </div>
+                  <h3 className="font-serif text-2xl text-accent md:text-3xl">{block.title}</h3>
+                  <div className="mt-5 flex flex-1 flex-col justify-center">
+                    <p className="font-sans text-base leading-relaxed text-foreground/85 md:text-lg">
+                      {block.body}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
