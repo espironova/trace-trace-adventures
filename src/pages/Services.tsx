@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
@@ -219,6 +219,16 @@ const serviceData = [
 
 const ImageCarousel = ({ images, alt }: { images: string[]; alt: string }) => {
   const [current, setCurrent] = useState(0);
+
+  const goNext = useCallback(() => {
+    setCurrent((c) => (c + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(goNext, 4000);
+    return () => clearInterval(timer);
+  }, [images.length, goNext]);
 
   if (images.length === 1) {
     return (

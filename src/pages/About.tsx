@@ -20,26 +20,26 @@ const fadeInUp = {
 const whyUs = [
   {
     image: iconDrivers,
-    title: "Experienced Drivers",
-    desc: "Professional, licensed drivers with years of experience navigating East Africa's roads and national parks safely.",
+    title: "Experienced, Licensed Drivers",
+    desc: "20+ years of experience navigating East Africa's roads and national parks safely.",
     alt: "Illustration representing licensed drivers for Nairobi airport and safari transport",
   },
   {
     image: iconFleet,
-    title: "Well-Maintained Fleet",
-    desc: "Every vehicle is regularly serviced and inspected, from comfortable sedans to rugged 4x4 Land Cruisers.",
+    title: "Premium,Well-Maintained Fleet",
+    desc: "Spotless sedans, 4x4 Land Cruisers, safari vans and minibuses all regularly serviced.",
     alt: "Illustration representing a serviced vehicle fleet for hire in Kenya",
   },
   {
     image: icon24h,
     title: "24/7 Availability",
-    desc: "Round-the-clock service for airport transfers, emergency travel, and last-minute bookings. We're always ready.",
+    desc: "Late-night JKIA arrivals, early departures, emergency transfers we’re always ready.",
     alt: "Icon representing 24-hour car hire and transfer availability in East Africa",
   },
   {
     image: iconExpertise,
     title: "Local Expertise",
-    desc: "Over 20 years of experience. Our team knows every route, hidden gem, and the best safari experiences across East Africa.",
+    desc: "We know the best routes, hidden gems, and the best safari experiences across East Africa.",
     alt: "Icon representing local travel expertise across Kenya, Tanzania, Uganda, and Rwanda",
   },
 ];
