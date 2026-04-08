@@ -50,10 +50,28 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl mx-auto mb-10"
+            className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl mx-auto mb-6"
           >
             Your Gateway to East Africa's <span className="italic text-heroGold">Greatest Adventures</span>
           </motion.h1>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.5 }}
+              className="mb-10"
+            >
+              <p className="font-sans text-lg md:text-xl text-heroGold font-bold uppercase tracking-[0.2em] mb-2">
+                {homeHeroSlides[current].label}
+              </p>
+              <p className="font-sans text-base md:text-lg text-white/80 max-w-2xl mx-auto">
+                {homeHeroSlides[current].subtitle}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
