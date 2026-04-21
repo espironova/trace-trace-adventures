@@ -10,6 +10,7 @@ import partnerTra from "@/assets/partner-tra.png";
 import partnerEagles from "@/assets/partner-eagles.jfif";
 import partnerMashariki from "@/assets/partner-mashariki.jpg";
 import givingBackCommunity from "@/assets/giving-back-community.png";
+import aboutHeroBg from "@/assets/about-hero-bg.jpg";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -56,14 +57,19 @@ const About = () => {
   return (
     <Layout>
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/85 to-muted" />
+        <img
+          src={aboutHeroBg}
+          alt="Track & Trace Adventures fleet on a Kenyan road"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/75 to-primary/60" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(244,196,48,0.22),transparent_55%)]" />
         <div className="absolute -top-24 left-[15%] h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
         <div className="absolute bottom-0 right-[10%] h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
         <div className="relative z-10 text-center px-4">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">About Us</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl text-primary-foreground drop-shadow-sm">
-            Our Story
+            Track & Trace Adventures Since 2005
           </motion.h1>
         </div>
       </section>
