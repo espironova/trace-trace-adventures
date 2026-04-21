@@ -1,17 +1,18 @@
 
 
-# Remove Vehicle Image Carousel from Fleet Grid
-
-## Summary
-Replace the auto-cycling `VehicleImageCarousel` component in the Fleet grid with a single static image per vehicle (using `images[0]`).
+# About Hero: Add Background Image + Update Title
 
 ## Changes
 
-### `src/pages/Fleet.tsx`
-- Remove the `VehicleImageCarousel` import
-- Replace `<VehicleImageCarousel images={v.images} alt={v.alt} />` with a simple `<div>` + `<img>` showing only `v.images[0]`
-- Keep the same `aspect-[4/3]` styling for consistency
+### 1. Copy uploaded image
+- `user-uploads://About_us.jpg` → `src/assets/about-hero-bg.jpg`
 
-### `src/components/VehicleImageCarousel.tsx`
-- No deletion needed (may be useful elsewhere later), but it will no longer be used on the Fleet page
+### 2. `src/pages/About.tsx` hero section
+- Import `aboutHeroBg from "@/assets/about-hero-bg.jpg"`
+- Add `<img src={aboutHeroBg}>` as absolute-positioned background (object-cover, full inset)
+- Keep the brown gradient overlay on top at reduced opacity (e.g. `from-primary/85 via-primary/75 to-primary/60`) so the photo shows through while text stays readable
+- Keep the radial/blur accents above the image
+- Replace `Our Story` heading text with `Track & Trace Adventures Since 2005`
+
+No other sections change.
 
