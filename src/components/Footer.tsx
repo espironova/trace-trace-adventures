@@ -45,9 +45,6 @@ const Footer = () => {
               <li className="opacity-80">Long Distance Transfers</li>
               <li className="opacity-80">SGR Transfers (station pickup & drop-off)</li>
               <li className="opacity-80">Hotel-to-Hotel Transfers</li>
-              <li className="opacity-80">Conference & Corporate Transport</li>
-              <li className="opacity-80">International Schools Transport</li>
-              <li className="opacity-80">Travel Consultations</li>
             </ul>
           </div>
 

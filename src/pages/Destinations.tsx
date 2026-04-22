@@ -141,14 +141,12 @@ const DestinationRow = ({ dest, index }: { dest: Destination; index: number }) =
         transition={{ duration: 0.7, delay: 0.2 }}
         className={`md:col-span-6 ${isEven ? "md:order-2" : "md:order-1"}`}
       >
-        <div className="overflow-hidden group">
+        <div className="relative overflow-hidden group h-[300px] md:h-[420px]">
           <img
             src={dest.image}
             alt={dest.name}
-            className="w-full h-[300px] md:h-[420px] object-cover transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
-            width={800}
-            height={500}
           />
         </div>
       </motion.div>

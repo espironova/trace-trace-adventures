@@ -156,11 +156,11 @@ const About = () => {
                   className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-white/40 via-accent/15 to-primary/10 backdrop-blur-md ring-1 ring-white/50 shadow-[0_8px_40px_-8px_hsl(24_30%_15%/0.2)] dark:from-white/5 dark:via-accent/10 dark:ring-white/10"
                   aria-hidden
                 />
-                <div className="relative overflow-hidden rounded-[1.35rem] shadow-[0_24px_60px_-12px_hsl(24_30%_15%/0.28)] ring-1 ring-white/30 backdrop-blur-[2px] dark:ring-white/10">
+                <div className="relative overflow-hidden rounded-[1.35rem] shadow-[0_24px_60px_-12px_hsl(24_30%_15%/0.28)] ring-1 ring-white/30 backdrop-blur-[2px] dark:ring-white/10 aspect-[4/3] sm:aspect-[16/10] lg:aspect-[5/4] lg:min-h-[380px]">
                   <img
                     src={givingBackCommunity}
                     alt="School children in Kenya smiling, representing our education and community support initiatives"
-                    className="aspect-[4/3] w-full object-cover object-[center_25%] sm:aspect-[16/10] lg:aspect-[5/4] lg:min-h-[380px]"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_25%]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />

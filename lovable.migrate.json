@@ -1,3 +1,53 @@
 {
-  "migrate": true
+  "migrate": true,
+  "title": "Track & Trace Adventures | Car Hire, Airport Transfers & Safari Tours in Nairobi, Kenya",
+  "description": "Premium car hire, airport transfers, safari tours, SGR station transfers, and long-distance transport services in Nairobi, Kenya. Book your JKIA airport pickup or Maasai Mara safari vehicle today.",
+  "siteUrl": "https://tracktraceadventures.co.ke",
+  "ogImage": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9cd65989-646c-4803-bac6-3e42271c13fd/id-preview-30207f92--27c9ad74-7129-421a-a373-b7d4528075fc.lovable.app-1774345698854.png",
+  "ogType": "website",
+  "twitterCard": "summary_large_image",
+  "locale": "en_KE",
+  "businessName": "Track & Trace Adventures",
+  "businessSchema": {
+    "type": "LocalBusiness",
+    "name": "Track & Trace Adventures",
+    "telephone": "+254721521009",
+    "areaServed": "Kenya",
+    "priceRange": "$$",
+    "address": {
+      "streetAddress": "Milestone Business Center, Northern Bypass Road",
+      "locality": "Nairobi",
+      "country": "KE"
+    }
+  },
+  "pages": {
+    "/": {
+      "title": "Track & Trace Adventures | Car Hire, Airport Transfers & Safari Tours in Nairobi, Kenya",
+      "description": "Premium car hire, airport transfers, safari tours, SGR station transfers, and long-distance transport in Nairobi, Kenya. Book your JKIA airport pickup or Maasai Mara safari vehicle today."
+    },
+    "/about": {
+      "title": "About Us | Track & Trace Adventures — 20+ Years Serving East Africa",
+      "description": "Over 20 years of experience in car hire, airport transfers, and safari tours across East Africa. Meet the team behind Kenya's trusted transport company."
+    },
+    "/services": {
+      "title": "Our Services | Track & Trace Adventures — Airport Transfers, Safari Tours & Car Hire",
+      "description": "Airport transfers, safari tours, car hire, SGR transfers, long-distance transport, hotel transfers, and corporate travel solutions in Nairobi, Kenya."
+    },
+    "/fleet": {
+      "title": "Our Fleet | Track & Trace Adventures — Sedans, 4x4s, Safari Vans & Minibuses",
+      "description": "Explore our premium, well-maintained fleet of sedans, 4x4 Land Cruisers, safari vans, and minibuses available for hire across Kenya and East Africa."
+    },
+    "/destinations": {
+      "title": "Destinations | Track & Trace Adventures — East Africa Safari & Travel Destinations",
+      "description": "Discover iconic East African destinations — Maasai Mara, Zanzibar, Bwindi, Kilimanjaro, and more — with trusted transport from Track & Trace Adventures."
+    },
+    "/blogs-reviews": {
+      "title": "Blogs & Reviews | Track & Trace Adventures — Kenya Travel Tips & Safari Guides",
+      "description": "Travel tips, destination guides, and client reviews from Track & Trace Adventures — your trusted car hire and safari transport partner in Kenya."
+    },
+    "/contact": {
+      "title": "Contact Us | Track & Trace Adventures — Book Car Hire & Transfers in Nairobi",
+      "description": "Get in touch with Track & Trace Adventures for car hire, airport transfers, safari tours, and transport bookings in Nairobi, Kenya. Available 24/7."
+    }
+  }
 }
