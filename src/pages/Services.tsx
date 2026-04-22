@@ -286,7 +286,7 @@ const Services = () => {
 
   return (
     <Layout>
-      <section className="relative py-24 text-center overflow-hidden">
+      <section className="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden py-24">
         <img
           src={servicesHeroBg}
           alt="Aircraft at Jomo Kenyatta International Airport at sunset, ready for transfer service"
