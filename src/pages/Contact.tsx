@@ -48,11 +48,15 @@ const Contact = () => {
 
   return (
     <Layout>
-      <section className="bg-primary text-primary-foreground py-24 text-center">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-primary text-primary-foreground py-14 md:py-16 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(244,196,48,0.18),transparent_60%)]" />
+        <div className="absolute -top-16 left-[10%] h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute bottom-0 right-[8%] h-48 w-48 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="relative z-10 container mx-auto px-4">
+          <div className="h-px w-16 bg-heroGold mx-auto mb-4" />
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">Get in Touch</motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4">Contact Us</motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg opacity-80 max-w-2xl mx-auto">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-5xl mb-4">Contact Us</motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-base md:text-lg opacity-80 max-w-2xl mx-auto">
             Ready to book? Have questions? Reach out and we'll get back to you within 24 hours.
           </motion.p>
         </div>

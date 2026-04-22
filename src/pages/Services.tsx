@@ -15,6 +15,7 @@ import fleetHiace from "@/assets/fleet-hiace.jpg";
 import fleetFord from "@/assets/fleet-ford.jpg";
 import fleetGoldenDragon from "@/assets/fleet-golden-dragon.jpg";
 import fleetInterior from "@/assets/fleet-interior.jpg";
+import servicesHeroBg from "@/assets/services-hero-bg.jpg";
 import { Plane, Map, Car, Bus, Train, Compass, ArrowRight, ChevronLeft, ChevronRight, Building, GlassWater, Users, GraduationCap, UtensilsCrossed } from "lucide-react";
 import { repeatAfterUnique } from "@/lib/utils";
 
@@ -286,17 +287,22 @@ const Services = () => {
   return (
     <Layout>
       <section className="relative py-24 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/85 to-muted" />
+        <img
+          src={servicesHeroBg}
+          alt="Aircraft at Jomo Kenyatta International Airport at sunset, ready for transfer service"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/75 to-primary/65" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(244,196,48,0.22),transparent_55%)]" />
         <div className="absolute -top-24 left-[15%] h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
         <div className="absolute bottom-0 right-[10%] h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
         <div className="relative z-10 container mx-auto px-4">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-sans text-sm uppercase tracking-[0.3em] text-heroGold mb-3">What We Offer</motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-4xl md:text-6xl mb-4 text-primary-foreground drop-shadow-sm">
-            Our Services
+            Car Hire & Transport Services in East Africa
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="font-sans text-lg text-primary-foreground/85 max-w-2xl mx-auto">
-            Comprehensive transport solutions across East Africa. From airport pickups to multi-day safari adventures, corporate events to school excursions. Professional service, reliable vehicles, competitive prices.
+            Reliable car hire, airport transfers, safari vehicles, and corporate transport in Kenya and East Africa. Professional service, well-maintained vehicles, and competitive pricing for all your travel needs.
           </motion.p>
         </div>
       </section>
