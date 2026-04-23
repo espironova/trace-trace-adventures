@@ -1,44 +1,42 @@
 
 
-# Services Hero + Blogs/Contact Hero Refinement
+# Fix WhatsApp Booking Message Truncation
 
-## 1. Services Page Hero (`src/pages/Services.tsx`)
+## Problem
+In `src/components/BookingModal.tsx`, the WhatsApp message is built with literal `&` characters (e.g. "Track & Trace Adventures", "*Booking Request*") and inserted directly into the URL. The browser treats `&` as a query-string separator, so WhatsApp only receives `Hello Track ` and the rest is dropped.
 
-### Copy uploaded photo
-- `user-uploads://Gemini_Generated_Image_7zvv1b7zvv1b7zvv.png` → `src/assets/services-hero-bg.jpg`
+## Fix — `src/components/BookingModal.tsx` `handleSubmit`
 
-### Update hero section
-- Import `servicesHeroBg from "@/assets/services-hero-bg.jpg"`
-- Add `<img>` as absolute-positioned background (object-cover, full inset) behind existing gradient
-- Reduce gradient opacity to `from-primary/85 via-primary/75 to-primary/65` so the JKIA airport photo shows through while preserving text contrast
-- Keep existing radial/blur accents on top
-- Replace copy:
-  - Eyebrow: `What We Offer` (unchanged)
-  - H1: `Car Hire & Transport Services in East Africa` (was `Our Services`)
-  - Subtitle: `Reliable car hire, airport transfers, safari vehicles, and corporate transport in Kenya and East Africa. Professional service, well-maintained vehicles, and competitive pricing for all your travel needs.`
+Rebuild the message as a normal multi-line string, then encode the whole thing once:
 
-## 2. Blogs & Reviews Hero (`src/pages/BlogsReviews.tsx`)
+```ts
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  const message = [
+    `Hello Track & Trace Adventures!`,
+    ``,
+    `*Booking Request*`,
+    `Name: ${form.name}`,
+    `Phone: ${form.phone}`,
+    `Pickup: ${form.pickup}`,
+    `Drop-off: ${form.dropoff}`,
+    `Date: ${form.date}`,
+    `Vehicle: ${form.vehicleType}`,
+    `Driver: ${form.driver}`,
+  ].join('\n');
 
-Make the plain hero feel more polished and reduce vertical size:
-- Reduce padding from current (likely `py-24`) to `py-14 md:py-16`
-- Add layered visual interest without a photo:
-  - Base: existing brown gradient
-  - Add subtle radial highlight: `bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(244,196,48,0.18),transparent_60%)]`
-  - Add soft accent blurs (saffron + cream) in corners, similar to other heroes
-  - Add a thin gold accent rule (`h-px w-16 bg-heroGold`) above the eyebrow for a magazine feel
-- Keep all existing copy intact
+  window.open(
+    `https://wa.me/254721521009?text=${encodeURIComponent(message)}`,
+    '_blank'
+  );
+  onClose();
+};
+```
 
-## 3. Contact Us Hero (`src/pages/Contact.tsx`)
-
-Apply the same treatment as Blogs:
-- Reduce padding to `py-14 md:py-16`
-- Add radial highlight + corner blur accents over the brown gradient
-- Add the thin gold accent rule above the eyebrow
-- Keep existing copy intact
+### Why this works
+- `encodeURIComponent` on the whole message converts `&` → `%26`, newlines → `%0A`, spaces → `%20`, etc., so nothing in the body is ever mistaken for a URL delimiter.
+- WhatsApp now receives the complete formatted booking request with all fields (Name, Phone, Pickup, Drop-off, Date, Vehicle, Driver) on separate lines.
 
 ## Files Modified
-1. `src/assets/services-hero-bg.jpg` — new (copied from upload)
-2. `src/pages/Services.tsx` — hero background image + new text
-3. `src/pages/BlogsReviews.tsx` — refined, shorter hero
-4. `src/pages/Contact.tsx` — refined, shorter hero
+1. `src/components/BookingModal.tsx` — rewrite `handleSubmit` message construction.
 
