@@ -51,8 +51,19 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const msg = `Hello Track & Trace Adventures!%0A%0A*Booking Request*%0AName: ${encodeURIComponent(form.name)}%0APhone: ${encodeURIComponent(form.phone)}%0APickup: ${encodeURIComponent(form.pickup)}%0ADrop-off: ${encodeURIComponent(form.dropoff)}%0ADate: ${encodeURIComponent(form.date)}%0AVehicle: ${encodeURIComponent(form.vehicleType)}%0ADriver: ${encodeURIComponent(form.driver)}`;
-    window.open(`https://wa.me/254721521009?text=${msg}`, "_blank");
+    const message = [
+      `Hello Track & Trace Adventures!`,
+      ``,
+      `*Booking Request*`,
+      `Name: ${form.name}`,
+      `Phone: ${form.phone}`,
+      `Pickup: ${form.pickup}`,
+      `Drop-off: ${form.dropoff}`,
+      `Date: ${form.date}`,
+      `Vehicle: ${form.vehicleType}`,
+      `Driver: ${form.driver}`,
+    ].join("\n");
+    window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
     onClose();
   };
 
