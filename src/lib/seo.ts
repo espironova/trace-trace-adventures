@@ -1,8 +1,7 @@
 export const SITE_URL = "https://tracktraceadventures.co.ke";
 
 /** Shared OG / Twitter preview image (matches index.html) */
-export const DEFAULT_OG_IMAGE =
-  "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9cd65989-646c-4803-bac6-3e42271c13fd/id-preview-30207f92--27c9ad74-7129-421a-a373-b7d4528075fc.lovable.app-1774345698854.png";
+export const DEFAULT_OG_IMAGE = "https://tracktraceadventures.co.ke/og-image.png";
 
 export type SeoEntry = {
   title: string;
