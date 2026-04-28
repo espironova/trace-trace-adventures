@@ -1,25 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, ChevronDown } from "lucide-react";
-
-const vehicles = [
-  { id: "safari-8", name: "8-Pax Safari Land Cruiser", longDist: { type: "perDay", rate: 25000 }, fullDay: 25000, airport: 15000, hotel: 10000, dinner: 10000, cocktail: 10000, standby: 10000, driverAllowance: 2500 },
-  { id: "van-8", name: "8-Pax Tour Van", longDist: { type: "perKm", rate: 130, minKm: 120 }, fullDay: 20000, airport: 10000, hotel: 12000, dinner: 10000, cocktail: 12000, standby: 12000, driverAllowance: 2000 },
-  { id: "coaster-14", name: "14-Pax Toyota Coaster", longDist: { type: "perKm", rate: 60, minKm: 120 }, fullDay: 12000, airport: 7000, hotel: 8000, dinner: 8000, cocktail: 10000, standby: 10000, driverAllowance: 2000 },
-  { id: "mercedes-22", name: "22-Pax Mercedes Shuttle", longDist: { type: "perKm", rate: 100, minKm: 120 }, fullDay: 17000, airport: 12000, hotel: 12000, dinner: 12000, cocktail: 12000, standby: 12000, driverAllowance: 2500 },
-  { id: "bus-33", name: "33/37-Pax Mercedes Bus", longDist: { type: "perKm", rate: 130, minKm: 120 }, fullDay: 20000, airport: 15000, hotel: 15000, dinner: 15000, cocktail: 15000, standby: 15000, driverAllowance: 3000 },
-  { id: "bus-45", name: "45-Pax Bus", longDist: { type: "perKm", rate: 150, minKm: 120 }, fullDay: 30000, airport: 18000, hotel: 18000, dinner: 18000, cocktail: 15000, standby: 25000, driverAllowance: 4000 },
-];
-
-const serviceTypes = [
-  { id: "longDist", name: "Long Distance" },
-  { id: "fullDay", name: "Full-Day Disposal" },
-  { id: "airport", name: "Airport Transfer" },
-  { id: "hotel", name: "Hotel-to-Hotel Transfer" },
-  { id: "dinner", name: "Dinner Transport" },
-  { id: "cocktail", name: "Corporate Cocktail" },
-  { id: "standby", name: "Standby" },
-];
+import { vehicles, serviceTypes, calculateEstimate } from "@/data/rates";
 
 type Result = { baseCost: number; driverAllowance: number; total: number; breakdown: string } | null;
 
@@ -37,29 +19,14 @@ const RateCalculator = () => {
   const needsDays = isLongDist || serviceId === "fullDay" || serviceId === "standby";
 
   const calculate = () => {
-    if (!selectedVehicle || !serviceId) return;
-    const numDays = Math.max(1, parseInt(days) || 1);
-    let baseCost = 0;
-    let breakdown = "";
-
-    if (isLongDist) {
-      const ld = selectedVehicle.longDist;
-      if (ld.type === "perKm") {
-        const numKm = Math.max(ld.minKm || 120, parseInt(km) || 0);
-        baseCost = ld.rate * numKm * numDays;
-        breakdown = `${ld.rate.toLocaleString()} KES/km × ${numKm} km × ${numDays} day(s)`;
-      } else {
-        baseCost = ld.rate * numDays;
-        breakdown = `${ld.rate.toLocaleString()} KES/day × ${numDays} day(s)`;
-      }
-    } else {
-      const rate = selectedVehicle[serviceId as keyof typeof selectedVehicle] as number;
-      baseCost = rate * numDays;
-      breakdown = numDays > 1 ? `${rate.toLocaleString()} KES × ${numDays} day(s)` : `${rate.toLocaleString()} KES`;
-    }
-
-    const driverAllowance = selectedVehicle.driverAllowance * numDays;
-    setResult({ baseCost, driverAllowance, total: baseCost + driverAllowance, breakdown });
+    const est = calculateEstimate({ vehicleId, serviceId, km, days });
+    if (!est) return;
+    setResult({
+      baseCost: est.baseCost,
+      driverAllowance: est.driverAllowance,
+      total: est.total,
+      breakdown: est.breakdown,
+    });
   };
 
   return (
