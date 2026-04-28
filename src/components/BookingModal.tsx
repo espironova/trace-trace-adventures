@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, MapPin, Calendar, Car, UserCheck } from "lucide-react";
+import { X, User, Phone, MapPin, Calendar, Car, UserCheck, Wallet, Route, CalendarDays, Briefcase } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { serviceTypes, calculateEstimate, getServiceMeta, matchRateVehicle } from "@/data/rates";
 
 interface BookingModalProps {
   open: boolean;
@@ -31,6 +32,9 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
     date: "",
     vehicleType: "",
     driver: "",
+    serviceId: "",
+    km: "",
+    days: "1",
   });
 
   const vehicleOptions = useMemo(() => {
@@ -49,9 +53,29 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Map the chosen vehicle label to a rate-card id, then compute a live estimate.
+  const rateVehicleId = useMemo(() => matchRateVehicle(form.vehicleType), [form.vehicleType]);
+  const { needsKm, needsDays } = useMemo(
+    () => getServiceMeta(rateVehicleId ?? "", form.serviceId),
+    [rateVehicleId, form.serviceId],
+  );
+  const estimate = useMemo(
+    () =>
+      rateVehicleId
+        ? calculateEstimate({
+            vehicleId: rateVehicleId,
+            serviceId: form.serviceId,
+            km: form.km,
+            days: form.days,
+          })
+        : null,
+    [rateVehicleId, form.serviceId, form.km, form.days],
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = [
+    const selectedService = serviceTypes.find((s) => s.id === form.serviceId);
+    const lines: string[] = [
       `Hello Track & Trace Adventures!`,
       ``,
       `*Booking Request*`,
@@ -61,8 +85,25 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
       `Drop-off: ${form.dropoff}`,
       `Date: ${form.date}`,
       `Vehicle: ${form.vehicleType}`,
-      `Driver: ${form.driver}`,
-    ].join("\n");
+    ];
+    if (selectedService) lines.push(`Service: ${selectedService.name}`);
+    if (needsKm && form.km) lines.push(`Distance: ${form.km} km`);
+    if (needsDays && form.days) lines.push(`Days: ${form.days}`);
+    lines.push(`Driver: ${form.driver}`);
+
+    if (estimate) {
+      lines.push(
+        ``,
+        `*Estimated Budget*`,
+        `${estimate.breakdown}`,
+        `Vehicle Cost: KES ${estimate.baseCost.toLocaleString()}`,
+        `Driver Allowance: KES ${estimate.driverAllowance.toLocaleString()}`,
+        `Estimated Total: KES ${estimate.total.toLocaleString()}`,
+        `(Estimate excludes park entrance fees, parking, and accommodation.)`,
+      );
+    }
+
+    const message = lines.join("\n");
     window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
     onClose();
   };
@@ -199,6 +240,60 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
                 </select>
               </div>
 
+              {/* Service Type (drives budget estimate) */}
+              <div>
+                <label className="flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2 font-bold">
+                  <Briefcase className="w-3.5 h-3.5 text-accent" /> Service Type
+                </label>
+                <select
+                  name="serviceId"
+                  value={form.serviceId}
+                  onChange={handleChange}
+                  className="w-full border border-border bg-background px-4 py-3 font-sans text-sm text-foreground focus:outline-none focus:border-accent transition-colors appearance-none"
+                >
+                  <option value="">Select a service (for budget estimate)</option>
+                  {serviceTypes.map((s) => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {(needsKm || needsDays) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {needsKm && (
+                    <div>
+                      <label className="flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2 font-bold">
+                        <Route className="w-3.5 h-3.5 text-accent" /> Distance (km)
+                      </label>
+                      <input
+                        type="number"
+                        name="km"
+                        min={120}
+                        value={form.km}
+                        onChange={handleChange}
+                        placeholder="Min 120 km"
+                        className="w-full border border-border bg-background px-4 py-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-accent transition-colors"
+                      />
+                    </div>
+                  )}
+                  {needsDays && (
+                    <div>
+                      <label className="flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2 font-bold">
+                        <CalendarDays className="w-3.5 h-3.5 text-accent" /> Number of Days
+                      </label>
+                      <input
+                        type="number"
+                        name="days"
+                        min={1}
+                        value={form.days}
+                        onChange={handleChange}
+                        className="w-full border border-border bg-background px-4 py-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-accent transition-colors"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Driver */}
               <div>
                 <label className="flex items-center gap-2 font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground mb-2 font-bold">
@@ -227,6 +322,36 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
                   ))}
                 </div>
               </div>
+
+              {/* Live Budget Estimate */}
+              {estimate && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="border border-accent/40 bg-accent/5 p-5 space-y-2"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Wallet className="w-4 h-4 text-accent" />
+                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-accent font-bold">Estimated Budget</p>
+                  </div>
+                  <p className="font-sans text-xs text-muted-foreground">{estimate.breakdown}</p>
+                  <div className="flex justify-between font-sans text-sm">
+                    <span className="text-foreground/70">Vehicle Cost</span>
+                    <span className="text-foreground font-bold">KES {estimate.baseCost.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between font-sans text-sm">
+                    <span className="text-foreground/70">Driver Allowance</span>
+                    <span className="text-foreground font-bold">KES {estimate.driverAllowance.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between font-sans text-base border-t border-accent/30 pt-2">
+                    <span className="text-foreground font-bold">Estimated Total</span>
+                    <span className="text-accent font-bold font-serif">KES {estimate.total.toLocaleString()}</span>
+                  </div>
+                  <p className="font-sans text-[11px] text-muted-foreground italic pt-1">
+                    Excludes park entrance fees, parking, and accommodation. Final quote confirmed via WhatsApp.
+                  </p>
+                </motion.div>
+              )}
 
               <button
                 type="submit"
