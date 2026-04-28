@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, MapPin, Calendar, Car, UserCheck } from "lucide-react";
+import { X, User, Phone, MapPin, Calendar, Car, UserCheck, Wallet, Route, CalendarDays, Briefcase } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { serviceTypes, calculateEstimate, getServiceMeta, matchRateVehicle } from "@/data/rates";
 
 interface BookingModalProps {
   open: boolean;
@@ -31,6 +32,9 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
     date: "",
     vehicleType: "",
     driver: "",
+    serviceId: "",
+    km: "",
+    days: "1",
   });
 
   const vehicleOptions = useMemo(() => {
@@ -49,9 +53,29 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Map the chosen vehicle label to a rate-card id, then compute a live estimate.
+  const rateVehicleId = useMemo(() => matchRateVehicle(form.vehicleType), [form.vehicleType]);
+  const { needsKm, needsDays } = useMemo(
+    () => getServiceMeta(rateVehicleId ?? "", form.serviceId),
+    [rateVehicleId, form.serviceId],
+  );
+  const estimate = useMemo(
+    () =>
+      rateVehicleId
+        ? calculateEstimate({
+            vehicleId: rateVehicleId,
+            serviceId: form.serviceId,
+            km: form.km,
+            days: form.days,
+          })
+        : null,
+    [rateVehicleId, form.serviceId, form.km, form.days],
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = [
+    const selectedService = serviceTypes.find((s) => s.id === form.serviceId);
+    const lines: string[] = [
       `Hello Track & Trace Adventures!`,
       ``,
       `*Booking Request*`,
@@ -61,8 +85,25 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
       `Drop-off: ${form.dropoff}`,
       `Date: ${form.date}`,
       `Vehicle: ${form.vehicleType}`,
-      `Driver: ${form.driver}`,
-    ].join("\n");
+    ];
+    if (selectedService) lines.push(`Service: ${selectedService.name}`);
+    if (needsKm && form.km) lines.push(`Distance: ${form.km} km`);
+    if (needsDays && form.days) lines.push(`Days: ${form.days}`);
+    lines.push(`Driver: ${form.driver}`);
+
+    if (estimate) {
+      lines.push(
+        ``,
+        `*Estimated Budget*`,
+        `${estimate.breakdown}`,
+        `Vehicle Cost: KES ${estimate.baseCost.toLocaleString()}`,
+        `Driver Allowance: KES ${estimate.driverAllowance.toLocaleString()}`,
+        `Estimated Total: KES ${estimate.total.toLocaleString()}`,
+        `(Estimate excludes park entrance fees, parking, and accommodation.)`,
+      );
+    }
+
+    const message = lines.join("\n");
     window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
     onClose();
   };
