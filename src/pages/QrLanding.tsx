@@ -21,7 +21,7 @@ import {
   Calculator,
 } from "lucide-react";
 import logo from "@/assets/logo.png";
-import heroImg from "@/assets/fleet-landcruiser.jpg";
+import heroImg from "@/assets/qr-hero-isuzu.jpg";
 import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetHiace from "@/assets/fleet-hiace.jpg";
 import fleetCoasterExt from "@/assets/fleet-coaster-ext.jpg";
@@ -291,6 +291,9 @@ const QrLanding = () => {
           </Link>
           <p className="font-sans text-[11px] opacity-60 pt-3 border-t border-primary-foreground/10">
             © {new Date().getFullYear()} Track &amp; Trace Adventures Ltd. All rights reserved.
+          </p>
+          <p className="font-sans text-[11px] opacity-60">
+            Powered by Espiranova
           </p>
         </div>
       </footer>
