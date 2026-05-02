@@ -19,11 +19,11 @@ export type RateVehicle = {
 
 export const vehicles: RateVehicle[] = [
   { id: "safari-8", name: "8-Pax Safari Land Cruiser", longDist: { type: "perDay", rate: 25000 }, fullDay: 25000, airport: 15000, hotel: 10000, dinner: 10000, cocktail: 10000, standby: 10000, driverAllowance: 2500 },
-  { id: "van-8", name: "8-Pax Tour Van", longDist: { type: "perKm", rate: 130, minKm: 120 }, fullDay: 20000, airport: 10000, hotel: 12000, dinner: 10000, cocktail: 12000, standby: 12000, driverAllowance: 2000 },
-  { id: "coaster-14", name: "14-Pax Toyota Coaster", longDist: { type: "perKm", rate: 60, minKm: 120 }, fullDay: 12000, airport: 7000, hotel: 8000, dinner: 8000, cocktail: 10000, standby: 10000, driverAllowance: 2000 },
-  { id: "mercedes-22", name: "22-Pax Mercedes Shuttle", longDist: { type: "perKm", rate: 100, minKm: 120 }, fullDay: 17000, airport: 12000, hotel: 12000, dinner: 12000, cocktail: 12000, standby: 12000, driverAllowance: 2500 },
+  { id: "van-8", name: "8-Pax Safari Van", longDist: { type: "perKm", rate: 130, minKm: 120 }, fullDay: 20000, airport: 10000, hotel: 12000, dinner: 10000, cocktail: 12000, standby: 12000, driverAllowance: 2000 },
+  { id: "coaster-14", name: "14-Pax Van", longDist: { type: "perKm", rate: 60, minKm: 120 }, fullDay: 12000, airport: 7000, hotel: 8000, dinner: 8000, cocktail: 10000, standby: 10000, driverAllowance: 2000 },
+  { id: "mercedes-22", name: "22-Pax Coaster Shuttle", longDist: { type: "perKm", rate: 100, minKm: 120 }, fullDay: 17000, airport: 12000, hotel: 12000, dinner: 12000, cocktail: 12000, standby: 12000, driverAllowance: 2500 },
   { id: "bus-33", name: "33/37-Pax Mercedes Bus", longDist: { type: "perKm", rate: 130, minKm: 120 }, fullDay: 20000, airport: 15000, hotel: 15000, dinner: 15000, cocktail: 15000, standby: 15000, driverAllowance: 3000 },
-  { id: "bus-45", name: "45-Pax Bus", longDist: { type: "perKm", rate: 150, minKm: 120 }, fullDay: 30000, airport: 18000, hotel: 18000, dinner: 18000, cocktail: 15000, standby: 25000, driverAllowance: 4000 },
+  { id: "bus-45", name: "45-Pax Mercedes Bus", longDist: { type: "perKm", rate: 150, minKm: 120 }, fullDay: 30000, airport: 18000, hotel: 18000, dinner: 18000, cocktail: 15000, standby: 25000, driverAllowance: 4000 },
 ];
 
 export const serviceTypes = [
@@ -122,14 +122,18 @@ export function matchRateVehicle(vehicleType: string | undefined | null): string
   if (!vehicleType) return null;
   const t = vehicleType.toLowerCase();
 
+  // Order matters: more specific keywords checked first.
+  if (t.includes("45")) return "bus-45";
+  if (t.includes("33") || t.includes("37")) return "bus-33";
+  if (t.includes("22") || t.includes("coaster") || t.includes("isuzu")) return "mercedes-22";
+  if (t.includes("14")) return "coaster-14";
   if (t.includes("land cruiser") || t.includes("landcruiser")) return "safari-8";
   if (t.includes("ford") || t.includes("ranger")) return "safari-8";
+  if (t.includes("safari van") || t.includes("hiace") || t.includes("nv350") || t.includes("nissan")) return "van-8";
   if (t.includes("noah") || t.includes("sedan")) return "van-8";
-  if (t.includes("hiace") || t.includes("nv350") || t.includes("nissan") || t.includes("van")) return "van-8";
-  if (t.includes("isuzu")) return "coaster-14";
-  if (t.includes("coaster")) return "coaster-14";
   if (t.includes("golden dragon")) return "bus-45";
   if (t.includes("mercedes")) return "bus-33";
+  if (t.includes("van")) return "van-8";
   if (t.includes("bus")) return "bus-33";
   return null;
 }

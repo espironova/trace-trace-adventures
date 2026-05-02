@@ -12,15 +12,12 @@ interface BookingModalProps {
 }
 
 const vehicleTypes = [
-  "Toyota Noah (Sedan)",
-  "Toyota Hiace (Safari Van)",
-  "Nissan NV350 (Van)",
-  "Toyota Coaster (Bus)",
-  "Isuzu Coaster (Bus)",
-  "Ford Ranger 4x4",
-  "Toyota Land Cruiser (Safari)",
-  "Mercedes Tour Bus",
-  "Golden Dragon Bus",
+  "8-Pax Safari Land Cruiser",
+  "8-Pax Safari Van (Toyota Hiace / Nissan NV350)",
+  "14-Pax Van",
+  "22-Pax Coaster Shuttle (Isuzu / Toyota Coaster)",
+  "33/37-Pax Mercedes Bus",
+  "45-Pax Mercedes Bus",
 ];
 
 const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) => {
