@@ -9,6 +9,8 @@ interface BookingModalProps {
   onClose: () => void;
   /** Prefills vehicle type (e.g. from Fleet card: model + registration). */
   initialVehicleType?: string;
+  /** Prefills service type (e.g. from QR landing tile). Must match an id in serviceTypes. */
+  initialServiceId?: string;
 }
 
 const vehicleTypes = [
@@ -20,7 +22,7 @@ const vehicleTypes = [
   "45-Pax Mercedes Bus",
 ];
 
-const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) => {
+const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: BookingModalProps) => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -45,6 +47,11 @@ const BookingModal = ({ open, onClose, initialVehicleType }: BookingModalProps) 
     if (!open || !initialVehicleType) return;
     setForm((prev) => ({ ...prev, vehicleType: initialVehicleType }));
   }, [open, initialVehicleType]);
+
+  useEffect(() => {
+    if (!open || !initialServiceId) return;
+    setForm((prev) => ({ ...prev, serviceId: initialServiceId }));
+  }, [open, initialServiceId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
