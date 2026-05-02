@@ -46,6 +46,7 @@ import hiaceKcr090x1 from "@/assets/fleet-unit-kcr-090x-1.jpg";
 import hiaceKdl731t1 from "@/assets/fleet-unit-kdl-731t-1.jpg";
 import nissanKdl731t2 from "@/assets/fleet-unit-kdl-731t-2.jpg";
 import nissanKdl731t3 from "@/assets/fleet-unit-kdl-731t-3.jpg";
+import hiaceKdp213s1 from "@/assets/fleet-unit-kdp-213s-1.jpg";
 
 export type FleetUnit = {
   id: string;
@@ -110,7 +111,7 @@ export const fleetUnits: FleetUnit[] = [
     alt: "Toyota Hiace safari van for tour groups and safari trips in Kenya",
     capacity: "7–14 passengers",
     idealFor: "Airport/SGR transfers, Conference & Corporate Transport",
-    features: ["Spacious interior", "Extended leg room", "Charging ports", "Large luggage area"],
+    features: ["Spacious interior", "Extended leg room", "Charging ports", "Top-mounted cargo carrier"],
   },
   {
     id: "kdl-731t",
@@ -122,6 +123,17 @@ export const fleetUnits: FleetUnit[] = [
     capacity: "7–14 passengers",
     idealFor: "Game Drives, Safari tours",
     features: ["Pop-up roof option", "Extended leg room", "Charging ports", "Large luggage area"],
+  },
+  {
+    id: "kdp-213s",
+    modelKey: "toyota-hiace",
+    modelName: "Toyota Hiace 9L High Roof",
+    registration: "KDP 213S",
+    images: [hiaceKdp213s1],
+    alt: "Toyota Hiace 9L high-roof safari van with pop-up roof for game drives in Kenya",
+    capacity: "7–14 passengers",
+    idealFor: "Game Drives, Safari Tours",
+    features: ["Pop-up roof", "High roof wide & long body", "Extended leg room", "Charging ports"],
   },
   {
     id: "kcn-030m",
