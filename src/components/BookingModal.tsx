@@ -96,7 +96,15 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
     if (needsDays && form.days) lines.push(`Days: ${form.days}`);
     lines.push(`Driver: ${form.driver}`);
 
-    if (estimate) {
+    if (estimate && estimate.inquire) {
+      lines.push(
+        ``,
+        `*Quote Request*`,
+        `Pricing on inquiry for ${estimate.vehicleName}.`,
+        `Indicative starting price: KES ${(estimate.startingFrom ?? 0).toLocaleString()} / day.`,
+        `Please confirm a tailored quote.`,
+      );
+    } else if (estimate) {
       lines.push(
         ``,
         `*Estimated Budget*`,
