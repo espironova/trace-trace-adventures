@@ -1,100 +1,47 @@
-## Plan: 2027 Rates Update + Smart Calculator Logic (Revised)
+## Plan: Rate Sheet, Booking Labels, Golden Dragon Photo
 
-### Pricing Model Clarifications
+### 1. Full Rate Sheet — Driver Allowance column (`src/components/RateCalculator.tsx`)
 
-**Unified day-based pricing** (Full-Day Disposal AND Long Distance use the same formula for non-inquire vehicles):
+The Driver column already exists, but every other column rounds to "k" (e.g. `2.0k`, `2.5k`) which obscures the exact driver allowance and conflates 2,000 with 2,500.
 
-```
-First 120 km included in the day rate.
-Extra km charged at the vehicle's per-km overage rate.
+Change the Driver cell to render the full KES value so each vehicle's distinct allowance is clear:
 
-cost_per_day = fullDay + max(0, km - 120) * perKmOverage
-total = cost_per_day * days + driverAllowance * days
-```
+- 5-Pax Noah: KES 2,000
+- 8-Pax Land Cruiser: KES 2,500
+- 8-Pax Safari Van: KES 2,000
+- 14-Pax Van: KES 2,000
+- 22-Pax Coaster Shuttle: KES 2,500
+- 33/37-Pax Mercedes Bus: KES 3,000
+- 45-Pax Mercedes Bus: KES 4,000
 
-Example (5-Pax Noah, 1 day, 140 km): 12,000 + 20*60 = 13,200 + 2,000 driver = **KES 15,200**.
+Render as `KES {v.driverAllowance.toLocaleString()}` (e.g. `KES 2,500`) in accent bold so the per-vehicle differences are visible. Update the column header to `Driver / day` for clarity. Footnote already states "Driver allowance charged per day" — keep as-is.
 
-**Inquire-only vehicles** (8-Pax Land Cruiser & 8-Pax Safari Van):
-- Full-Day Disposal AND Long Distance return an inquiry card.
-- Card shows a **"Starting from"** indicative price:
-  - Land Cruiser: from **KES 25,000 / day**
-  - 8-Pax Safari Van: from **KES 20,000 / day**
-- Plus WhatsApp + Phone CTAs for a custom quote.
-- Airport / Hotel / Dinner / Cocktail / Standby for these vehicles still calculate normally with their fixed rates.
+### 2. Booking Modal vehicle labels (`src/components/BookingModal.tsx`)
 
-### 1. Update `src/data/rates.ts`
+In the `vehicleTypes` array, simplify two labels:
 
-**Final rate matrix:**
+- `"8-Pax Safari Van (Toyota Hiace / Nissan NV350)"` -> `"8-Pax Safari Van"`
+- `"22-Pax Coaster Shuttle (Isuzu / Toyota Coaster)"` -> `"22-Pax Coaster Shuttle"`
 
-| Vehicle | Day Rate (Full Day & Long Dist) | Per-km overage (>120 km) | Airport | Hotel | Dinner | Cocktail | Standby | Driver |
-|---|---|---|---|---|---|---|---|---|
-| 5-Pax Noah Minivan (NEW) | 12,000 | 60 | 6,000 | 6,000 | 8,000 | 8,000 | 8,000 | 2,000 |
-| 8-Pax Land Cruiser | Inquire (from 25,000) | Inquire | 15,000 | 10,000 | 10,000 | 10,000 | 10,000 | 2,500 |
-| 8-Pax Safari Van | Inquire (from 20,000) | Inquire | 10,000 | 12,000 | 10,000 | 12,000 | 12,000 | 2,000 |
-| 14-Pax Van | 12,000 | 80 | 7,000 | 8,000 | 8,000 | 10,000 | 10,000 | 2,000 |
-| 22-Pax Coaster | 17,000 | 100 | 12,000 | 12,000 | 12,000 | 12,000 | 12,000 | 2,500 |
-| 33/37-Pax Mercedes Bus | 20,000 | 130 | 15,000 | 15,000 | 15,000 | 15,000 | 15,000 | 3,000 |
-| 45-Pax Mercedes Bus | 30,000 | 150 | 18,000 | 18,000 | 18,000 | 15,000 | 25,000 | 4,000 |
+`matchRateVehicle` in `src/data/rates.ts` already matches on "safari van" and "22"/"coaster", so rate lookups stay correct. No other changes needed there.
 
-**Type changes:**
-- Replace `longDist: LongDistRate` with a unified shape:
-  ```ts
-  dayRate:
-    | { type: "fixed"; baseDay: number; perKmOverage: number; includedKm: number /* 120 */ }
-    | { type: "inquire"; startingFrom: number };
-  ```
-- Long Distance and Full-Day Disposal both consume `dayRate`.
-- Other service rates (`airport`, `hotel`, `dinner`, `cocktail`, `standby`, `driverAllowance`) stay fixed numbers on every vehicle (including inquire ones).
+### 3. Replace Golden Dragon photo
 
-**`calculateEstimate` logic:**
-- If `serviceId` is `fullDay` or `longDist`:
-  - `inquire` → return `{ inquire: true, startingFrom, total: null, breakdown: "Custom quote" }`.
-  - `fixed` → use the unified formula above; `km` defaults to 120 if blank.
-- Other services: unchanged (`rate * days`).
+The new photo (`user-uploads://Dragon_Bus-2.png`) replaces the existing Golden Dragon hero shot used in the Fleet section.
 
-### 2. Update `src/components/RateCalculator.tsx`
+Steps:
+- Copy the upload to `src/assets/fleet-golden-dragon.jpg` (overwrite the existing file). Keeping the same filename means every importer (`src/data/fleet.ts` -> `goldenImages`, plus any other module that imports `fleet-golden-dragon.jpg`) automatically picks up the new image with no code changes.
+- Verify with ripgrep that `fleet-golden-dragon` is the only Golden Dragon asset reference; if any other Golden Dragon-specific image is imported elsewhere, swap it to the new asset too.
 
-- Merge the "Long Distance" and "Full-Day Disposal" UX:
-  - Both show the **Distance (km)** input (optional, hint: "Defaults to 120 km. Extra km billed at vehicle's per-km rate.").
-  - Both show the **Days** input.
-- Result card additions:
-  - When `inquire`: render an "Inquiry Required" panel:
-    - Headline: "Starting from KES {startingFrom} / day"
-    - Subtext: "This vehicle has custom pricing based on route, season, and requirements."
-    - Two CTAs: WhatsApp (reuse `+254721521009` link from `WhatsAppButton`) and Call (`+254 721 521 009`).
-  - When fixed-day with overage: show a clear breakdown line:
-    `"Base 12,000 + 20 km extra x 60 = 13,200 (per day) x 1 day"`.
-- Rate sheet table updates:
-  - New row for 5-Pax Noah.
-  - Combine "Long Dist." and "Full Day" columns into one labeled **"Day Rate (first 120 km)"** plus a new **"Extra km"** column.
-  - Inquire-only rows display "From 25k / Inquire" and "From 20k / Inquire" in those two columns.
-  - Footer note updated: "Day rate covers up to 120 km. Additional km charged per vehicle's per-km rate. Driver allowance per day."
+The Golden Dragon entry in `fleetUnits` uses `goldenImages = [fleetGoldenDragon, fleetGoldenInterior, fleetGoldenInt2]`, so only the front/exterior shot is replaced. The two interior shots remain.
 
-### 3. Update `src/components/BookingModal.tsx`
+### Files to modify
 
-- Update `matchRateVehicle` so:
-  - "noah" → `noah-5` (new).
-  - Keep "hiace / nv350 / nissan / safari van" → `van-8`.
-- When the matched vehicle's `dayRate.type === "inquire"` AND the chosen service is `fullDay` or `longDist`, replace inline cost preview with: "Custom quote, our team will confirm pricing. Starts from KES {startingFrom}/day."
+- `src/components/RateCalculator.tsx` (Driver cell formatting + header)
+- `src/components/BookingModal.tsx` (two vehicle label strings)
+- `src/assets/fleet-golden-dragon.jpg` (overwrite with uploaded image)
 
-### 4. Update `src/pages/Contact.tsx`
+### Out of scope
 
-Add a one-line intro above the Rate Calculator: "2027 rates. Day rate covers up to 120 km, additional km charged per vehicle. Land Cruiser and 8-Pax Safari Van pricing on inquiry."
-
-### 5. Memory
-
-Update `mem://features/rate-calculator`:
-- 2027 unified day-rate model with 120 km cap and per-km overage.
-- Inquire-only vehicles (Land Cruiser from 25k/day, 8-Pax Safari Van from 20k/day).
-- New 5-Pax Noah Minivan baseline.
-- Other services (airport/hotel/etc.) remain fixed flat fees.
-
-### Files Touched
-- `src/data/rates.ts`
-- `src/components/RateCalculator.tsx`
-- `src/components/BookingModal.tsx`
-- `src/pages/Contact.tsx`
-- `mem://features/rate-calculator`
-
-### Out of Scope
-Park entrance, Kaps, and county parking fees remain listed as excluded.
+- No changes to `src/data/rates.ts` logic, calculator math, or Booking form fields.
+- Interior Golden Dragon photos (`fleet-golden-interior.jpg`, `fleet-golden-int-2.jpg`) stay unchanged.

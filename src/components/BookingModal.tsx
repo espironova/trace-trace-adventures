@@ -16,9 +16,9 @@ interface BookingModalProps {
 const vehicleTypes = [
   "5-Pax Toyota Noah Minivan",
   "8-Pax Safari Land Cruiser",
-  "8-Pax Safari Van (Toyota Hiace / Nissan NV350)",
+  "8-Pax Safari Van",
   "14-Pax Van",
-  "22-Pax Coaster Shuttle (Isuzu / Toyota Coaster)",
+  "22-Pax Coaster Shuttle",
   "33/37-Pax Mercedes Bus",
   "45-Pax Mercedes Bus",
 ];
