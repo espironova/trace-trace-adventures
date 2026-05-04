@@ -14,6 +14,7 @@ interface BookingModalProps {
 }
 
 const vehicleTypes = [
+  "5-Pax Toyota Noah Minivan",
   "8-Pax Safari Land Cruiser",
   "8-Pax Safari Van (Toyota Hiace / Nissan NV350)",
   "14-Pax Van",
@@ -95,7 +96,15 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
     if (needsDays && form.days) lines.push(`Days: ${form.days}`);
     lines.push(`Driver: ${form.driver}`);
 
-    if (estimate) {
+    if (estimate && estimate.inquire) {
+      lines.push(
+        ``,
+        `*Quote Request*`,
+        `Pricing on inquiry for ${estimate.vehicleName}.`,
+        `Indicative starting price: KES ${(estimate.startingFrom ?? 0).toLocaleString()} / day.`,
+        `Please confirm a tailored quote.`,
+      );
+    } else if (estimate) {
       lines.push(
         ``,
         `*Estimated Budget*`,
@@ -272,10 +281,10 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
                       <input
                         type="number"
                         name="km"
-                        min={120}
+                        min={0}
                         value={form.km}
                         onChange={handleChange}
-                        placeholder="Min 120 km"
+                        placeholder="e.g. 140 (first 120 km included)"
                         className="w-full border border-border bg-background px-4 py-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-accent transition-colors"
                       />
                     </div>
@@ -328,7 +337,27 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
               </div>
 
               {/* Live Budget Estimate */}
-              {estimate && (
+              {estimate && estimate.inquire && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="border border-accent/40 bg-accent/5 p-5 space-y-2"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Wallet className="w-4 h-4 text-accent" />
+                    <p className="font-sans text-xs uppercase tracking-[0.2em] text-accent font-bold">Custom Quote</p>
+                  </div>
+                  <p className="font-sans text-sm text-foreground/80">
+                    {estimate.vehicleName} pricing for full-day and long-distance is on inquiry. Starts from{" "}
+                    <span className="text-accent font-bold">KES {(estimate.startingFrom ?? 0).toLocaleString()}</span> per day.
+                  </p>
+                  <p className="font-sans text-[11px] text-muted-foreground italic pt-1">
+                    Send this booking and our team will confirm the exact quote on WhatsApp.
+                  </p>
+                </motion.div>
+              )}
+
+              {estimate && !estimate.inquire && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

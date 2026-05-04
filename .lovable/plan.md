@@ -1,71 +1,100 @@
-# QR Code Landing Page (`/qr-code`)
+## Plan: 2027 Rates Update + Smart Calculator Logic (Revised)
 
-A standalone, mobile-first conversion page designed for users scanning a QR code in vehicles, brochures, or business cards. Minimal layout, fast load, big tappable CTAs, and reuses existing booking + rate logic.
+### Pricing Model Clarifications
 
-## Routing & Visibility
+**Unified day-based pricing** (Full-Day Disposal AND Long Distance use the same formula for non-inquire vehicles):
 
-- New page `src/pages/QrLanding.tsx`, registered in `src/App.tsx` as `/qr-code`.
-- Does NOT use the main `Layout` (no `Header`/`Footer`/main nav) so it stays distraction-free, as requested.
-- Add `/qr-code` to `public/robots.txt` as `Disallow` (optional, since it's a landing not meant for SEO indexing) and exclude from `sitemap.xml`.
-- Reuses the floating `WhatsAppButton` (sticky CTA) and `BookingModal` from the website.
+```
+First 120 km included in the day rate.
+Extra km charged at the vehicle's per-km overage rate.
 
-## Page Sections
+cost_per_day = fullDay + max(0, km - 120) * perKmOverage
+total = cost_per_day * days + driverAllowance * days
+```
 
-### 1. Sticky mini-header
-- Small Track & Trace wordmark + phone icon (tap-to-call `+254 721 521 009`) on the right. No nav links.
+Example (5-Pax Noah, 1 day, 140 km): 12,000 + 20*60 = 13,200 + 2,000 driver = **KES 15,200**.
 
-### 2. Hero (above the fold)
-- Background: existing safari/fleet hero image (e.g. `fleet-landcruiser.jpg`) with dark gradient overlay for legibility.
-- Headline: "Reliable Transport in East Africa, Anytime, Anywhere"
-- Sub: "Airport Transfers, Hotel Pickups, Corporate Travel, Safari Tours, Car Hire, School Trips"
-- Two large stacked buttons (full width on mobile):
-  - Primary (Saffron Gold): "Get Instant Quote / Book Now" → opens `BookingModal`
-  - Secondary (WhatsApp green): "WhatsApp Us Now" → `https://wa.me/254721521009?text=...`
+**Inquire-only vehicles** (8-Pax Land Cruiser & 8-Pax Safari Van):
+- Full-Day Disposal AND Long Distance return an inquiry card.
+- Card shows a **"Starting from"** indicative price:
+  - Land Cruiser: from **KES 25,000 / day**
+  - 8-Pax Safari Van: from **KES 20,000 / day**
+- Plus WhatsApp + Phone CTAs for a custom quote.
+- Airport / Hotel / Dinner / Cocktail / Standby for these vehicles still calculate normally with their fixed rates.
 
-### 3. Quick Service Selector
-- 7 large icon tiles in a 2-column grid (mobile) / 4-column (tablet+):
-  Airport Transfers, Hotel Pickups, Corporate Travel, Safari & Day Tours, Car Hire, Group Transport, School Trips.
-- Each tile uses Lucide icons (`Plane`, `Building2`, `Briefcase`, `Mountain`, `Car`, `Bus`, `GraduationCap`).
-- Tapping a tile opens `BookingModal` with `initialVehicleType` + a pre-filled service hint (extend modal to also accept an optional `initialServiceId` prefill, mapped to existing `serviceTypes` from `src/data/rates.ts`).
+### 1. Update `src/data/rates.ts`
 
-### 4. Booking / Quote
-- "Get Your Quote" anchor section with a single primary button that opens the existing `BookingModal` (already includes live budget estimate, vehicle + service selector).
-- Secondary link: "View Full Rate Card" → routes to `/contact#rate-calculator` (add an `id="rate-calculator"` anchor on the existing `RateCalculator` section in `Contact.tsx` so the link scrolls to it).
+**Final rate matrix:**
 
-### 5. Trust Builders
-- Horizontal strip with 3 stat cards: "20+ Years Experience", "5,000+ Happy Clients", "24/7 Availability".
-- Sub-line: "Licensed & Insured  |  Nairobi-based, East Africa-wide".
-- Mini fleet strip: 4 thumbnails from `src/data/fleet.ts` (Land Cruiser, Hiace, Coaster, Mercedes Bus) in a horizontal scroll.
+| Vehicle | Day Rate (Full Day & Long Dist) | Per-km overage (>120 km) | Airport | Hotel | Dinner | Cocktail | Standby | Driver |
+|---|---|---|---|---|---|---|---|---|
+| 5-Pax Noah Minivan (NEW) | 12,000 | 60 | 6,000 | 6,000 | 8,000 | 8,000 | 8,000 | 2,000 |
+| 8-Pax Land Cruiser | Inquire (from 25,000) | Inquire | 15,000 | 10,000 | 10,000 | 10,000 | 10,000 | 2,500 |
+| 8-Pax Safari Van | Inquire (from 20,000) | Inquire | 10,000 | 12,000 | 10,000 | 12,000 | 12,000 | 2,000 |
+| 14-Pax Van | 12,000 | 80 | 7,000 | 8,000 | 8,000 | 10,000 | 10,000 | 2,000 |
+| 22-Pax Coaster | 17,000 | 100 | 12,000 | 12,000 | 12,000 | 12,000 | 12,000 | 2,500 |
+| 33/37-Pax Mercedes Bus | 20,000 | 130 | 15,000 | 15,000 | 15,000 | 15,000 | 15,000 | 3,000 |
+| 45-Pax Mercedes Bus | 30,000 | 150 | 18,000 | 18,000 | 18,000 | 15,000 | 25,000 | 4,000 |
 
-### 6. Why Choose Us
-- 5 short benefit rows with Lucide icons:
-  - Flight tracking & meet-and-greet (`PlaneLanding`)
-  - English & Kiswahili speaking professional drivers (`Languages`)
-  - Safe, clean, well-maintained vehicles (`ShieldCheck`)
-  - Competitive rates, no hidden fees (`BadgeCheck`)
-  - Real-time 24/7 support (`Headphones`)
+**Type changes:**
+- Replace `longDist: LongDistRate` with a unified shape:
+  ```ts
+  dayRate:
+    | { type: "fixed"; baseDay: number; perKmOverage: number; includedKm: number /* 120 */ }
+    | { type: "inquire"; startingFrom: number };
+  ```
+- Long Distance and Full-Day Disposal both consume `dayRate`.
+- Other service rates (`airport`, `hotel`, `dinner`, `cocktail`, `standby`, `driverAllowance`) stay fixed numbers on every vehicle (including inquire ones).
 
-### 7. Footer (compact)
-- Phone, WhatsApp, Email (`info@tracktraceadventures.co.ke`), office address (Milestone Business Center, Northern Bypass, Nairobi).
-- "Visit our full website →" link to `/`.
-- Copyright line.
+**`calculateEstimate` logic:**
+- If `serviceId` is `fullDay` or `longDist`:
+  - `inquire` → return `{ inquire: true, startingFrom, total: null, breakdown: "Custom quote" }`.
+  - `fixed` → use the unified formula above; `km` defaults to 120 if blank.
+- Other services: unchanged (`rate * days`).
 
-### Persistent
-- `WhatsAppButton` floating sticky bottom-right (already in project).
+### 2. Update `src/components/RateCalculator.tsx`
 
-## Technical Details
+- Merge the "Long Distance" and "Full-Day Disposal" UX:
+  - Both show the **Distance (km)** input (optional, hint: "Defaults to 120 km. Extra km billed at vehicle's per-km rate.").
+  - Both show the **Days** input.
+- Result card additions:
+  - When `inquire`: render an "Inquiry Required" panel:
+    - Headline: "Starting from KES {startingFrom} / day"
+    - Subtext: "This vehicle has custom pricing based on route, season, and requirements."
+    - Two CTAs: WhatsApp (reuse `+254721521009` link from `WhatsAppButton`) and Call (`+254 721 521 009`).
+  - When fixed-day with overage: show a clear breakdown line:
+    `"Base 12,000 + 20 km extra x 60 = 13,200 (per day) x 1 day"`.
+- Rate sheet table updates:
+  - New row for 5-Pax Noah.
+  - Combine "Long Dist." and "Full Day" columns into one labeled **"Day Rate (first 120 km)"** plus a new **"Extra km"** column.
+  - Inquire-only rows display "From 25k / Inquire" and "From 20k / Inquire" in those two columns.
+  - Footer note updated: "Day rate covers up to 120 km. Additional km charged per vehicle's per-km rate. Driver allowance per day."
 
-- File: `src/pages/QrLanding.tsx` (no `Layout` wrapper; renders own minimal shell).
-- Route: add `<Route path="/qr-code" element={<QrLanding />} />` in `src/App.tsx`.
-- Reused components: `BookingModal`, `WhatsAppButton`, `WhatsAppIcon`.
-- BookingModal extension: add optional `initialServiceId?: string` prop, prefill `form.serviceId` when modal opens (mirrors existing `initialVehicleType` pattern). Service tile → modal mapping uses existing IDs from `src/data/rates.ts` (`airport`, `fullDay`, `longDist`, etc.).
-- Contact page: add `id="rate-calculator"` to the rate calculator section so `/contact#rate-calculator` scrolls correctly.
-- Styling: Tailwind, brand tokens (Deep Brown, Olive Gold, Cream, Saffron Gold), Playfair + Lato. No em-dashes. Uses Framer Motion for subtle fades only (keep it fast).
-- Performance: lazy-load below-the-fold images with `loading="lazy"`, reuse already-bundled fleet assets (no new images needed).
-- Mobile-first: hero buttons min height 56px, body font 16px+, generous tap targets, single-column under `md`.
-- SEO: `<Seo>` not added (page is intentionally low-profile); add `<meta name="robots" content="noindex,nofollow">` inline on this page.
+### 3. Update `src/components/BookingModal.tsx`
 
-## Out of Scope
+- Update `matchRateVehicle` so:
+  - "noah" → `noah-5` (new).
+  - Keep "hiace / nv350 / nissan / safari van" → `van-8`.
+- When the matched vehicle's `dayRate.type === "inquire"` AND the chosen service is `fullDay` or `longDist`, replace inline cost preview with: "Custom quote, our team will confirm pricing. Starts from KES {startingFrom}/day."
 
-- Generating the actual QR image PNG (can be done after launch with the live URL).
-- Analytics tracking for QR scans (can be added later if needed).
+### 4. Update `src/pages/Contact.tsx`
+
+Add a one-line intro above the Rate Calculator: "2027 rates. Day rate covers up to 120 km, additional km charged per vehicle. Land Cruiser and 8-Pax Safari Van pricing on inquiry."
+
+### 5. Memory
+
+Update `mem://features/rate-calculator`:
+- 2027 unified day-rate model with 120 km cap and per-km overage.
+- Inquire-only vehicles (Land Cruiser from 25k/day, 8-Pax Safari Van from 20k/day).
+- New 5-Pax Noah Minivan baseline.
+- Other services (airport/hotel/etc.) remain fixed flat fees.
+
+### Files Touched
+- `src/data/rates.ts`
+- `src/components/RateCalculator.tsx`
+- `src/components/BookingModal.tsx`
+- `src/pages/Contact.tsx`
+- `mem://features/rate-calculator`
+
+### Out of Scope
+Park entrance, Kaps, and county parking fees remain listed as excluded.
