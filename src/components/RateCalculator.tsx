@@ -213,7 +213,7 @@ const RateCalculator = () => {
                       <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Dinner</th>
                       <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Cocktail</th>
                       <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Standby</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Driver</th>
+                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Driver / day</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -233,7 +233,7 @@ const RateCalculator = () => {
                         <td className="px-3 py-3 text-center text-foreground/80">{(v.dinner / 1000).toFixed(0)}k</td>
                         <td className="px-3 py-3 text-center text-foreground/80">{(v.cocktail / 1000).toFixed(0)}k</td>
                         <td className="px-3 py-3 text-center text-foreground/80">{(v.standby / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-accent font-bold">{(v.driverAllowance / 1000).toFixed(1)}k</td>
+                        <td className="px-3 py-3 text-center text-accent font-bold whitespace-nowrap">KES {v.driverAllowance.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
