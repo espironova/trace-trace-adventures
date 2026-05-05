@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    { "source": "/safari-tours", "destination": "/services", "permanent": true },
+    { "source": "/all-team-members", "destination": "/about", "permanent": true },
+    { "source": "/team", "destination": "/about", "permanent": true },
+    { "source": "/about-us", "destination": "/about", "permanent": true },
+    { "source": "/contact-us", "destination": "/contact", "permanent": true },
+    { "source": "/tours", "destination": "/destinations", "permanent": true },
+    { "source": "/car-hire", "destination": "/services", "permanent": true },
+    { "source": "/airport-transfers", "destination": "/services", "permanent": true },
+    { "source": "/blog", "destination": "/blogs-reviews", "permanent": true },
+    { "source": "/reviews", "destination": "/blogs-reviews", "permanent": true },
+    { "source": "/our-fleet", "destination": "/fleet", "permanent": true }
+  ]
+}
