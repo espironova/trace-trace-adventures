@@ -1,7 +1,11 @@
+"use client";
+import Image from 'next/image'
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { homeHeroSlides } from "@/data/heroFleetImages";
 import BookingModal from "@/components/BookingModal";
+
+const MotionImage = motion(Image)
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
@@ -20,18 +24,18 @@ const HeroSection = () => {
     <>
       <section className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
         <AnimatePresence mode="popLayout">
-          <motion.img
+          <MotionImage
             key={current}
             src={homeHeroSlides[current].image}
             alt={homeHeroSlides[current].alt}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 object-cover"
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            width={1920}
-            height={1080}
-          />
+          fill
+          sizes="100vw"
+        />
         </AnimatePresence>
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />

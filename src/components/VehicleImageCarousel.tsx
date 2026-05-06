@@ -1,5 +1,9 @@
+"use client";
+import Image from 'next/image'
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const MotionImage = motion(Image)
 
 interface VehicleImageCarouselProps {
   images: string[];
@@ -29,7 +33,7 @@ const VehicleImageCarousel = ({ images, alt }: VehicleImageCarouselProps) => {
       onMouseLeave={() => setPaused(false)}
     >
       <AnimatePresence mode="wait">
-        <motion.img
+        <MotionImage
           key={index}
           src={images[index]}
           alt={alt}
@@ -37,10 +41,10 @@ const VehicleImageCarousel = ({ images, alt }: VehicleImageCarouselProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 object-cover"
           loading="lazy"
-          width={800}
-          height={600}
+          fill
+          sizes="100vw"
         />
       </AnimatePresence>
 

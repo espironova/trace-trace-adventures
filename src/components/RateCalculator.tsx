@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, ChevronDown, Phone, MessageCircle } from "lucide-react";

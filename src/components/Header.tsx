@@ -1,5 +1,8 @@
+"use client";
+import Image from 'next/image'
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Phone, Mail, Menu, X } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +20,7 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -49,8 +52,14 @@ const Header = () => {
       {/* Main navigation */}
       <nav className="bg-background/95 backdrop-blur-md border-b border-border">
         <div className="container mx-auto flex items-center justify-between py-3 px-4">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="Track & Trace Adventures logo" className="h-12 w-auto" />
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+          src={logo}
+          alt="Track & Trace Adventures logo"
+          width={180}
+          height={64}
+          className="h-12 w-auto w-auto"
+        />
             <div className="hidden sm:block">
               <span className="font-serif text-lg md:text-xl font-bold text-primary tracking-tight leading-none block">
                 Track & Trace
@@ -66,9 +75,9 @@ const Header = () => {
             {navLinks.map((link) => (
               <li key={link.path}>
                 <Link
-                  to={link.path}
+                  href={link.path}
                   className={`text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:text-accent ${
-                    location.pathname === link.path ? "text-accent font-bold" : "text-foreground"
+                    pathname === link.path ? "text-accent font-bold" : "text-foreground"
                   }`}
                 >
                   {link.label}
@@ -100,10 +109,10 @@ const Header = () => {
                 {navLinks.map((link) => (
                   <li key={link.path}>
                     <Link
-                      to={link.path}
+                      href={link.path}
                       onClick={() => setMobileOpen(false)}
                       className={`block px-6 py-3 text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:bg-muted ${
-                        location.pathname === link.path ? "text-accent font-bold" : "text-foreground"
+                        pathname === link.path ? "text-accent font-bold" : "text-foreground"
                       }`}
                     >
                       {link.label}
