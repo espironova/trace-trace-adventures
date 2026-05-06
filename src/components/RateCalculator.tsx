@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calculator, ChevronDown, Phone, MessageCircle } from "lucide-react";
+import { Calculator, Phone, MessageCircle, TableProperties } from "lucide-react";
 import { vehicles, serviceTypes, calculateEstimate, getServiceMeta, INCLUDED_KM } from "@/data/rates";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Result =
   | { kind: "calc"; baseCost: number; driverAllowance: number; total: number; breakdown: string }
@@ -187,66 +188,70 @@ const RateCalculator = () => {
             )}
           </motion.div>
 
-          {/* Rate Sheet Toggle */}
+          {/* View Full Rate Sheet button */}
           <div className="mt-8">
             <button
-              onClick={() => setShowRateSheet(!showRateSheet)}
-              className="w-full flex items-center justify-between bg-card border border-border px-6 py-4 font-sans text-sm uppercase tracking-wider text-foreground hover:bg-muted transition-colors"
+              onClick={() => setShowRateSheet(true)}
+              className="w-full flex items-center justify-center gap-2 bg-card border border-border px-6 py-4 font-sans text-sm uppercase tracking-wider text-foreground hover:bg-muted transition-colors font-bold"
             >
-              <span className="font-bold">View Full Rate Sheet</span>
-              <ChevronDown className={`w-5 h-5 transition-transform ${showRateSheet ? "rotate-180" : ""}`} />
+              <TableProperties className="w-4 h-4" /> View Full Rate Sheet
             </button>
-
-            {showRateSheet && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-card border border-t-0 border-border overflow-x-auto"
-              >
-                <table className="w-full text-sm font-sans">
-                  <thead>
-                    <tr className="bg-primary text-primary-foreground">
-                      <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider">Vehicle</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Day Rate (first 120 km)</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Extra km</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Airport</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Hotel</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Dinner</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Cocktail</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Standby</th>
-                      <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center">Driver / day</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vehicles.map((v, i) => (
-                      <tr key={v.id} className={i % 2 === 0 ? "bg-background" : "bg-muted"}>
-                        <td className="px-4 py-3 font-bold text-foreground whitespace-nowrap">{v.name}</td>
-                        <td className="px-3 py-3 text-center text-foreground/80">
-                          {v.dayRate.type === "fixed"
-                            ? `${(v.dayRate.baseDay / 1000).toFixed(0)}k`
-                            : `From ${(v.dayRate.startingFrom / 1000).toFixed(0)}k`}
-                        </td>
-                        <td className="px-3 py-3 text-center text-foreground/80">
-                          {v.dayRate.type === "fixed" ? `${v.dayRate.perKmOverage}/km` : "Inquire"}
-                        </td>
-                        <td className="px-3 py-3 text-center text-foreground/80">{(v.airport / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-foreground/80">{(v.hotel / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-foreground/80">{(v.dinner / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-foreground/80">{(v.cocktail / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-foreground/80">{(v.standby / 1000).toFixed(0)}k</td>
-                        <td className="px-3 py-3 text-center text-accent font-bold whitespace-nowrap">KES {v.driverAllowance.toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p className="px-4 py-3 text-xs text-muted-foreground italic border-t border-border">
-                  All rates in KES. Day rate (Full-Day Disposal and Long Distance) covers the first 120 km. Extra km billed at the vehicle's per-km rate. Driver allowance charged per day. Park entrance fees, parking, and accommodation not included.
-                </p>
-              </motion.div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* Full Rate Sheet Dialog */}
+      <Dialog open={showRateSheet} onOpenChange={setShowRateSheet}>
+        <DialogContent className="max-w-[95vw] w-full p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
+            <DialogTitle className="font-serif text-2xl">Full Rate Sheet</DialogTitle>
+            <p className="font-sans text-xs text-muted-foreground mt-1">
+              All rates in KES. Day rate covers the first {INCLUDED_KM} km — extra km billed per vehicle rate. Driver allowance charged per day.
+            </p>
+          </DialogHeader>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm font-sans">
+              <thead>
+                <tr className="bg-primary text-primary-foreground">
+                  <th className="text-left px-4 py-3 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Vehicle</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Day Rate<br /><span className="font-normal normal-case tracking-normal">(first {INCLUDED_KM} km)</span></th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Extra km</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Airport</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Hotel</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Dinner</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Cocktail</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Standby</th>
+                  <th className="px-3 py-3 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Driver / day</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicles.map((v, i) => (
+                  <tr key={v.id} className={i % 2 === 0 ? "bg-background" : "bg-muted"}>
+                    <td className="px-4 py-3 font-bold text-foreground whitespace-nowrap">{v.name}</td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">
+                      {v.dayRate.type === "fixed"
+                        ? v.dayRate.baseDay.toLocaleString()
+                        : `From ${v.dayRate.startingFrom.toLocaleString()}`}
+                    </td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">
+                      {v.dayRate.type === "fixed" ? `${v.dayRate.perKmOverage}/km` : "Inquire"}
+                    </td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">{v.airport.toLocaleString()}</td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">{v.hotel.toLocaleString()}</td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">{v.dinner.toLocaleString()}</td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">{v.cocktail.toLocaleString()}</td>
+                    <td className="px-3 py-3 text-center text-foreground/80 whitespace-nowrap">{v.standby.toLocaleString()}</td>
+                    <td className="px-3 py-3 text-center text-accent font-bold whitespace-nowrap">{v.driverAllowance.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="px-6 py-4 text-xs text-muted-foreground italic border-t border-border">
+            Park entrance fees, parking, and accommodation not included.
+          </p>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
