@@ -839,6 +839,9 @@ jobs:
       # ─── FIX E: Write next.config.mjs ────────────────────────────────────────
       # Runs AFTER Fix I so it can read the collected external hostnames and
       # inject remotePatterns for next/image.
+      # Also auto-detects the Supabase project hostname from .env so that
+      # images uploaded via the admin panel (stored in Supabase Storage) are
+      # accepted by next/image without requiring manual configuration.
       - name: "Fix E — Write SSR-compatible next.config.mjs"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -853,6 +856,21 @@ jobs:
           let hostnames = [];
           if (fs.existsSync('/tmp/image-hostnames.json')) {
             hostnames = JSON.parse(fs.readFileSync('/tmp/image-hostnames.json', 'utf8'));
+          }
+
+          // Auto-detect Supabase storage hostname from .env so that admin-uploaded
+          // images (stored in Supabase Storage) work with next/image.
+          // The VITE_SUPABASE_URL env var is committed as a public anon credential.
+          if (fs.existsSync('.env')) {
+            const envContent = fs.readFileSync('.env', 'utf8');
+            const supabaseMatch = envContent.match(/SUPABASE_URL=["']?(https?:\/\/([^"'\s\n]+))["']?/);
+            if (supabaseMatch && supabaseMatch[2]) {
+              const hostname = supabaseMatch[2];
+              if (!hostnames.includes(hostname)) {
+                hostnames.push(hostname);
+                console.log('Auto-detected Supabase hostname for remotePatterns: ' + hostname);
+              }
+            }
           }
 
           const configLines = [
@@ -875,6 +893,65 @@ jobs:
           fs.writeFileSync('next.config.mjs', configLines.join('\n'));
 
           console.log('Wrote next.config.mjs' + (hostnames.length ? ' with remotePatterns for: ' + hostnames.join(', ') : ''));
+          NODEJS
+
+      # ─── FIX N: Fix Supabase env vars for Next.js ────────────────────────────
+      # Vite exposes env vars via import.meta.env.VITE_* but Next.js/Turbopack
+      # only exposes NEXT_PUBLIC_* to the browser. The Supabase client uses
+      # VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY which evaluate to
+      # undefined at runtime, causing createClient() to throw and breaking every
+      # page that imports the Supabase client.
+      # Fix: inline the credential values (public anon key — safe to embed in
+      # client bundles, already committed in .env) directly into client.ts so
+      # the client initialises correctly regardless of env var conventions.
+      - name: "Fix N — Inline Supabase credentials in client.ts for Next.js compatibility"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs = require('fs');
+
+          if (!fs.existsSync('.env')) {
+            console.log('No .env file found — skipping Supabase credential fix');
+            process.exit(0);
+          }
+
+          const envContent = fs.readFileSync('.env', 'utf8');
+          const urlMatch = envContent.match(/VITE_SUPABASE_URL=["']?([^"'\s\n]+)["']?/);
+          const keyMatch = envContent.match(/VITE_SUPABASE_PUBLISHABLE_KEY=["']?([^"'\s\n]+)["']?/);
+
+          if (!urlMatch || !keyMatch) {
+            console.log('VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY not found in .env — skipping');
+            process.exit(0);
+          }
+
+          const supabaseUrl = urlMatch[1];
+          const supabaseKey = keyMatch[1];
+
+          // Candidate paths for the Supabase client module
+          const candidatePaths = [
+            'src/integrations/supabase/client.ts',
+            'src/lib/supabase.ts',
+            'src/lib/supabaseClient.ts',
+            'src/supabase/client.ts',
+          ];
+
+          for (const p of candidatePaths) {
+            if (!fs.existsSync(p)) continue;
+            let src = fs.readFileSync(p, 'utf8');
+            const orig = src;
+
+            // Replace import.meta.env.VITE_ references with inlined values
+            src = src.replace(/import\.meta\.env\.VITE_SUPABASE_URL/g, JSON.stringify(supabaseUrl));
+            src = src.replace(/import\.meta\.env\.VITE_SUPABASE_PUBLISHABLE_KEY/g, JSON.stringify(supabaseKey));
+            // Also cover process.env variants if present
+            src = src.replace(/process\.env\.VITE_SUPABASE_URL/g, JSON.stringify(supabaseUrl));
+            src = src.replace(/process\.env\.VITE_SUPABASE_PUBLISHABLE_KEY/g, JSON.stringify(supabaseKey));
+
+            if (src !== orig) {
+              fs.writeFileSync(p, src);
+              console.log('Fix N — Inlined Supabase credentials in: ' + p);
+            }
+          }
           NODEJS
 
       # ─── FIX J: Generate SEO files ───────────────────────────────────────────
