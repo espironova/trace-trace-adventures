@@ -8,8 +8,9 @@ import fleetSedan from "@/assets/fleet-sedan.jpg";
 import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
 import amboImg from "@/assets/amboseli.jpg";
 import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
-const blogs = [
+const staticBlogs = [
   {
     title: "Top 5 Safari Destinations in Kenya You Must Visit",
     excerpt: "From the endless plains of the Maasai Mara to the elephant-filled landscapes of Amboseli, Kenya offers some of the world's most spectacular safari experiences.",
@@ -57,7 +58,7 @@ const blogs = [
   },
 ];
 
-const reviews = [
+const staticReviews = [
   { name: "Sarah Mitchell", location: "London, UK", text: "Track & Trace picked us up from JKIA at midnight. The driver was already waiting with a name sign. Spotless vehicle, smooth ride to our hotel. Couldn't have asked for a better first impression of Kenya.", rating: 5, service: "Airport Transfer" },
   { name: "James Kariuki", location: "Nairobi, Kenya", text: "Our 3-day Maasai Mara safari was absolutely life-changing. The Land Cruiser was in perfect condition, and our guide Joseph spotted animals we would have never seen on our own. Truly world-class.", rating: 5, service: "Safari Tour, Maasai Mara" },
   { name: "Priya Deshmukh", location: "Mumbai, India", text: "Rented a safari van for a week-long family trip across Kenya. From Nairobi to Amboseli to Lake Nakuru, the vehicle handled everything beautifully. Great value for money.", rating: 5, service: "Car Hire, Safari Van" },
@@ -69,7 +70,32 @@ const reviews = [
 ];
 
 const BlogsReviews = () => {
+  const [blogs, setBlogs] = useState(staticBlogs);
+  const [reviews, setReviews] = useState(staticReviews);
   const [reviewIndex, setReviewIndex] = useState(0);
+
+  useEffect(() => {
+    supabase.from("blogs").select("*").order("published_at", { ascending: false }).then(({ data }) => {
+      if (data && data.length) {
+        const fromDb = data.map((b: any) => ({
+          title: b.title,
+          excerpt: b.excerpt,
+          date: new Date(b.published_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+          category: b.category,
+          readTime: b.read_time,
+          image: b.image_url || maasaiImg,
+          alt: b.alt || b.title,
+        }));
+        setBlogs([...fromDb, ...staticBlogs]);
+      }
+    });
+    supabase.from("reviews").select("*").order("sort_order").order("created_at", { ascending: false }).then(({ data }) => {
+      if (data && data.length) {
+        const fromDb = data.map((r: any) => ({ name: r.name, location: r.location, text: r.text, rating: r.rating, service: r.service }));
+        setReviews([...fromDb, ...staticReviews]);
+      }
+    });
+  }, []);
 
   const nextReview = useCallback(() => {
     setReviewIndex((prev) => (prev + 1) % reviews.length);

@@ -1,14 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
 import bgFleetHero from "@/assets/fleet-hero-bg.jpg";
 import { fleetUnits, fleetBookingLabel, type FleetUnit } from "@/data/fleet";
 import { ArrowRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Fleet = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingVehicleType, setBookingVehicleType] = useState<string | undefined>(undefined);
+  const [extras, setExtras] = useState<FleetUnit[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("fleet_units")
+      .select("*")
+      .order("sort_order")
+      .order("created_at")
+      .then(({ data }) => {
+        if (!data) return;
+        setExtras(
+          data.map((u: any) => ({
+            id: u.id,
+            modelKey: u.model_key,
+            modelName: u.model_name,
+            registration: u.registration,
+            images: (u.images && u.images.length ? u.images : ["/placeholder.svg"]) as string[],
+            alt: u.alt || u.model_name,
+            capacity: u.capacity,
+            idealFor: u.ideal_for,
+            features: u.features ?? [],
+          })),
+        );
+      });
+  }, []);
+
+  const allUnits = [...fleetUnits, ...extras];
 
   const openBooking = (unit: FleetUnit) => {
     setBookingVehicleType(fleetBookingLabel(unit));
@@ -46,7 +74,7 @@ const Fleet = () => {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {fleetUnits.map((v, i) => (
+            {allUnits.map((v, i) => (
               <motion.div
                 key={v.id}
                 initial={{ opacity: 0, y: 40 }}

@@ -13,6 +13,7 @@ import BlogsReviews from "./pages/BlogsReviews.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import QrLanding from "./pages/QrLanding.tsx";
+import Admin from "./pages/Admin.tsx";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/blogs-reviews" element={<BlogsReviews />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/qr-code" element={<QrLanding />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
