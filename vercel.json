@@ -1,29 +1,34 @@
 {
-  "redirects": [
-    { "source": "/safari-tours", "destination": "/services", "permanent": true },
-    { "source": "/all-team-members", "destination": "/about", "permanent": true },
-    { "source": "/team", "destination": "/about", "permanent": true },
-    { "source": "/about-us", "destination": "/about", "permanent": true },
-    { "source": "/contact-us", "destination": "/contact", "permanent": true },
-    { "source": "/tours", "destination": "/destinations", "permanent": true },
-    { "source": "/car-hire", "destination": "/services", "permanent": true },
-    { "source": "/airport-transfers", "destination": "/services", "permanent": true },
-    { "source": "/blog", "destination": "/blogs-reviews", "permanent": true },
-    { "source": "/reviews", "destination": "/blogs-reviews", "permanent": true },
-    { "source": "/our-fleet", "destination": "/fleet", "permanent": true },
-    { "source": "/shop", "destination": "/services", "permanent": true },
-    { "source": "/store", "destination": "/services", "permanent": true },
-    { "source": "/all-posts", "destination": "/blogs-reviews", "permanent": true },
-    { "source": "/posts", "destination": "/blogs-reviews", "permanent": true },
-    { "source": "/professional-and-reliability", "destination": "/about", "permanent": true },
-    { "source": "/professional-reliability", "destination": "/about", "permanent": true },
-    { "source": "/wp-admin", "destination": "/", "permanent": true },
-    { "source": "/wp-login.php", "destination": "/", "permanent": true },
-    { "source": "/wp-content/:path*", "destination": "/", "permanent": true },
-    { "source": "/wp-includes/:path*", "destination": "/", "permanent": true },
-    { "source": "/?page_id=:id", "destination": "/", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/((?!favicon|icon|apple-touch|og-image|site\\.webmanifest|sitemap\\.xml|robots\\.txt|google).*)", "destination": "/index.html" }
+  "routes": [
+    { "src": "/safari-tours", "headers": { "Location": "/services" }, "status": 301 },
+    { "src": "/all-team-members", "headers": { "Location": "/about" }, "status": 301 },
+    { "src": "/team", "headers": { "Location": "/about" }, "status": 301 },
+    { "src": "/about-us", "headers": { "Location": "/about" }, "status": 301 },
+    { "src": "/contact-us", "headers": { "Location": "/contact" }, "status": 301 },
+    { "src": "/tours", "headers": { "Location": "/destinations" }, "status": 301 },
+    { "src": "/car-hire", "headers": { "Location": "/services" }, "status": 301 },
+    { "src": "/airport-transfers", "headers": { "Location": "/services" }, "status": 301 },
+    { "src": "/blog", "headers": { "Location": "/blogs-reviews" }, "status": 301 },
+    { "src": "/reviews", "headers": { "Location": "/blogs-reviews" }, "status": 301 },
+    { "src": "/our-fleet", "headers": { "Location": "/fleet" }, "status": 301 },
+
+    { "src": "/shop", "status": 410 },
+    { "src": "/store", "status": 410 },
+    { "src": "/all-posts", "status": 410 },
+    { "src": "/posts", "status": 410 },
+    { "src": "/professional-and-reliability", "status": 410 },
+    { "src": "/professional-reliability", "status": 410 },
+    { "src": "/wp-admin", "status": 410 },
+    { "src": "/wp-login.php", "status": 410 },
+    { "src": "/wp-content/(.*)", "status": 410 },
+    { "src": "/wp-includes/(.*)", "status": 410 },
+    { "src": "/wp-json/(.*)", "status": 410 },
+    { "src": "/feed", "status": 410 },
+    { "src": "/feed/(.*)", "status": 410 },
+
+    { "src": "/(favicon\\.ico|favicon\\.png|favicon-32x32\\.png|favicon-96x96\\.png|apple-touch-icon\\.png|icon-192\\.png|icon-512\\.png|og-image\\.png|site\\.webmanifest|sitemap\\.xml|robots\\.txt)", "dest": "/$1" },
+    { "src": "/google(.*)\\.html", "dest": "/google$1.html" },
+
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
