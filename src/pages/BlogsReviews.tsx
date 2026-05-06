@@ -42,6 +42,7 @@ const BlogsReviews = () => {
   }, [nextReview]);
 
   const getVisibleReviews = () => {
+    if (!reviews.length) return [];
     const visible = [];
     for (let i = 0; i < 3; i++) {
       visible.push(reviews[(reviewIndex + i) % reviews.length]);
