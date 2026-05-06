@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export function ImageUpload({ onUploaded, label = "Upload image" }: { onUploaded: (url: string) => void; label?: string }) {
