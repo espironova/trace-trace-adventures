@@ -32,14 +32,13 @@ const BlogsReviews = () => {
     });
   }, []);
 
-  const nextReview = useCallback(() => {
-    setReviewIndex((prev) => (prev + 1) % reviews.length);
-  }, []);
-
   useEffect(() => {
-    const timer = setInterval(nextReview, 4000);
+    if (reviews.length === 0) return;
+    const timer = setInterval(() => {
+      setReviewIndex((prev) => (prev + 1) % reviews.length);
+    }, 4000);
     return () => clearInterval(timer);
-  }, [nextReview]);
+  }, [reviews.length]);
 
   const getVisibleReviews = () => {
     if (!reviews.length) return [];
