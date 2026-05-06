@@ -10,6 +10,20 @@
     { "source": "/airport-transfers", "destination": "/services", "permanent": true },
     { "source": "/blog", "destination": "/blogs-reviews", "permanent": true },
     { "source": "/reviews", "destination": "/blogs-reviews", "permanent": true },
-    { "source": "/our-fleet", "destination": "/fleet", "permanent": true }
+    { "source": "/our-fleet", "destination": "/fleet", "permanent": true },
+    { "source": "/shop", "destination": "/services", "permanent": true },
+    { "source": "/store", "destination": "/services", "permanent": true },
+    { "source": "/all-posts", "destination": "/blogs-reviews", "permanent": true },
+    { "source": "/posts", "destination": "/blogs-reviews", "permanent": true },
+    { "source": "/professional-and-reliability", "destination": "/about", "permanent": true },
+    { "source": "/professional-reliability", "destination": "/about", "permanent": true },
+    { "source": "/wp-admin", "destination": "/", "permanent": true },
+    { "source": "/wp-login.php", "destination": "/", "permanent": true },
+    { "source": "/wp-content/:path*", "destination": "/", "permanent": true },
+    { "source": "/wp-includes/:path*", "destination": "/", "permanent": true },
+    { "source": "/?page_id=:id", "destination": "/", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/((?!favicon|icon|apple-touch|og-image|site\\.webmanifest|sitemap\\.xml|robots\\.txt|google).*)", "destination": "/index.html" }
   ]
 }
