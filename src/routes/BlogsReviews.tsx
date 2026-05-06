@@ -7,18 +7,23 @@ import Link from 'next/link';
 import { ArrowRight, Calendar, Tag } from "lucide-react";
 import placeholderImg from "@/assets/maasai-mara.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const BlogsReviews = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [selectedBlog, setSelectedBlog] = useState<any | null>(null);
 
   useEffect(() => {
     supabase.from("blogs").select("*").order("published_at", { ascending: false }).then(({ data }) => {
       if (data) {
         setBlogs(data.map((b: any) => ({
+          id: b.id,
           title: b.title,
           excerpt: b.excerpt,
+          body: b.body || null,
           date: new Date(b.published_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
           category: b.category,
           readTime: b.read_time,
@@ -88,7 +93,8 @@ const BlogsReviews = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="bg-card border border-border overflow-hidden group hover:border-accent/50 transition-colors"
+                className="bg-card border border-border overflow-hidden group hover:border-accent/50 transition-colors cursor-pointer"
+                onClick={() => setSelectedBlog(blog)}
               >
                 <div className="aspect-[16/10] overflow-hidden relative">
                   <Image
@@ -112,9 +118,12 @@ const BlogsReviews = () => {
                     <span className="flex items-center gap-1 font-sans text-xs text-muted-foreground">
                       <Calendar className="w-3 h-3" /> {blog.date}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-accent font-sans text-sm font-bold group-hover:gap-2 transition-all">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedBlog(blog); }}
+                      className="inline-flex items-center gap-1 text-accent font-sans text-sm font-bold group-hover:gap-2 transition-all hover:underline"
+                    >
                       Read More <ArrowRight className="w-3 h-3" />
-                    </span>
+                    </button>
                   </div>
                 </div>
               </motion.article>
@@ -198,6 +207,53 @@ const BlogsReviews = () => {
           </motion.div>
         </div>
       </section>
+
+      <Dialog open={!!selectedBlog} onOpenChange={(open) => { if (!open) setSelectedBlog(null); }}>
+        <DialogContent className="max-w-2xl p-0 overflow-hidden">
+          {selectedBlog && (
+            <>
+              {selectedBlog.image && (
+                <div className="relative w-full aspect-[16/9]">
+                  <Image
+                    src={selectedBlog.image}
+                    alt={selectedBlog.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 672px"
+                  />
+                </div>
+              )}
+              <div className="p-6 pb-2">
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="inline-flex items-center gap-1 font-sans text-xs text-accent font-bold uppercase tracking-wider">
+                    <Tag className="w-3 h-3" /> {selectedBlog.category}
+                  </span>
+                  <span className="font-sans text-xs text-muted-foreground">{selectedBlog.readTime}</span>
+                  <span className="flex items-center gap-1 font-sans text-xs text-muted-foreground ml-auto">
+                    <Calendar className="w-3 h-3" /> {selectedBlog.date}
+                  </span>
+                </div>
+                <DialogHeader>
+                  <DialogTitle className="font-serif text-2xl text-foreground leading-snug text-left">
+                    {selectedBlog.title}
+                  </DialogTitle>
+                </DialogHeader>
+              </div>
+              <ScrollArea className="max-h-[50vh] px-6 pb-6">
+                {selectedBlog.body ? (
+                  <p className="font-sans text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
+                    {selectedBlog.body}
+                  </p>
+                ) : (
+                  <p className="font-sans text-sm text-foreground/80 leading-relaxed">
+                    {selectedBlog.excerpt}
+                  </p>
+                )}
+              </ScrollArea>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
