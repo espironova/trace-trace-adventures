@@ -30,11 +30,9 @@ export function ImageUpload({ onUploaded, label = "Upload image" }: { onUploaded
   }
 
   return (
-    <label className="inline-block">
+    <label className="inline-flex items-center gap-2 cursor-pointer rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors">
       <input type="file" accept="image/*" onChange={handle} className="hidden" disabled={busy} />
-      <Button type="button" variant="outline" asChild disabled={busy}>
-        <span>{busy ? "Uploading..." : label}</span>
-      </Button>
+      {busy ? "Uploading..." : label}
     </label>
   );
 }
