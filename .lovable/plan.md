@@ -1,33 +1,48 @@
-## Fix admin access
+## Make existing blogs/reviews editable + admin onboarding flow
 
-Two backend issues are blocking admin login for espironova@gmail.com.
+Right now the original blogs and reviews live as hardcoded arrays in `src/pages/BlogsReviews.tsx`. The admin panel only shows database rows, so you can't edit the originals. Other admins also have no way in.
 
-### Problem 1: `has_role` function denies all callers
-RLS policies on `user_roles`, `blogs`, `reviews`, and `fleet_units` all call `public.has_role(...)`, but the `authenticated` Postgres role has no EXECUTE permission on that function. Every call returns `42501 permission denied for function has_role`, so no user is ever recognized as admin.
+### Part 1: Seed existing content into the database
 
-### Problem 2: The admin-assignment trigger was never attached
-The function `handle_new_user_admin()` exists, but no trigger on `auth.users` calls it. So when you signed up with espironova@gmail.com, no row was inserted into `user_roles`. Result: even after fixing Problem 1, the admin check still returns false.
+Insert all 5 hardcoded blogs and 8 hardcoded reviews into the `blogs` and `reviews` tables. Existing image imports are kept by uploading them to the `site-images` storage bucket and saving the public URLs (no admin re-upload needed).
 
-### Fix (single migration)
+Then refactor `src/pages/BlogsReviews.tsx`:
+- Remove the `staticBlogs` and `staticReviews` arrays.
+- Read everything from the database.
+- Order: blogs by `published_at` desc, reviews by `sort_order` then `created_at` desc.
+- Keep the existing visual layout exactly as it is.
 
-```sql
--- 1. Let authenticated/anon execute the role check
-grant execute on function public.has_role(uuid, public.app_role) to authenticated, anon;
+Result: every blog and review shows up in the admin panel's Edit / Delete lists, and any change instantly reflects on the public page.
 
--- 2. Attach the trigger so future admin emails get auto-promoted
-drop trigger if exists on_auth_user_created_admin on auth.users;
-create trigger on_auth_user_created_admin
-  after insert on auth.users
-  for each row execute function public.handle_new_user_admin();
+### Part 2: Admin onboarding flow
 
--- 3. Backfill admin role for the existing espironova@gmail.com account
-insert into public.user_roles (user_id, role)
-select id, 'admin'::app_role from auth.users where email = 'espironova@gmail.com'
-on conflict do nothing;
-```
+Currently only `espironova@gmail.com` is auto-promoted to admin on signup. Other people can sign up but land on "Not authorized."
 
-### After the migration
-- Sign out and sign back in at `/admin` with espironova@gmail.com.
-- The dashboard (Blogs / Reviews / Fleet tabs) will load.
+Add a fourth tab in the admin dashboard, **"Admins"**, visible only to existing admins. It will:
+- List all current admin users (email + date added).
+- Show pending signups (any authenticated user without admin role) with a **Grant admin** button.
+- Allow removing admin from another user (but not yourself).
 
-No frontend changes needed.
+Backend pieces:
+- A `SECURITY DEFINER` SQL function `list_users_for_admin()` that returns `{ user_id, email, is_admin, created_at }` for every auth user. Only callable by admins (checks `has_role(auth.uid(), 'admin')` and raises if not). This is the only safe way to read `auth.users` from the client.
+- A `SECURITY DEFINER` function `grant_admin(target_user_id uuid)` and `revoke_admin(target_user_id uuid)` that insert/delete from `user_roles`. Both verify the caller is admin and `revoke_admin` blocks self-removal.
+
+### Process for new admins (what you'll tell them)
+
+1. They go to `/admin` and click "First time? Create account", sign up with email + password.
+2. They will see "Not authorized" until you grant access.
+3. You sign in to `/admin`, open the **Admins** tab, find their email under "Pending users", click **Grant admin**.
+4. They refresh `/admin` and now have full access.
+
+Email verification: leave it as it currently is (auto-confirmed on signup, which is the project's existing setting). No verification email step is required for them to sign in.
+
+### Files
+
+- New migration: seed blogs + reviews, create `list_users_for_admin`, `grant_admin`, `revoke_admin` functions.
+- New: `src/components/admin/AdminsManager.tsx`.
+- Edited: `src/pages/Admin.tsx` (add Admins tab), `src/pages/BlogsReviews.tsx` (drop static arrays).
+
+### Out of scope
+
+- Email verification flow for new admin signups (can be added later if you want).
+- Inviting admins by email before they sign up (requires server-side admin API).

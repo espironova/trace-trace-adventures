@@ -3,96 +3,31 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
-import maasaiImg from "@/assets/maasai-mara.jpg";
-import fleetSedan from "@/assets/fleet-sedan.jpg";
-import fleetLandcruiser from "@/assets/fleet-landcruiser.jpg";
-import amboImg from "@/assets/amboseli.jpg";
-import fleetBusInterior from "@/assets/fleet-bus-interior.jpg";
+import placeholderImg from "@/assets/maasai-mara.jpg";
 import { supabase } from "@/integrations/supabase/client";
 
-const staticBlogs = [
-  {
-    title: "Top 5 Safari Destinations in Kenya You Must Visit",
-    excerpt: "From the endless plains of the Maasai Mara to the elephant-filled landscapes of Amboseli, Kenya offers some of the world's most spectacular safari experiences.",
-    date: "March 15, 2026",
-    category: "Destinations",
-    readTime: "5 min read",
-    image: maasaiImg,
-    alt: "Wildebeest herds in the Maasai Mara savanna during the Great Migration",
-  },
-  {
-    title: "Airport Transfer Tips for First-Time Visitors to Nairobi",
-    excerpt: "Arriving at JKIA for the first time? From booking your transfer in advance to what to expect at arrivals, here's everything you need for a smooth airport pickup.",
-    date: "March 8, 2026",
-    category: "Travel Tips",
-    readTime: "4 min read",
-    image: fleetSedan,
-    alt: "Toyota Noah sedan ready for airport transfer at JKIA Nairobi",
-  },
-  {
-    title: "Why Hire a 4x4 for Your Kenya Adventure",
-    excerpt: "Kenya's national parks have rugged terrain that standard vehicles can't handle. Learn why a 4x4 Land Cruiser is the best choice for your safari.",
-    date: "February 28, 2026",
-    category: "Car Hire",
-    readTime: "6 min read",
-    image: fleetLandcruiser,
-    alt: "Toyota Land Cruiser on a dusty safari road in Kenya",
-  },
-  {
-    title: "Best Time to Visit the Maasai Mara: A Seasonal Guide",
-    excerpt: "The Maasai Mara is stunning year-round, but each season offers a different experience. Timing your visit makes all the difference.",
-    date: "February 15, 2026",
-    category: "Safari Tours",
-    readTime: "5 min read",
-    image: amboImg,
-    alt: "Elephants with Mount Kilimanjaro in the background at Amboseli",
-  },
-  {
-    title: "Nairobi to Mombasa: Your Long-Distance Travel Options",
-    excerpt: "Planning a trip from Nairobi to the coast? We break down the best ways to travel and why hiring a dedicated vehicle might be your best bet.",
-    date: "February 5, 2026",
-    category: "Long Distance",
-    readTime: "4 min read",
-    image: fleetBusInterior,
-    alt: "Comfortable bus interior for long distance travel across Kenya",
-  },
-];
-
-const staticReviews = [
-  { name: "Sarah Mitchell", location: "London, UK", text: "Track & Trace picked us up from JKIA at midnight. The driver was already waiting with a name sign. Spotless vehicle, smooth ride to our hotel. Couldn't have asked for a better first impression of Kenya.", rating: 5, service: "Airport Transfer" },
-  { name: "James Kariuki", location: "Nairobi, Kenya", text: "Our 3-day Maasai Mara safari was absolutely life-changing. The Land Cruiser was in perfect condition, and our guide Joseph spotted animals we would have never seen on our own. Truly world-class.", rating: 5, service: "Safari Tour, Maasai Mara" },
-  { name: "Priya Deshmukh", location: "Mumbai, India", text: "Rented a safari van for a week-long family trip across Kenya. From Nairobi to Amboseli to Lake Nakuru, the vehicle handled everything beautifully. Great value for money.", rating: 5, service: "Car Hire, Safari Van" },
-  { name: "Robert Ochieng", location: "Kisumu, Kenya", text: "Used Track & Trace for a Nairobi to Mombasa group transfer. The bus was comfortable, driver was professional, and we arrived right on schedule. My go-to for long-distance travel now.", rating: 5, service: "Long Distance Transfer" },
-  { name: "Emily Chen", location: "Singapore", text: "Booked an Amboseli safari with Track & Trace and it exceeded all expectations. Seeing elephants with Kilimanjaro in the background from our 4x4 roof hatch was a once-in-a-lifetime moment.", rating: 5, service: "Safari Tour, Amboseli" },
-  { name: "David Thompson", location: "Toronto, Canada", text: "I've used many car hire services across Africa, and Track & Trace stands out. The vehicles are genuinely well-maintained, the pricing is transparent, and the team is incredibly responsive on WhatsApp.", rating: 5, service: "Car Hire, Land Cruiser" },
-  { name: "Fatima Al-Rashid", location: "Dubai, UAE", text: "We hired a minibus for our corporate team building event. The driver was punctual, friendly, and knew exactly where to go. Excellent corporate transport option.", rating: 5, service: "Corporate Transport" },
-  { name: "Michael Njoroge", location: "Nairobi, Kenya", text: "Track & Trace handled our wedding guest transport flawlessly. Three vehicles coordinated perfectly, all arrived on time, and our guests were thrilled.", rating: 5, service: "Event Transport" },
-];
-
 const BlogsReviews = () => {
-  const [blogs, setBlogs] = useState(staticBlogs);
-  const [reviews, setReviews] = useState(staticReviews);
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [reviewIndex, setReviewIndex] = useState(0);
 
   useEffect(() => {
     supabase.from("blogs").select("*").order("published_at", { ascending: false }).then(({ data }) => {
-      if (data && data.length) {
-        const fromDb = data.map((b: any) => ({
+      if (data) {
+        setBlogs(data.map((b: any) => ({
           title: b.title,
           excerpt: b.excerpt,
           date: new Date(b.published_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
           category: b.category,
           readTime: b.read_time,
-          image: b.image_url || maasaiImg,
+          image: b.image_url || placeholderImg,
           alt: b.alt || b.title,
-        }));
-        setBlogs([...fromDb, ...staticBlogs]);
+        })));
       }
     });
-    supabase.from("reviews").select("*").order("sort_order").order("created_at", { ascending: false }).then(({ data }) => {
-      if (data && data.length) {
-        const fromDb = data.map((r: any) => ({ name: r.name, location: r.location, text: r.text, rating: r.rating, service: r.service }));
-        setReviews([...fromDb, ...staticReviews]);
+    supabase.from("reviews").select("*").order("sort_order", { ascending: false }).order("created_at", { ascending: false }).then(({ data }) => {
+      if (data) {
+        setReviews(data.map((r: any) => ({ name: r.name, location: r.location, text: r.text, rating: r.rating, service: r.service })));
       }
     });
   }, []);
@@ -107,6 +42,7 @@ const BlogsReviews = () => {
   }, [nextReview]);
 
   const getVisibleReviews = () => {
+    if (!reviews.length) return [];
     const visible = [];
     for (let i = 0; i < 3; i++) {
       visible.push(reviews[(reviewIndex + i) % reviews.length]);
