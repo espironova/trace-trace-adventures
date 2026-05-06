@@ -286,7 +286,8 @@ jobs:
               // Route importSrc is like "./pages/Index" or "./pages/services/Motor"
               // After Fix H runs, src/pages → src/routes, so we substitute that.
               const importRelPath = route.importSrc.replace(/^\.\/pages\//, '');
-              const segments = route.path.split('/').filter(Boolean);
+              // Convert React Router dynamic segments (:param) → Next.js bracket syntax ([param])
+              const segments = route.path.split('/').filter(Boolean).map(s => s.startsWith(':') ? '[' + s.slice(1) + ']' : s);
               const depth = segments.length + 1; // +1 for the src/app/ prefix itself
               const relImport = '../'.repeat(depth) + 'routes/' + importRelPath;
 
