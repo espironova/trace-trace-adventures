@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, MapPin, Calendar, Car, UserCheck, Wallet, Route, CalendarDays, Briefcase } from "lucide-react";
+import { X, User, Phone, MapPin, Calendar, Car, UserCheck, Wallet, Route, CalendarDays, Briefcase, Mail } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { serviceTypes, calculateEstimate, getServiceMeta, matchRateVehicle } from "@/data/rates";
 
@@ -78,8 +78,7 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
     [rateVehicleId, form.serviceId, form.km, form.days],
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const buildBookingMessage = () => {
     const selectedService = serviceTypes.find((s) => s.id === form.serviceId);
     const lines: string[] = [
       `Hello Track & Trace Adventures!`,
@@ -116,9 +115,20 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
         `(Estimate excludes park entrance fees, parking, and accommodation.)`,
       );
     }
+    return lines.join("\n");
+  };
 
-    const message = lines.join("\n");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = buildBookingMessage();
     window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
+    onClose();
+  };
+
+  const handleEmailBooking = () => {
+    const message = buildBookingMessage();
+    const subject = `Booking Request - ${form.name || "New Booking"}${form.vehicleType ? ` - ${form.vehicleType}` : ""}${form.date ? ` - ${form.date}` : ""}`;
+    window.location.href = `mailto:info@tracktraceadventures.co.ke?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
     onClose();
   };
 
@@ -387,13 +397,33 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
                 </motion.div>
               )}
 
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-accent text-accent-foreground py-4 font-sans text-sm uppercase tracking-[0.2em] font-bold hover:bg-accent/90 transition-colors"
-              >
-                <WhatsAppIcon className="w-5 h-5 shrink-0" />
-                Send Booking via WhatsApp
-              </button>
+              <p className="text-center font-sans text-xs text-muted-foreground">
+                Corporate clients can also book via email.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 bg-accent text-accent-foreground py-4 font-sans text-xs uppercase tracking-[0.18em] font-bold hover:bg-accent/90 transition-colors"
+                >
+                  <WhatsAppIcon className="w-5 h-5 shrink-0" />
+                  Book via WhatsApp
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    const formEl = (e.currentTarget.closest("form") as HTMLFormElement | null);
+                    if (formEl && !formEl.checkValidity()) {
+                      formEl.reportValidity();
+                      return;
+                    }
+                    handleEmailBooking();
+                  }}
+                  className="inline-flex items-center justify-center gap-2 border border-accent text-accent bg-transparent py-4 font-sans text-xs uppercase tracking-[0.18em] font-bold hover:bg-accent/10 transition-colors"
+                >
+                  <Mail className="w-5 h-5 shrink-0" />
+                  Book via Email
+                </button>
+              </div>
 
               <p className="text-center font-sans text-xs text-muted-foreground">
                 Or call us directly: <a href="tel:+254721521009" className="text-accent font-bold">+254 721 521 009</a>
