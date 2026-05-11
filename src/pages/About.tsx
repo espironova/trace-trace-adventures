@@ -345,11 +345,13 @@ const About = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center"
+                transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -8 }}
+                className="group text-center p-6 rounded-xl border border-transparent hover:border-heroGold/40 hover:bg-heroGold/5 transition-all duration-300"
               >
-                <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center relative">
-                  <img src={item.image} alt={item.alt} className="w-full h-full object-contain" loading="lazy" />
+                <div className="w-24 h-24 mx-auto mb-5 flex items-center justify-center relative transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                  <span className="absolute inset-0 rounded-full bg-heroGold/0 group-hover:bg-heroGold/20 blur-xl transition-colors duration-500" aria-hidden />
+                  <img src={item.image} alt={item.alt} className="relative w-full h-full object-contain" loading="lazy" />
                 </div>
                 <h3 className="font-serif text-xl mb-3">{item.title}</h3>
                 <p className="font-sans text-sm opacity-80 leading-relaxed">{item.desc}</p>
