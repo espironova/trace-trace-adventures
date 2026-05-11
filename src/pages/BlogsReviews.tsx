@@ -12,7 +12,7 @@ const BlogsReviews = () => {
   const [reviewIndex, setReviewIndex] = useState(0);
 
   useEffect(() => {
-    supabase.from("blogs").select("*").order("published_at", { ascending: false }).then(({ data }) => {
+    supabase.from("blogs").select("*").eq("status", "published").order("published_at", { ascending: false }).then(({ data }) => {
       if (data) {
         setBlogs(data.map((b: any) => ({
           id: b.id,
