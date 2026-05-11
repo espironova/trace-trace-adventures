@@ -120,11 +120,21 @@ const About = () => {
                 { icon: Clock, label: "24/7 Available", desc: "Round-the-clock service for all your transport needs" },
                 { icon: Award, label: "East Africa Wide", desc: "Serving Kenya, Tanzania, Uganda, and Rwanda" },
               ].map((item, i) => (
-                <div key={i} className="bg-card border border-border p-6 text-center">
-                  <item.icon className="w-8 h-8 mx-auto mb-3 text-accent" />
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6, scale: 1.03 }}
+                  className="group relative bg-card border border-border p-6 text-center rounded-md transition-shadow duration-300 hover:border-heroGold hover:shadow-[0_12px_32px_-12px_hsl(var(--hero-gold)/0.45)] cursor-default"
+                >
+                  <div className="inline-flex w-12 h-12 mx-auto mb-3 items-center justify-center rounded-full bg-heroGold/15 group-hover:bg-heroGold/30 transition-colors">
+                    <item.icon className="w-6 h-6 text-accent group-hover:text-foreground transition-colors group-hover:rotate-6 duration-300" />
+                  </div>
                   <h3 className="font-serif text-lg mb-2">{item.label}</h3>
                   <p className="font-sans text-xs text-muted-foreground">{item.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
@@ -307,10 +317,12 @@ const About = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="border border-border bg-card p-8 text-center"
+                transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group relative overflow-hidden border border-border bg-card p-8 text-center rounded-md transition-all duration-300 hover:border-heroGold hover:shadow-[0_18px_40px_-16px_hsl(var(--hero-gold)/0.5)]"
               >
-                <h3 className="font-serif text-xl mb-3 text-accent">{v.title}</h3>
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-heroGold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <h3 className="font-serif text-xl mb-3 text-accent group-hover:text-foreground transition-colors">{v.title}</h3>
                 <p className="font-sans text-sm text-foreground/80 leading-relaxed">{v.desc}</p>
               </motion.div>
             ))}
