@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import Layout from "@/components/Layout";
-import { ArrowLeft, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Tag, Link2, Facebook, Linkedin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const BlogDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [blog, setBlog] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   useEffect(() => {
     if (!id) return;
@@ -56,8 +59,21 @@ const BlogDetail = () => {
     day: "numeric",
   });
 
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareTitle = blog.title;
+  const fbHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const liHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+  const copyLink = async () => {
+    try { await navigator.clipboard.writeText(shareUrl); toast.success("Link copied"); }
+    catch { toast.error("Could not copy link"); }
+  };
+
   return (
     <Layout>
+      <motion.div
+        style={{ scaleX: progress }}
+        className="fixed top-0 left-0 right-0 h-1 origin-left z-50 bg-gradient-to-r from-heroGold via-accent to-heroGold"
+      />
       {blog.image_url && (
         <div className="w-full h-[40vh] md:h-[55vh] overflow-hidden relative">
           <img
@@ -96,8 +112,22 @@ const BlogDetail = () => {
               {blog.title}
             </h1>
 
-            <div className="flex items-center gap-1 font-sans text-xs text-muted-foreground mb-10 pb-10 border-b border-border">
-              <Calendar className="w-3 h-3" /> {date}
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-10 pb-10 border-b border-border">
+              <span className="flex items-center gap-1 font-sans text-xs text-muted-foreground">
+                <Calendar className="w-3 h-3" /> {date}
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-sans text-xs uppercase tracking-wider text-muted-foreground mr-1">Share</span>
+                <button onClick={copyLink} aria-label="Copy link" className="p-2 rounded-full border border-border hover:bg-heroGold/20 hover:border-heroGold transition-colors">
+                  <Link2 className="w-4 h-4" />
+                </button>
+                <a href={fbHref} target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" className="p-2 rounded-full border border-border hover:bg-heroGold/20 hover:border-heroGold transition-colors">
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a href={liHref} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" className="p-2 rounded-full border border-border hover:bg-heroGold/20 hover:border-heroGold transition-colors">
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              </div>
             </div>
 
             <div className="font-sans text-base text-foreground/80 leading-relaxed whitespace-pre-wrap">

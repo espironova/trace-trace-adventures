@@ -1,23 +1,60 @@
-## Problem
-The "Book via Email" button calls `window.location.href = "mailto:..."` from inside the Lovable preview iframe, then immediately closes the modal. In sandboxed iframes (and in many browsers when no default mail handler is registered), assigning `mailto:` to `window.location.href` is silently blocked, so nothing happens. The most reliable cross-browser pattern is a real `<a href="mailto:...">` click triggered by the user gesture, which is treated as top-level navigation.
+## 1. About page card animations
 
-## Fix (single file: `src/components/BookingModal.tsx`)
+Goal: bring the four feature cards, the four mini-stat cards, and the three Values cards to life.
 
-1. Compute the mailto URL reactively from the current form state via `useMemo`:
-   - subject: `Booking Request - {name|"New Booking"}{ - vehicleType?}{ - date?}`
-   - body: result of `buildBookingMessage()`
-   - URL: `mailto:info@tracktraceadventures.co.ke?subject=...&body=...` (URL-encoded)
+- Add staggered fade-in-up on scroll (Framer Motion `whileInView`) on each card grid (instead of one wrapper animation).
+- On hover: lift + scale (`y: -6, scale: 1.02`), accent border glow, icon pulse/rotate.
+- Add a subtle gradient sheen overlay on hover for the Vision/Mission cards.
+- Animate the "20+ Years" badge with a slow continuous pulse ring.
 
-2. Replace the `<button type="button" onClick={handleEmailBooking}>` with an `<a>` styled identically (same Tailwind classes, same `Mail` icon and label):
-   - `href={mailtoHref}`
-   - On click: if the form is invalid, `e.preventDefault()` + `formEl.reportValidity()`. Otherwise let the browser navigate to the mailto URL natively, then call `onClose()` (no `target="_blank"` so the user's default mail app is invoked reliably; the page itself does not actually navigate for `mailto:`).
+## 2. More mustard (heroGold) accent across the site
 
-3. Remove the now-unused `handleEmailBooking` function (logic moved into the memoized href + click handler).
+The brand already has `--hero-gold` (mustard #F4C430) but it is barely used. Increase visibility by:
 
-4. Add a tiny fallback hint under the email button (muted, small): "If your email app does not open, write to info@tracktraceadventures.co.ke" with the address as a plain `mailto:` link, so corporate users on machines without a configured mail client still have a path forward.
+- Switching select primary CTA buttons (Hire a Vehicle, Read More, Leave a Review, etc.) to use heroGold instead of muted accent gold for hover/active states.
+- Add heroGold underline/divider accents under section eyebrows and H2s on Home, Fleet, Services, Destinations, About, Blogs.
+- Use heroGold for icon backgrounds in feature cards (About, Services).
+- Add a thin heroGold top border on Footer.
+- Keep Deep Brown + Cream base intact (per brand memory). Only mustard accents are intensified.
 
-## Notes
-- WhatsApp button and all other behavior unchanged.
-- No design-system violations: reuses existing `border-accent`, `text-accent`, `bg-transparent`, `hover:bg-accent/10` tokens.
-- No data, rates, or estimate logic changes.
-- Why this works: a user-gesture click on an `<a href="mailto:...">` is handled by the browser's protocol handler dispatch, which works inside iframes and across Chrome/Safari/Firefox; programmatic `window.location.href = "mailto:..."` from an iframe is frequently suppressed.
+## 3. Blog admin upgrades (`src/components/admin/BlogsManager.tsx`)
+
+a. **Auto read-time**: compute from `body` length (≈ 200 wpm). Remove read_time input; show calculated value as read-only chip. Recompute on body change.
+
+b. **Save as draft / Publish later / Unpublish**:
+- New DB column `status text default 'published'` with values `draft | published`. Migration required.
+- Form gets two save buttons: "Save as Draft" and "Publish".
+- In edit mode for a published post, show "Unpublish" button (sets status='draft'); for a draft, show "Publish now".
+- List shows a small badge (Draft / Published) per item.
+- Public BlogsReviews page filters `.eq('status','published')` so drafts stay hidden.
+
+c. **Category dropdown with custom option**:
+- Predefined categories: Travel Tips, Destinations, Safari Guides, Vehicle & Hire, Corporate Travel, Stories, News.
+- Use a Select; last option "+ Add custom" reveals an inline input that writes back to `form.category`.
+
+d. **Share icons on blog detail page** (`src/pages/BlogDetail.tsx`):
+- Add a share row (Link copy, Facebook, LinkedIn, WhatsApp optional) using lucide icons (`Link2`, `Facebook`, `Linkedin`).
+- Copy-link uses `navigator.clipboard` + toast confirmation.
+- FB/LinkedIn open standard share intents in a new tab with the current URL + title.
+
+## 4. Reading progress bar on blog detail
+
+In `src/pages/BlogDetail.tsx`:
+- Fixed top progress bar (1 px → 3 px tall) tied to scroll position of the article container.
+- Uses `useScroll` / `useSpring` from framer-motion already in the project. Color: heroGold gradient.
+
+## Technical notes
+
+- Migration: `ALTER TABLE public.blogs ADD COLUMN status text NOT NULL DEFAULT 'published' CHECK (status IN ('draft','published'));`
+- `read_time` column kept (auto-populated on save) for backward compatibility.
+- All new color usage stays in HSL semantic tokens (`heroGold`, `accent`, `primary`).
+- No new dependencies needed.
+
+## Files to change
+
+- `src/pages/About.tsx` — animations
+- `src/pages/BlogsReviews.tsx` — filter published, mustard accents
+- `src/pages/BlogDetail.tsx` — share icons + reading progress bar
+- `src/components/admin/BlogsManager.tsx` — auto read-time, draft/publish, category dropdown
+- `src/components/HeroSection.tsx`, `src/components/Footer.tsx`, services/fleet/destinations pages — increased mustard accents (light touch only)
+- New migration adding `blogs.status`

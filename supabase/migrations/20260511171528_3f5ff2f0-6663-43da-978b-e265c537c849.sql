@@ -1,0 +1,1 @@
+ALTER TABLE public.blogs ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'published' CHECK (status IN ('draft','published'));
