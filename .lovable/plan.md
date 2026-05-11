@@ -1,26 +1,23 @@
-## Goal
-Give corporate (and any) clients an alternative to WhatsApp by adding a "Book via Email" action to the booking modal. The email goes to `info@tracktraceadventures.co.ke` and contains all the same details captured by the form (and the live budget estimate).
+## Problem
+The "Book via Email" button calls `window.location.href = "mailto:..."` from inside the Lovable preview iframe, then immediately closes the modal. In sandboxed iframes (and in many browsers when no default mail handler is registered), assigning `mailto:` to `window.location.href` is silently blocked, so nothing happens. The most reliable cross-browser pattern is a real `<a href="mailto:...">` click triggered by the user gesture, which is treated as top-level navigation.
 
-## Changes
-**File:** `src/components/BookingModal.tsx`
+## Fix (single file: `src/components/BookingModal.tsx`)
 
-1. Refactor the existing `handleSubmit` so the message-building logic (lines list including booking details + estimate block) is extracted into a small helper that returns the plain-text body. Reuse it for both WhatsApp and Email so the two channels stay perfectly in sync.
+1. Compute the mailto URL reactively from the current form state via `useMemo`:
+   - subject: `Booking Request - {name|"New Booking"}{ - vehicleType?}{ - date?}`
+   - body: result of `buildBookingMessage()`
+   - URL: `mailto:info@tracktraceadventures.co.ke?subject=...&body=...` (URL-encoded)
 
-2. Add a second submit handler `handleEmailSubmit` that:
-   - Validates the form via `requestSubmit()`/native required fields.
-   - Builds the same body via the helper.
-   - Builds a subject line like: `Booking Request — {name} — {vehicleType} — {date}`.
-   - Opens `mailto:info@tracktraceadventures.co.ke?subject=...&body=...` (URL-encoded).
-   - Closes the modal.
+2. Replace the `<button type="button" onClick={handleEmailBooking}>` with an `<a>` styled identically (same Tailwind classes, same `Mail` icon and label):
+   - `href={mailtoHref}`
+   - On click: if the form is invalid, `e.preventDefault()` + `formEl.reportValidity()`. Otherwise let the browser navigate to the mailto URL natively, then call `onClose()` (no `target="_blank"` so the user's default mail app is invoked reliably; the page itself does not actually navigate for `mailto:`).
 
-3. Update the action area at the bottom of the form (currently a single full-width WhatsApp button) to show **two buttons side-by-side** on sm+ screens, stacked on mobile:
-   - Primary: "Book via WhatsApp" (existing styling, accent background, WhatsApp icon).
-   - Secondary: "Book via Email" (outline / muted variant using design tokens, `Mail` icon from lucide-react).
-   - Add a short helper line above: "Corporate clients can also book via email."
+3. Remove the now-unused `handleEmailBooking` function (logic moved into the memoized href + click handler).
 
-4. The email body uses the same multi-line plain-text format used for WhatsApp (no markdown asterisks needed for email, but keeping them is harmless and preserves a single source of truth — keep as-is).
+4. Add a tiny fallback hint under the email button (muted, small): "If your email app does not open, write to info@tracktraceadventures.co.ke" with the address as a plain `mailto:` link, so corporate users on machines without a configured mail client still have a path forward.
 
 ## Notes
-- No backend / edge function involved — `mailto:` opens the user's default mail client, mirroring the pattern already used in `src/pages/Contact.tsx`.
-- No design-system violations: uses existing `bg-accent`, `border-border`, `text-foreground` tokens.
-- No changes to data, rates, or estimate logic.
+- WhatsApp button and all other behavior unchanged.
+- No design-system violations: reuses existing `border-accent`, `text-accent`, `bg-transparent`, `hover:bg-accent/10` tokens.
+- No data, rates, or estimate logic changes.
+- Why this works: a user-gesture click on an `<a href="mailto:...">` is handled by the browser's protocol handler dispatch, which works inside iframes and across Chrome/Safari/Firefox; programmatic `window.location.href = "mailto:..."` from an iframe is frequently suppressed.

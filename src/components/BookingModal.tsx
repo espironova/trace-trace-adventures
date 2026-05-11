@@ -125,12 +125,12 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
     onClose();
   };
 
-  const handleEmailBooking = () => {
-    const message = buildBookingMessage();
+  const mailtoHref = useMemo(() => {
     const subject = `Booking Request - ${form.name || "New Booking"}${form.vehicleType ? ` - ${form.vehicleType}` : ""}${form.date ? ` - ${form.date}` : ""}`;
-    window.location.href = `mailto:info@tracktraceadventures.co.ke?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-    onClose();
-  };
+    const body = buildBookingMessage();
+    return `mailto:info@tracktraceadventures.co.ke?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, estimate, needsKm, needsDays]);
 
   return (
     <AnimatePresence>
@@ -408,22 +408,30 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
                   <WhatsAppIcon className="w-5 h-5 shrink-0" />
                   Book via WhatsApp
                 </button>
-                <button
-                  type="button"
+                <a
+                  href={mailtoHref}
                   onClick={(e) => {
                     const formEl = (e.currentTarget.closest("form") as HTMLFormElement | null);
                     if (formEl && !formEl.checkValidity()) {
+                      e.preventDefault();
                       formEl.reportValidity();
                       return;
                     }
-                    handleEmailBooking();
+                    setTimeout(() => onClose(), 100);
                   }}
                   className="inline-flex items-center justify-center gap-2 border border-accent text-accent bg-transparent py-4 font-sans text-xs uppercase tracking-[0.18em] font-bold hover:bg-accent/10 transition-colors"
                 >
                   <Mail className="w-5 h-5 shrink-0" />
                   Book via Email
-                </button>
+                </a>
               </div>
+
+              <p className="text-center font-sans text-[11px] text-muted-foreground italic">
+                If your email app does not open, write to{" "}
+                <a href="mailto:info@tracktraceadventures.co.ke" className="text-accent font-bold not-italic">
+                  info@tracktraceadventures.co.ke
+                </a>
+              </p>
 
               <p className="text-center font-sans text-xs text-muted-foreground">
                 Or call us directly: <a href="tel:+254721521009" className="text-accent font-bold">+254 721 521 009</a>
