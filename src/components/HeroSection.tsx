@@ -1,11 +1,8 @@
 "use client";
-import Image from 'next/image'
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { homeHeroSlides } from "@/data/heroFleetImages";
 import BookingModal from "@/components/BookingModal";
-
-const MotionImage = motion(Image)
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);

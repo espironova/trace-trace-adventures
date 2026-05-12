@@ -1,5 +1,5 @@
 // Shared rate-card data and helpers used by RateCalculator and BookingModal.
-// 2027 rates: Day rate (Full-Day Disposal & Long Distance) covers first 120 km;
+// 2026 rates: Day rate (Full-Day Disposal & Long Distance) covers first 120 km;
 // extra km billed at the vehicle's per-km overage rate. Some vehicles are
 // inquire-only for day-based services and show a "starting from" indicative price.
 
