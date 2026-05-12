@@ -394,6 +394,10 @@ jobs:
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
           if [ -d "src/pages" ]; then
+            # Remove stale src/routes/ if it already exists (e.g. from a previous Claude Code
+            # session that committed migration artifacts back to main). Without this, `mv` would
+            # nest src/pages inside src/routes/pages/ instead of replacing it.
+            rm -rf src/routes
             mv src/pages src/routes
             find src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" \) \
               -not -path "*/node_modules/*" | while read -r file; do
