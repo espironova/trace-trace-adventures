@@ -89,13 +89,11 @@ export default function FleetManager() {
             <div className="flex flex-wrap gap-2 mb-2">
               {form.images.map((src, i) => (
                 <div key={i} className="relative">
-                  <Image
-          src={src}
-          alt=""
-          width={180}
-          height={64}
-          className="w-24 h-20 object-cover rounded w-auto"
-        />
+                  <img
+                    src={src}
+                    alt=""
+                    className="w-24 h-20 object-cover rounded"
+                  />
                   <button type="button" onClick={() => setForm({ ...form, images: form.images.filter((_, j) => j !== i) })} className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-5 h-5 text-xs">×</button>
                 </div>
               ))}
@@ -114,13 +112,11 @@ export default function FleetManager() {
         <p className="text-sm text-muted-foreground">The original built-in fleet is always shown on the Fleet page. New vehicles you add here appear alongside them.</p>
         {items.map(u => (
           <div key={u.id} className="flex items-center gap-4 bg-card border border-border p-3 rounded">
-            {u.images[0] && <Image
-          src={u.images[0]}
-          alt={u.alt}
-          width={180}
-          height={64}
-          className="w-20 h-14 object-cover rounded w-auto"
-        />}
+            {u.images[0] && <img
+              src={u.images[0]}
+              alt={u.alt}
+              className="w-20 h-14 object-cover rounded"
+            />}
             <div className="flex-1 min-w-0">
               <p className="font-bold truncate">{u.model_name}</p>
               <p className="text-xs text-muted-foreground">{u.registration} • {u.capacity}</p>
