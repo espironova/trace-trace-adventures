@@ -30,7 +30,7 @@ const VehicleImageCarousel = ({ images, alt }: VehicleImageCarouselProps) => {
       onMouseLeave={() => setPaused(false)}
     >
       <AnimatePresence mode="wait">
-        <MotionImage
+        <motion.img
           key={index}
           src={images[index]}
           alt={alt}
@@ -38,10 +38,8 @@ const VehicleImageCarousel = ({ images, alt }: VehicleImageCarouselProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
-          className="absolute inset-0 object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
-          fill
-          sizes="100vw"
         />
       </AnimatePresence>
 
