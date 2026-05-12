@@ -1,8 +1,5 @@
 "use client";
-import Image from 'next/image'
 import { useState } from "react";
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { Phone, Mail, Menu, X } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,7 +17,7 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -52,14 +49,14 @@ const Header = () => {
       {/* Main navigation */}
       <nav className="bg-background/95 backdrop-blur-md border-b border-border">
         <div className="container mx-auto flex items-center justify-between py-3 px-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-          src={logo}
-          alt="Track & Trace Adventures logo"
-          width={180}
-          height={64}
-          className="h-12 w-auto w-auto"
-        />
+          <a href="/" className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="Track & Trace Adventures logo"
+              width={180}
+              height={64}
+              className="h-12 w-auto"
+            />
             <div className="hidden sm:block">
               <span className="font-serif text-lg md:text-xl font-bold text-primary tracking-tight leading-none block">
                 Track & Trace
@@ -68,20 +65,20 @@ const Header = () => {
                 Adventures
               </span>
             </div>
-          </Link>
+          </a>
 
           {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <li key={link.path}>
-                <Link
+                <a
                   href={link.path}
                   className={`text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:text-accent ${
                     pathname === link.path ? "text-accent font-bold" : "text-foreground"
                   }`}
                 >
                   {link.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -108,7 +105,7 @@ const Header = () => {
               <ul className="flex flex-col py-4">
                 {navLinks.map((link) => (
                   <li key={link.path}>
-                    <Link
+                    <a
                       href={link.path}
                       onClick={() => setMobileOpen(false)}
                       className={`block px-6 py-3 text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:bg-muted ${
@@ -116,7 +113,7 @@ const Header = () => {
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
