@@ -54,7 +54,7 @@ const RateCalculator = () => {
           <p className="font-sans text-sm uppercase tracking-[0.3em] text-accent mb-3">Plan Your Budget</p>
           <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">Rate Calculator</h2>
           <p className="font-sans text-muted-foreground max-w-2xl mx-auto">
-            2027 rates. Day rate covers the first {INCLUDED_KM} km. Extra km is billed at each vehicle's per-km rate.
+            2026 rates. Day rate covers the first {INCLUDED_KM} km. Extra km is billed at each vehicle's per-km rate.
             Land Cruiser and 8-Pax Safari Van full-day and long-distance pricing is on inquiry.
           </p>
         </motion.div>
