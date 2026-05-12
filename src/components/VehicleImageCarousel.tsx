@@ -1,9 +1,6 @@
 "use client";
-import Image from 'next/image'
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const MotionImage = motion(Image)
 
 interface VehicleImageCarouselProps {
   images: string[];
