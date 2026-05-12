@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => {
@@ -28,9 +27,9 @@ const Footer = () => {
                 { label: "Contact Us", path: "/contact" },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="opacity-80 hover:opacity-100 hover:text-accent transition-colors">
+                  <a href={link.path} className="opacity-80 hover:opacity-100 hover:text-accent transition-colors">
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

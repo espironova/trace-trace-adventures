@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import { Phone, Mail, Menu, X } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,7 +17,7 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { pathname } = useLocation();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -50,7 +49,7 @@ const Header = () => {
       {/* Main navigation */}
       <nav className="bg-background/95 backdrop-blur-md border-b border-border">
         <div className="container mx-auto flex items-center justify-between py-3 px-4">
-          <Link to="/" className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-3">
             <img
               src={logo}
               alt="Track & Trace Adventures logo"
@@ -66,20 +65,20 @@ const Header = () => {
                 Adventures
               </span>
             </div>
-          </Link>
+          </a>
 
           {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <li key={link.path}>
-                <Link
-                  to={link.path}
+                <a
+                  href={link.path}
                   className={`text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:text-accent ${
                     pathname === link.path ? "text-accent font-bold" : "text-foreground"
                   }`}
                 >
                   {link.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -106,15 +105,15 @@ const Header = () => {
               <ul className="flex flex-col py-4">
                 {navLinks.map((link) => (
                   <li key={link.path}>
-                    <Link
-                      to={link.path}
+                    <a
+                      href={link.path}
                       onClick={() => setMobileOpen(false)}
                       className={`block px-6 py-3 text-sm font-sans uppercase tracking-[0.15em] transition-colors hover:bg-muted ${
                         pathname === link.path ? "text-accent font-bold" : "text-foreground"
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>

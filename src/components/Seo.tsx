@@ -1,10 +1,9 @@
 "use client";
 import { Helmet } from "react-helmet-async";
-import { useLocation } from "react-router-dom";
 import { buildWebPageJsonLd, DEFAULT_OG_IMAGE, getSeoForPath } from "@/lib/seo";
 
 const Seo = () => {
-  const { pathname } = useLocation();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const { title, description, canonical, noindex } = getSeoForPath(pathname);
   const webPageJson = buildWebPageJsonLd({ canonical, title, description });
 
