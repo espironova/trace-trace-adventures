@@ -1073,6 +1073,94 @@ jobs:
           walk('src');
           NODEJS
 
+      # ─── FIX P2: Auto-detect shared component localStorage usage ────────────
+      # If localStorage is called inside a shared component (e.g. Navigation,
+      # a hook, or a provider) that is imported by EVERY page, Fix P's per-file
+      # rewrite won't help because the call site is in a dependency.
+      # This step scans src/components and src/hooks for localStorage usage,
+      # then writes /tmp/localStorage-components.txt for diagnostic purposes
+      # and wraps any TOP-LEVEL (non-function-body) localStorage calls it finds.
+      - name: "Fix P2 — Wrap top-level localStorage in shared components"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          function walk(dir) {
+            if (!fs.existsSync(dir)) return [];
+            const results = [];
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) results.push(...walk(full));
+              else if (/\.(tsx|ts)$/.test(entry.name)) results.push(full);
+            }
+            return results;
+          }
+
+          const dirsToScan = ['src/components', 'src/hooks', 'src/lib', 'src/context'];
+          const affected = [];
+
+          for (const dir of dirsToScan) {
+            for (const file of walk(dir)) {
+              const src = fs.readFileSync(file, 'utf8');
+              if (!src.includes('localStorage') && !src.includes('sessionStorage')) continue;
+
+              // Check if localStorage is used OUTSIDE of function bodies
+              // by looking for it at the module's top level (before any function declaration)
+              const lines = src.split('\n');
+              let inFunction = 0;
+              let hasTopLevel = false;
+              for (const line of lines) {
+                const opens = (line.match(/\{/g) || []).length;
+                const closes = (line.match(/\}/g) || []).length;
+                if (inFunction === 0 && (line.includes('localStorage') || line.includes('sessionStorage'))) {
+                  hasTopLevel = true;
+                }
+                inFunction += opens - closes;
+                if (inFunction < 0) inFunction = 0;
+              }
+
+              if (hasTopLevel) {
+                affected.push(file);
+                console.log('Found top-level localStorage in: ' + file);
+
+                // Wrap the specific lines
+                let newSrc = src;
+                newSrc = newSrc.replace(
+                  /^([ \t]*(?:const|let|var)\s+\w+\s*=\s*(?:localStorage|sessionStorage)\.\w+\([^)]*\))/gm,
+                  (match, stmt) => {
+                    if (match.includes("typeof window")) return match;
+                    const varMatch = stmt.match(/(?:const|let|var)\s+(\w+)\s*=/);
+                    const varName = varMatch ? varMatch[1] : null;
+                    if (varName) {
+                      const storage = stmt.includes('sessionStorage') ? 'sessionStorage' : 'localStorage';
+                      const methodMatch = stmt.match(/\.(getItem|setItem|removeItem|clear|key|length)\(/);
+                      const method = methodMatch ? methodMatch[1] : 'getItem';
+                      const fallback = ['getItem', 'key'].includes(method) ? 'null' : 'undefined';
+                      return stmt.replace(
+                        /(localStorage|sessionStorage)\./,
+                        "typeof window !== 'undefined' ? $1."
+                      ).replace(/(\([^)]*\))$/, '$1 : ' + fallback);
+                    }
+                    return match;
+                  }
+                );
+
+                if (newSrc !== src) {
+                  fs.writeFileSync(file, newSrc);
+                  console.log('Fixed top-level localStorage in: ' + file);
+                }
+              }
+            }
+          }
+
+          if (affected.length === 0) {
+            console.log('No top-level localStorage found in shared components');
+          }
+          NODEJS
+
       # ─── FIX Q: Force non-SEO pages to client-only rendering ────────────────
       # Pages like /admin, /qr use localStorage at module level in ways that
       # Fix P's regex cannot safely rewrite. These pages don't need Google to
@@ -1090,11 +1178,16 @@ jobs:
           const path = require('path');
 
           // Pages that should never SSR — admin panels, QR tools, etc.
+          // Also includes pages where a shared component calls localStorage.
+          // SEO-critical pages (/, /services, /destinations, /about, /contact)
+          // are excluded so Google can still read their content.
           const CLIENT_ONLY_DIRS = [
             'src/app/admin',
             'src/app/qr',
             'src/app/qr-landing',
             'src/app/blogs-reviews',
+            'src/app/fleet',
+            'src/app/blog-detail',
           ];
 
           for (const pageDir of CLIENT_ONLY_DIRS) {
