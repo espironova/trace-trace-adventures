@@ -1073,6 +1073,81 @@ jobs:
           walk('src');
           NODEJS
 
+      # ─── FIX Q: Force non-SEO pages to client-only rendering ────────────────
+      # Pages like /admin, /qr use localStorage at module level in ways that
+      # Fix P's regex cannot safely rewrite (class initializers, default params,
+      # deeply nested calls). These pages don't need Google to index them, so
+      # we force them to render client-side only by adding a top-level
+      # 'use client' + noSSR dynamic wrapper directly on the page file.
+      - name: "Fix Q — Force admin/qr pages to client-only (noSSR)"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          // Pages that should never SSR — admin panels, QR tools, etc.
+          // Add any route here that uses browser-only APIs at module level.
+          const CLIENT_ONLY_PAGES = [
+            'src/app/admin/page.tsx',
+            'src/app/qr/page.tsx',
+            'src/app/qr-landing/page.tsx',
+          ];
+
+          for (const pagePath of CLIENT_ONLY_PAGES) {
+            if (!fs.existsSync(pagePath)) {
+              console.log('Skipping (not found): ' + pagePath);
+              continue;
+            }
+
+            const src = fs.readFileSync(pagePath, 'utf8');
+
+            // Already client-only — skip
+            if (src.includes("'use client'") || src.includes('"use client"')) {
+              console.log('Already client-only: ' + pagePath);
+              continue;
+            }
+
+            // Find the component name and its client import
+            // page.tsx pattern: import { XxxClient } from './_client'
+            const clientImportMatch = src.match(/import\s*\{\s*(\w+)\s*\}\s*from\s*['"]\.\/(_client|client)['"]/);
+            if (!clientImportMatch) {
+              console.log('No client import found in: ' + pagePath + ' — skipping');
+              continue;
+            }
+
+            const clientName = clientImportMatch[1];
+            const componentMatch = src.match(/export default function (\w+)/);
+            const componentName = componentMatch ? componentMatch[1] : 'Page';
+
+            // Rewrite page.tsx to use dynamic noSSR wrapper
+            // Keep metadata export (server component feature) but wrap render in noSSR
+            const hasMetadata = src.includes('export const metadata');
+            const metadataImport = hasMetadata ? "import type { Metadata } from 'next'\n" : '';
+            const metadataBlock = hasMetadata
+              ? src.match(/export const metadata[\s\S]*?\n\}/)?.[0] || ''
+              : '';
+
+            const newContent = [
+              metadataImport + "import dynamic from 'next/dynamic'",
+              '',
+              "const " + clientName + "NoSSR = dynamic(() => Promise.resolve().then(() => ({ default: function W() {",
+              "  const C = require('./_client')." + clientName,
+              "  return <C />",
+              "}})), { ssr: false })",
+              '',
+              metadataBlock ? metadataBlock + '\n' : '',
+              'export default function ' + componentName + '() {',
+              '  return <' + clientName + 'NoSSR />',
+              '}',
+              '',
+            ].filter(s => s !== undefined).join('\n');
+
+            fs.writeFileSync(pagePath, newContent);
+            console.log('Fix Q — forced client-only (noSSR): ' + pagePath);
+          }
+          NODEJS
+
       # ─── 6. INSTALL DEPENDENCIES ─────────────────────────────────────────────
       - name: Install dependencies
         if: steps.check_flag.outputs.enabled == 'true'
