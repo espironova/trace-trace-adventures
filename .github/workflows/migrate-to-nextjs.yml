@@ -986,6 +986,31 @@ jobs:
           rm -f public/robots.txt public/sitemap.xml
           echo "Removed public/robots.txt and public/sitemap.xml (Next.js serves these dynamically)"
 
+      # ─── FIX O: Convert .avif images to .jpg ────────────────────────────────
+      # Next.js 15's sharp cannot process certain HEIF-encoded .avif files
+      # (e.g. mt-kenya.avif) — throws "Bitstream not supported" and kills the
+      # entire build. Convert all .avif assets to .jpg before npm install so
+      # Next.js never encounters them. imagemagick is pre-installed on ubuntu-latest.
+      - name: "Fix O — Convert .avif images to .jpg"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          sudo apt-get install -y imagemagick 2>/dev/null || true
+          find src public -name "*.avif" \
+            -not -path "*/node_modules/*" | while read -r f; do
+            jpg="${f%.avif}.jpg"
+            if convert "$f" "$jpg" 2>/dev/null; then
+              rm "$f"
+              echo "Converted: $f → $jpg"
+            else
+              echo "WARNING: Could not convert $f — removing to prevent build failure"
+              rm "$f"
+            fi
+          done
+          # Update all import/src references from .avif to .jpg in source files
+          find src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.css" -o -name "*.js" \) \
+            -not -path "*/node_modules/*" | xargs -r sed -i 's/\.avif/.jpg/g'
+          echo "Fix O complete — .avif files converted to .jpg"
+
       # ─── 6. INSTALL DEPENDENCIES ─────────────────────────────────────────────
       - name: Install dependencies
         if: steps.check_flag.outputs.enabled == 'true'
