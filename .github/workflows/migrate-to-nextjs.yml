@@ -1277,6 +1277,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: "Step 8b — Exclude .next/ and node_modules from commit"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          grep -qxF '.next/' .gitignore || echo '.next/' >> .gitignore
+          grep -qxF '.next' .gitignore  || echo '.next'  >> .gitignore
+          grep -qxF 'node_modules/' .gitignore || echo 'node_modules/' >> .gitignore
+          git rm -r --cached .next/ 2>/dev/null || true
+          git rm -r --cached node_modules/ 2>/dev/null || true
+          echo "Excluded .next/ and node_modules/ from commit"
+
       # ─── 9. PUSH TO nextjs-deploy ────────────────────────────────────────────
       - name: Push to nextjs-deploy branch
         if: steps.check_flag.outputs.enabled == 'true'
