@@ -20,6 +20,20 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      # ─── 1b. GITIGNORE SETUP ─────────────────────────────────────────────────
+      # Add .next/ and node_modules/ to .gitignore BEFORE anything else runs.
+      # This must happen before npm install and next build so these directories
+      # are never tracked by git. Doing this after the build (Step 8b) was too
+      # late — git add -A would already stage the large cache files.
+      - name: "Step 1b — Ensure .next/ excluded from git before build"
+        run: |
+          grep -qxF '.next' .gitignore   || echo '.next'   >> .gitignore
+          grep -qxF '.next/' .gitignore  || echo '.next/'  >> .gitignore
+          grep -qxF 'node_modules' .gitignore || echo 'node_modules' >> .gitignore
+          grep -qxF 'node_modules/' .gitignore || echo 'node_modules/' >> .gitignore
+          echo ".next and node_modules added to .gitignore"
+          cat .gitignore | grep -E "\.next|node_modules"
+
       # ─── 2. OPT-IN CHECK ─────────────────────────────────────────────────────
       - name: Check if migration is enabled for this repo
         id: check_flag
@@ -321,16 +335,15 @@ jobs:
               const dynName = route.component + 'Dynamic';
               const clientName = route.component + 'Client';
 
-              // _client.tsx — 'use client', loads component with SSR enabled
+              // _client.tsx — direct import for SSR pages (no dynamic())
+              // Using direct import ensures Next.js renders content server-side
+              // so Google sees the full HTML body, not a blank page.
               fs.writeFileSync(path.join(pageDir, '_client.tsx'), [
                 "'use client'",
-                "import dynamic from 'next/dynamic'",
-                '',
-                "// SSR enabled — Google can read this page's content",
-                "const " + dynName + " = dynamic(() => import('" + relImport + "'))",
+                "import " + route.component + " from '" + relImport + "'",
                 '',
                 'export function ' + clientName + '() {',
-                '  return <' + dynName + ' />',
+                '  return <' + route.component + ' />',
                 '}',
                 '',
               ].join('\n'));
@@ -356,15 +369,13 @@ jobs:
               const nfRelPath = notFound.importSrc.replace(/^\.\/pages\//, '');
               const nfDynName = notFound.component + 'Dynamic';
               const nfClientName = notFound.component + 'Client';
-              // FIX 2: { ssr: false } removed from not-found dynamic() too
+              // Direct import for not-found — no dynamic() needed
               fs.writeFileSync('src/app/_not-found-client.tsx', [
                 "'use client'",
-                "import dynamic from 'next/dynamic'",
-                '',
-                "const " + nfDynName + " = dynamic(() => import('../routes/" + nfRelPath + "'))",
+                "import " + notFound.component + " from '../routes/" + nfRelPath + "'",
                 '',
                 'export function ' + nfClientName + '() {',
-                '  return <' + nfDynName + ' />',
+                '  return <' + notFound.component + ' />',
                 '}',
                 '',
               ].join('\n'));
@@ -1277,15 +1288,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: "Step 8b — Exclude .next/ and node_modules from commit"
-        if: steps.check_flag.outputs.enabled == 'true'
-        run: |
-          grep -qxF '.next/' .gitignore || echo '.next/' >> .gitignore
-          grep -qxF '.next' .gitignore  || echo '.next'  >> .gitignore
-          grep -qxF 'node_modules/' .gitignore || echo 'node_modules/' >> .gitignore
-          git rm -r --cached .next/ 2>/dev/null || true
-          git rm -r --cached node_modules/ 2>/dev/null || true
-          echo "Excluded .next/ and node_modules/ from commit"
 
       # ─── 9. PUSH TO nextjs-deploy ────────────────────────────────────────────
       - name: Push to nextjs-deploy branch
@@ -1294,7 +1296,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -B nextjs-deploy
+          # Final safety net — explicitly remove .next/ from staging even if
+          # gitignore was already applied. Belt AND braces.
+          git rm -r --cached .next/ 2>/dev/null || true
+          git rm -r --cached node_modules/ 2>/dev/null || true
           git add -A
+          git reset HEAD .next/ 2>/dev/null || true
+          git reset HEAD node_modules/ 2>/dev/null || true
           git commit -m "chore: auto-migrate to Next.js 15 with SSR enabled [$(date +'%Y-%m-%d %H:%M')]" \
             || echo "No changes to commit"
           git push origin nextjs-deploy --force
@@ -1303,5 +1311,3 @@ jobs:
       - name: Skip notice
         if: steps.check_flag.outputs.enabled == 'false'
         run: echo "lovable.migrate.json not found — skipping migration for this repo."
-
- 
