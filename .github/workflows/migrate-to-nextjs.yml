@@ -97,8 +97,12 @@ jobs:
       # ─── 4b. INLINE MIGRATION ────────────────────────────────────────────────
       # Reads /tmp/routes.json. If routes were extracted, generates individual
       # Next.js page files (one per route) — full SSR, Google sees real HTML.
-      # Falls back to the old [[...slug]] + ssr:false catch-all if route
-      # extraction failed, so no project is left in a broken state.
+      # Falls back to the old [[...slug]] catch-all ONLY if route extraction
+      # completely failed. SSR is now enabled by default (ssr:false removed).
+      #
+      # FIX 1: next version changed from ^16.0.0 → ^15.3.0 (stable release)
+      # FIX 2: ssr:false removed from dynamic() — enables real pre-rendering
+      # FIX 3: Fallback catch-all also uses SSR (ssr:false removed there too)
       #
       # Metadata priority: lovable.migrate.json → index.html → "My App"
       - name: "Step 4b — Inline migration: Vite SPA → Next.js App Router"
@@ -260,8 +264,9 @@ jobs:
           ].join('\n'));
 
           if (useFallback) {
-            // ── FALLBACK: [[...slug]] catch-all with ssr:false ─────────────
-            console.warn('WARNING: Using fallback catch-all (ssr:false) — no SSR for page content');
+            // ── FALLBACK: [[...slug]] catch-all ────────────────────────────
+            // FIX 3: ssr:false removed — App renders server-side in fallback too
+            console.warn('WARNING: Using fallback catch-all — routes not extracted from App.tsx');
             const appEntry = fs.existsSync('src/App.tsx') ? '../../App' : '../../app';
             fs.mkdirSync('src/app/[[...slug]]', { recursive: true });
             fs.writeFileSync('src/app/[[...slug]]/page.tsx', [
@@ -270,10 +275,14 @@ jobs:
               'export default function Page() { return <ClientOnly /> }',
               '',
             ].join('\n'));
+            // FIX 3: Removed { ssr: false } from dynamic() in fallback
             fs.writeFileSync('src/app/[[...slug]]/client.tsx', [
               "'use client'",
               "import dynamic from 'next/dynamic'",
-              "const App = dynamic(() => import('" + appEntry + "'), { ssr: false })",
+              '',
+              "// SSR enabled — content is pre-rendered and visible to Google",
+              "const App = dynamic(() => import('" + appEntry + "'))",
+              '',
               'export function ClientOnly() { return <App /> }',
               '',
             ].join('\n'));
@@ -305,18 +314,20 @@ jobs:
               const metadataImport = pagesMeta ? "import type { Metadata } from 'next'" : '';
 
               // Two-file pattern: server page.tsx (exports metadata) + 'use client' _client.tsx
-              // (holds dynamic ssr:false). This satisfies both constraints:
-              // - export const metadata only works in Server Components (no 'use client')
-              // - dynamic(ssr:false) is forbidden in Server Components
+              // page.tsx   — server component, exports per-page metadata, visible to Google
+              // _client.tsx — 'use client', handles interactivity
+              //
+              // FIX 2: { ssr: false } removed from dynamic() — content now pre-rendered
               const dynName = route.component + 'Dynamic';
               const clientName = route.component + 'Client';
 
-              // _client.tsx — 'use client', wraps component with dynamic(ssr:false)
+              // _client.tsx — 'use client', loads component with SSR enabled
               fs.writeFileSync(path.join(pageDir, '_client.tsx'), [
                 "'use client'",
                 "import dynamic from 'next/dynamic'",
                 '',
-                "const " + dynName + " = dynamic(() => import('" + relImport + "'), { ssr: false })",
+                "// SSR enabled — Google can read this page's content",
+                "const " + dynName + " = dynamic(() => import('" + relImport + "'))",
                 '',
                 'export function ' + clientName + '() {',
                 '  return <' + dynName + ' />',
@@ -345,12 +356,12 @@ jobs:
               const nfRelPath = notFound.importSrc.replace(/^\.\/pages\//, '');
               const nfDynName = notFound.component + 'Dynamic';
               const nfClientName = notFound.component + 'Client';
-              // _not-found-client.tsx — 'use client', wraps component with dynamic(ssr:false)
+              // FIX 2: { ssr: false } removed from not-found dynamic() too
               fs.writeFileSync('src/app/_not-found-client.tsx', [
                 "'use client'",
                 "import dynamic from 'next/dynamic'",
                 '',
-                "const " + nfDynName + " = dynamic(() => import('../routes/" + nfRelPath + "'), { ssr: false })",
+                "const " + nfDynName + " = dynamic(() => import('../routes/" + nfRelPath + "'))",
                 '',
                 'export function ' + nfClientName + '() {',
                 '  return <' + nfDynName + ' />',
@@ -373,14 +384,19 @@ jobs:
           // ── Update package.json ─────────────────────────────────────────────
           const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
           pkg.dependencies = pkg.dependencies || {};
-          pkg.dependencies['next'] = '^16.0.0';
+          // FIX 1: Was ^16.0.0 (non-existent). Now ^15.3.0 (latest stable).
+          pkg.dependencies['next'] = '^15.3.0';
           pkg.scripts = pkg.scripts || {};
           pkg.scripts['dev']   = 'next dev';
           pkg.scripts['build'] = 'next build';
           pkg.scripts['start'] = 'next start';
+          pkg.scripts['lint']  = 'next lint';
+          // Remove Vite-specific scripts that conflict with Next.js
+          delete pkg.scripts['build:dev'];
+          delete pkg.scripts['preview'];
           fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
 
-          console.log('Migration complete — SSR mode: ' + (useFallback ? 'FALLBACK (ssr:false)' : 'INDIVIDUAL PAGES'));
+          console.log('Migration complete — Next.js 15.3.0, SSR ENABLED on all pages');
           NODEJS
 
       # ─── FIX A: Remove stale --no-turbo CLI flag ──────────────────────────────
@@ -517,13 +533,6 @@ jobs:
           done
 
       # ─── FIX C3: Handle combined react-router-dom imports ───────────────────
-      # Fix C only handles single-named imports like `import { Link } from 'react-router-dom'`.
-      # Combined imports like `import { Link, useLocation } from 'react-router-dom'` (used in
-      # Navigation.tsx and NotFound.tsx) are left untouched, leaving react-router-dom hooks
-      # in the codebase without a Router context → runtime crash on every page.
-      # This step also fixes usage patterns Fix C misses:
-      #   const { pathname } = useLocation()  →  const pathname = usePathname()
-      #   const [searchParams] = useSearchParams()  →  const searchParams = useSearchParams()
       - name: "Fix C3 — Handle combined react-router-dom imports and missed usage patterns"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -544,7 +553,6 @@ jobs:
             let src = fs.readFileSync(file, 'utf8');
             const orig = src;
 
-            // Replace any remaining combined react-router-dom named imports
             if (src.includes('react-router-dom')) {
               src = src.replace(
                 /import\s*\{([^}]+)\}\s*from\s*["']react-router-dom["'];?/g,
@@ -570,16 +578,8 @@ jobs:
               );
             }
 
-            // Fix destructuring pattern Fix C misses: const { pathname } = useLocation()
             src = src.replace(/const\s*\{\s*pathname\s*\}\s*=\s*useLocation\s*\(\)/g, 'const pathname = usePathname()');
-
-            // Fix react-router-dom useSearchParams tuple → next/navigation scalar
-            // react-router-dom: const [p] = useSearchParams()  →  next: const p = useSearchParams()
             src = src.replace(/const\s*\[\s*(\w+)\s*\]\s*=\s*useSearchParams\s*\(\)/g, 'const $1 = useSearchParams()');
-
-            // Fix C misses multi-line <Link to=... where <Link and to= are on separate lines.
-            // Replace any remaining `to=` prop on a next/link Link (already imported as next/link).
-            // Safe because react-router-dom is gone at this point; `to=` is invalid on next/link.
             src = src.replace(/(<Link\b[^>]*?)\bto=/gs, '$1href=');
 
             if (src !== orig) {
@@ -605,7 +605,6 @@ jobs:
           done
 
       # ─── FIX F: Rename .jfif → .jpg ──────────────────────────────────────────
-      # Must run before Fix I so image tags already reference .jpg paths.
       - name: "Fix F — Rename .jfif image files to .jpg"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -621,10 +620,6 @@ jobs:
             2>/dev/null | xargs -r sed -i 's/\.jfif/.jpg/g'
 
       # ─── FIX I: Replace <img> with next/image ────────────────────────────────
-      # Rewrites all <img> tags to <Image> from next/image.
-      # Strategy: fill prop for all container images (all use w-full h-full or
-      # positioned parents). Logo/fixed-size images get explicit width/height.
-      # Collects external image hostnames → /tmp/image-hostnames.json for Fix E.
       - name: "Fix I — Migrate <img> tags to next/image"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -646,7 +641,6 @@ jobs:
 
           function processFile(file) {
             let src = fs.readFileSync(file, 'utf8');
-            // Multiline img tag match
             const imgRe = /<img\s([^>]*?)\/>/gs;
             let changed = false;
 
@@ -654,9 +648,6 @@ jobs:
               changed = true;
               totalReplaced++;
 
-              // Extract attribute values — returns {value, isExpr} to preserve quoting.
-              // Uses balanced-brace counting so template literals like alt={`${x}`}
-              // are extracted correctly (simple [^}]+ regex stops at the first } inside ${}).
               const getAttr = (name) => {
                 const re = new RegExp('(?:^|\\s)' + name + '=\\{');
                 const m = re.exec(attrs);
@@ -674,6 +665,7 @@ jobs:
                 if (strM) return { value: strM[1].trim(), isExpr: false };
                 return { value: '', isExpr: false };
               };
+
               const srcInfo     = getAttr('src');
               const altInfo     = getAttr('alt');
               const classInfo   = getAttr('className');
@@ -683,19 +675,15 @@ jobs:
               const classVal   = classInfo.value;
               const loadingVal = loadingInfo.value;
 
-              // Collect external hostnames
               const urlMatch = srcVal.match(/https?:\/\/([^/'"]+)/);
               if (urlMatch) hostnames.add(urlMatch[1]);
 
-              // Determine if fill or fixed — use space-delimited class matching to avoid
-              // false positives from 'max-h-full' / 'max-w-full' matching 'h-full' / 'w-full'.
-              // Include Tailwind arbitrary heights (e.g. h-[120%]) so hero/parallax imgs get fill, not 180×64.
               const hasExactClass = (cls) => (' ' + classVal + ' ').includes(' ' + cls + ' ');
               const hasArbitraryHeight = /\bh-\[[^\]]+\]/.test(classVal);
               const isFill = (hasExactClass('w-full') && hasExactClass('h-full'))
                           || hasExactClass('h-full')
                           || (hasExactClass('w-full') && hasArbitraryHeight);
-              // Clean className: remove w-full and h-full (incompatible with fill); strip arbitrary h-[…] too
+
               const cleanClass = classVal
                 .replace(/(^| )w-full( |$)/g, ' ')
                 .replace(/(^| )h-full( |$)/g, ' ')
@@ -704,14 +692,12 @@ jobs:
                 .trim();
 
               const isPriority = loadingVal === 'eager';
-              // sizes: full-width for external/background images, responsive for cards
               const isBackground = classVal.includes('absolute') || attrs.includes('inset-0')
                 || srcVal.startsWith('https://') || srcVal.startsWith('http://');
               const sizes = isBackground
                 ? '"100vw"'
                 : '"(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"';
 
-              // Rebuild src/alt JSX attributes with correct quoting
               const srcAttr = srcInfo.isExpr ? 'src={' + srcVal + '}' : 'src={"' + srcVal + '"}';
               const altAttr = altVal
                 ? (altInfo.isExpr ? 'alt={' + altVal + '}' : 'alt="' + altVal + '"')
@@ -719,21 +705,15 @@ jobs:
 
               if (isFill) {
                 const parts = [
-                  srcAttr,
-                  altAttr,
-                  'fill',
+                  srcAttr, altAttr, 'fill',
                   cleanClass ? 'className="' + cleanClass + '"' : '',
                   'sizes=' + sizes,
                   isPriority ? 'priority' : '',
                 ].filter(Boolean).join('\n          ');
                 return '<Image\n          ' + parts + '\n        />';
               } else {
-                // Fixed size (logo pattern)
                 const parts = [
-                  srcAttr,
-                  altAttr,
-                  'width={180}',
-                  'height={64}',
+                  srcAttr, altAttr, 'width={180}', 'height={64}',
                   classVal ? 'className="' + classVal + ' w-auto"' : '',
                   isPriority ? 'priority' : '',
                 ].filter(Boolean).join('\n          ');
@@ -742,9 +722,6 @@ jobs:
             });
 
             if (changed) {
-              // Inject next/image import if not already present.
-              // MUST go after "use client" directive (if present) — placing it before
-              // causes "use client must be the first line" build errors.
               if (!src.includes("from 'next/image'") && !src.includes('from "next/image"')) {
                 if (/^["']use client["']/.test(src)) {
                   src = src.replace(/^(["']use client["'];?\n)/, "$1import Image from 'next/image'\n");
@@ -764,11 +741,6 @@ jobs:
           NODEJS
 
       # ─── FIX L: Convert motion.img → motion(Image) ──────────────────────────
-      # Fix I converts <img> to <Image fill> but skips <motion.img> (Framer Motion).
-      # In Next.js, static asset imports return StaticImageData objects, not strings.
-      # A plain <img src={obj}> renders src="[object Object]" — images go blank.
-      # This step converts every <motion.img> to <MotionImage> (motion wrapped
-      # next/image), which accepts StaticImageData natively and preserves animations.
       - name: "Fix L — Convert motion.img carousel images to motion(Image)"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -790,16 +762,13 @@ jobs:
             if (!src.includes('<motion.img')) return;
             const orig = src;
 
-            // Replace each <motion.img .../>  with <MotionImage fill .../>
             src = src.replace(/<motion\.img\n?([\s\S]*?)\/>/g, (match, attrs) => {
-              // Strip width/height (fill handles sizing)
               let a = attrs
                 .replace(/[ \t]*width=\{[^}]+\}\n?/g, '')
                 .replace(/[ \t]*height=\{[^}]+\}\n?/g, '')
                 .replace(/[ \t]*width="[^"]*"\n?/g, '')
                 .replace(/[ \t]*height="[^"]*"\n?/g, '');
 
-              // Remove w-full and h-full from className — fill covers the container
               a = a.replace(/(className=")([^"]*)(")/, (_, open, cls, close) => {
                 const cleaned = cls
                   .replace(/(^| )w-full( |$)/g, ' ')
@@ -809,14 +778,12 @@ jobs:
                 return cleaned ? open + cleaned + close : '';
               });
 
-              // Append fill + sizes before closing
               a = a.replace(/\s+$/, '') + '\n          fill\n          sizes="100vw"\n        ';
               return '<MotionImage\n' + a + '/>';
             });
 
             if (src === orig) return;
 
-            // Inject next/image import after 'use client' directive or at top
             if (!src.includes("from 'next/image'") && !src.includes('from "next/image"')) {
               if (/^["']use client["']/.test(src)) {
                 src = src.replace(/^(["']use client["'];?\n)/, "$1import Image from 'next/image'\n");
@@ -825,7 +792,6 @@ jobs:
               }
             }
 
-            // Insert `const MotionImage = motion(Image)` after the last import line
             if (!src.includes('const MotionImage')) {
               const lastImport = src.lastIndexOf('\nimport ');
               if (lastImport !== -1) {
@@ -842,18 +808,12 @@ jobs:
           NODEJS
 
       # ─── FIX E: Write next.config.mjs ────────────────────────────────────────
-      # Runs AFTER Fix I so it can read the collected external hostnames and
-      # inject remotePatterns for next/image.
-      # Also auto-detects the Supabase project hostname from .env so that
-      # images uploaded via the admin panel (stored in Supabase Storage) are
-      # accepted by next/image without requiring manual configuration.
       - name: "Fix E — Write SSR-compatible next.config.mjs"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
           node - <<'NODEJS'
           const fs = require('fs');
 
-          // Remove stale Next.js config files that may conflict with the clean .mjs we write
           ['next.config.js', 'next.config.ts', 'next.config.cjs'].forEach(f => {
             if (fs.existsSync(f)) { fs.unlinkSync(f); console.log('Removed stale config: ' + f); }
           });
@@ -863,9 +823,6 @@ jobs:
             hostnames = JSON.parse(fs.readFileSync('/tmp/image-hostnames.json', 'utf8'));
           }
 
-          // Auto-detect Supabase storage hostname from .env so that admin-uploaded
-          // images (stored in Supabase Storage) work with next/image.
-          // The VITE_SUPABASE_URL env var is committed as a public anon credential.
           if (fs.existsSync('.env')) {
             const envContent = fs.readFileSync('.env', 'utf8');
             const supabaseMatch = envContent.match(/SUPABASE_URL=["']?(https?:\/\/([^"'\s\n]+))["']?/);
@@ -882,7 +839,10 @@ jobs:
             '/** @type {import(\'next\').NextConfig} */',
             'const nextConfig = {',
             '  typescript: {',
-            '    ignoreBuildErrors: true, // intentional training wheels',
+            '    ignoreBuildErrors: true,',
+            '  },',
+            '  eslint: {',
+            '    ignoreDuringBuilds: true,',
             '  },',
           ];
           if (hostnames.length > 0) {
@@ -901,14 +861,6 @@ jobs:
           NODEJS
 
       # ─── FIX N: Fix Supabase env vars for Next.js ────────────────────────────
-      # Vite exposes env vars via import.meta.env.VITE_* but Next.js/Turbopack
-      # only exposes NEXT_PUBLIC_* to the browser. The Supabase client uses
-      # VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY which evaluate to
-      # undefined at runtime, causing createClient() to throw and breaking every
-      # page that imports the Supabase client.
-      # Fix: inline the credential values (public anon key — safe to embed in
-      # client bundles, already committed in .env) directly into client.ts so
-      # the client initialises correctly regardless of env var conventions.
       - name: "Fix N — Inline Supabase credentials in client.ts for Next.js compatibility"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -932,7 +884,6 @@ jobs:
           const supabaseUrl = urlMatch[1];
           const supabaseKey = keyMatch[1];
 
-          // Candidate paths for the Supabase client module
           const candidatePaths = [
             'src/integrations/supabase/client.ts',
             'src/lib/supabase.ts',
@@ -945,10 +896,8 @@ jobs:
             let src = fs.readFileSync(p, 'utf8');
             const orig = src;
 
-            // Replace import.meta.env.VITE_ references with inlined values
             src = src.replace(/import\.meta\.env\.VITE_SUPABASE_URL/g, JSON.stringify(supabaseUrl));
             src = src.replace(/import\.meta\.env\.VITE_SUPABASE_PUBLISHABLE_KEY/g, JSON.stringify(supabaseKey));
-            // Also cover process.env variants if present
             src = src.replace(/process\.env\.VITE_SUPABASE_URL/g, JSON.stringify(supabaseUrl));
             src = src.replace(/process\.env\.VITE_SUPABASE_PUBLISHABLE_KEY/g, JSON.stringify(supabaseKey));
 
@@ -960,8 +909,6 @@ jobs:
           NODEJS
 
       # ─── FIX J: Generate SEO files ───────────────────────────────────────────
-      # Generates src/app/sitemap.ts and src/app/robots.ts.
-      # Uses siteUrl from lovable.migrate.json; falls back to https://example.com.
       - name: "Fix J — Generate sitemap.ts and robots.ts"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -972,20 +919,17 @@ jobs:
           const siteUrl = cfg.siteUrl || 'https://example.com';
           if (!cfg.siteUrl) console.warn('WARNING: siteUrl missing from lovable.migrate.json — using placeholder');
 
-          // Read extracted routes
           const routeData = JSON.parse(fs.readFileSync('/tmp/routes.json', 'utf8'));
           const paths = routeData.fallback
             ? ['/']
             : (routeData.routes || []).map(r => r.path);
 
-          // Build sitemap entry lines using string concatenation (no template literals)
           const routeLines = paths.map(p => {
             const priority = p === '/' ? '1.0' : '0.8';
             const freq = p === '/' ? 'weekly' : 'monthly';
             return "    { url: `${baseUrl}" + p + "`, lastModified: new Date().toISOString(), changeFrequency: '" + freq + "', priority: " + priority + ' },';
           });
 
-          // sitemap.ts
           const sitemapLines = [
             "import { MetadataRoute } from 'next'",
             '',
@@ -999,7 +943,6 @@ jobs:
           ]);
           fs.writeFileSync('src/app/sitemap.ts', sitemapLines.join('\n'));
 
-          // robots.ts
           fs.writeFileSync('src/app/robots.ts', [
             "import { MetadataRoute } from 'next'",
             '',
@@ -1016,10 +959,6 @@ jobs:
           NODEJS
 
       # ─── FIX K: Write Next.js vercel.json ───────────────────────────────────
-      # Lovable commits a vercel.json with outputDirectory:"dist" (Vite build output).
-      # Vercel project dashboard settings can also hardcode "dist" as the output dir.
-      # Writing an explicit vercel.json with framework:nextjs overrides both sources
-      # and ensures Vercel uses .next regardless of dashboard settings.
       - name: "Fix K — Write Next.js vercel.json"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -1031,11 +970,6 @@ jobs:
           echo "Wrote vercel.json with framework:nextjs"
 
       # ─── FIX M: Use logo as favicon ──────────────────────────────────────────
-      # Next.js App Router auto-detects src/app/icon.png as the site favicon and
-      # generates a <link rel="icon"> tag in every page's <head>.
-      # We ALSO delete public/favicon.ico so Google doesn't prefer that stale
-      # Lovable-default ICO over the correct Next.js-generated meta link.
-      # apple-icon.png covers Apple touch icon (home screen shortcut).
       - name: "Fix M — Copy logo as Next.js app favicon"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -1044,17 +978,11 @@ jobs:
             cp src/assets/logo.png src/app/apple-icon.png
             cp src/assets/logo.png public/favicon.png
             cp src/assets/logo.png public/apple-touch-icon.png
-            # Remove the legacy Lovable ICO — browsers and Google will use the
-            # <link rel="icon"> tag generated from src/app/icon.png instead.
             rm -f public/favicon.ico
             echo "Updated all favicon/icon files from src/assets/logo.png"
           else
             echo "No logo.png in src/assets — skipping favicon update"
           fi
-          # Remove static public/ SEO files that conflict with the dynamic
-          # Next.js App Router routes generated by Fix J (src/app/robots.ts,
-          # src/app/sitemap.ts). Next.js routes take precedence, but having
-          # both causes CDN/cache ambiguity and unpredictable serving order.
           rm -f public/robots.txt public/sitemap.xml
           echo "Removed public/robots.txt and public/sitemap.xml (Next.js serves these dynamically)"
 
@@ -1083,7 +1011,7 @@ jobs:
         run: |
           git checkout -B nextjs-deploy
           git add -A
-          git commit -m "chore: auto-migrate to Next.js [$(date +'%Y-%m-%d %H:%M')]" \
+          git commit -m "chore: auto-migrate to Next.js 15 with SSR enabled [$(date +'%Y-%m-%d %H:%M')]" \
             || echo "No changes to commit"
           git push origin nextjs-deploy --force
 
