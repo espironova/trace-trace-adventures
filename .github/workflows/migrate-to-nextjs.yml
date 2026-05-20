@@ -1075,10 +1075,13 @@ jobs:
 
       # ─── FIX Q: Force non-SEO pages to client-only rendering ────────────────
       # Pages like /admin, /qr use localStorage at module level in ways that
-      # Fix P's regex cannot safely rewrite (class initializers, default params,
-      # deeply nested calls). These pages don't need Google to index them, so
-      # we force them to render client-side only by adding a top-level
-      # 'use client' + noSSR dynamic wrapper directly on the page file.
+      # Fix P's regex cannot safely rewrite. These pages don't need Google to
+      # index them so we render them client-side only.
+      #
+      # Next.js rule: ssr:false is ONLY allowed in 'use client' files.
+      # Solution: create a _nossr.tsx ('use client') that wraps _client.tsx
+      # with dynamic(ssr:false), then have page.tsx (server component) import
+      # _nossr.tsx instead of _client.tsx directly.
       - name: "Fix Q — Force admin/qr pages to client-only (noSSR)"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
@@ -1087,64 +1090,79 @@ jobs:
           const path = require('path');
 
           // Pages that should never SSR — admin panels, QR tools, etc.
-          // Add any route here that uses browser-only APIs at module level.
-          const CLIENT_ONLY_PAGES = [
-            'src/app/admin/page.tsx',
-            'src/app/qr/page.tsx',
-            'src/app/qr-landing/page.tsx',
+          const CLIENT_ONLY_DIRS = [
+            'src/app/admin',
+            'src/app/qr',
+            'src/app/qr-landing',
           ];
 
-          for (const pagePath of CLIENT_ONLY_PAGES) {
+          for (const pageDir of CLIENT_ONLY_DIRS) {
+            const pagePath   = path.join(pageDir, 'page.tsx');
+            const clientPath = path.join(pageDir, '_client.tsx');
+            const nossrPath  = path.join(pageDir, '_nossr.tsx');
+
             if (!fs.existsSync(pagePath)) {
               console.log('Skipping (not found): ' + pagePath);
               continue;
             }
 
-            const src = fs.readFileSync(pagePath, 'utf8');
+            // Read existing page.tsx to find client component name and metadata
+            const pageSrc = fs.readFileSync(pagePath, 'utf8');
 
-            // Already client-only — skip
-            if (src.includes("'use client'") || src.includes('"use client"')) {
-              console.log('Already client-only: ' + pagePath);
-              continue;
-            }
-
-            // Find the component name and its client import
-            // page.tsx pattern: import { XxxClient } from './_client'
-            const clientImportMatch = src.match(/import\s*\{\s*(\w+)\s*\}\s*from\s*['"]\.\/(_client|client)['"]/);
+            // Extract the client component name from the import line
+            // e.g. import { AdminClient } from './_client'
+            const clientImportMatch = pageSrc.match(
+              /import\s*\{\s*(\w+)\s*\}\s*from\s*['"]\.\/_client['"]/
+            );
             if (!clientImportMatch) {
-              console.log('No client import found in: ' + pagePath + ' — skipping');
+              console.log('No _client import in ' + pagePath + ' — skipping');
               continue;
             }
+            const clientName  = clientImportMatch[1];   // e.g. AdminClient
+            const nossrName   = clientName + 'NoSSR';   // e.g. AdminClientNoSSR
 
-            const clientName = clientImportMatch[1];
-            const componentMatch = src.match(/export default function (\w+)/);
-            const componentName = componentMatch ? componentMatch[1] : 'Page';
+            // Extract page function name
+            const fnMatch = pageSrc.match(/export default function (\w+)/);
+            const pageFnName = fnMatch ? fnMatch[1] : 'Page';
 
-            // Rewrite page.tsx to use dynamic noSSR wrapper
-            // Keep metadata export (server component feature) but wrap render in noSSR
-            const hasMetadata = src.includes('export const metadata');
-            const metadataImport = hasMetadata ? "import type { Metadata } from 'next'\n" : '';
-            const metadataBlock = hasMetadata
-              ? src.match(/export const metadata[\s\S]*?\n\}/)?.[0] || ''
-              : '';
+            // Extract metadata block if present (must stay in server component)
+            const metaMatch = pageSrc.match(
+              /(import type \{ Metadata \} from 'next'\n)?(export const metadata[^}]+\})/s
+            );
+            const metadataImport = metaMatch ? "import type { Metadata } from 'next'\n" : '';
+            const metadataBlock  = metaMatch ? metaMatch[2] : '';
 
-            const newContent = [
-              metadataImport + "import dynamic from 'next/dynamic'",
+            // ── Write _nossr.tsx ('use client') ──────────────────────────
+            // This is the ONLY file allowed to use ssr:false
+            fs.writeFileSync(nossrPath, [
+              "'use client'",
+              "import dynamic from 'next/dynamic'",
               '',
-              "const " + clientName + "NoSSR = dynamic(() => Promise.resolve().then(() => ({ default: function W() {",
-              "  const C = require('./_client')." + clientName,
-              "  return <C />",
-              "}})), { ssr: false })",
+              '// Disable SSR for this page — uses localStorage at module level',
+              "const " + clientName + "Dynamic = dynamic(",
+              "  () => import('./_client').then(m => ({ default: m." + clientName + " })),",
+              "  { ssr: false }",
+              ")",
               '',
-              metadataBlock ? metadataBlock + '\n' : '',
-              'export default function ' + componentName + '() {',
-              '  return <' + clientName + 'NoSSR />',
+              'export function ' + nossrName + '() {',
+              '  return <' + clientName + 'Dynamic />',
               '}',
               '',
-            ].filter(s => s !== undefined).join('\n');
+            ].join('\n'));
 
-            fs.writeFileSync(pagePath, newContent);
-            console.log('Fix Q — forced client-only (noSSR): ' + pagePath);
+            // ── Rewrite page.tsx (server component) ──────────────────────
+            // Import from _nossr instead of _client, keep metadata
+            fs.writeFileSync(pagePath, [
+              metadataImport + "import { " + nossrName + " } from './_nossr'",
+              '',
+              metadataBlock ? metadataBlock + '\n' : '',
+              'export default function ' + pageFnName + '() {',
+              '  return <' + nossrName + ' />',
+              '}',
+              '',
+            ].filter(Boolean).join('\n'));
+
+            console.log('Fix Q — created _nossr.tsx and rewrote page.tsx for: ' + pageDir);
           }
           NODEJS
 
