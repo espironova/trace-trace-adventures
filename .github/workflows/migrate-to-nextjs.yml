@@ -1011,6 +1011,68 @@ jobs:
             -not -path "*/node_modules/*" | xargs -r sed -i 's/\.avif/.jpg/g'
           echo "Fix O complete — .avif files converted to .jpg"
 
+      # ─── FIX P: Guard browser-only APIs for SSR ─────────────────────────────
+      # localStorage, sessionStorage, and window are not defined during SSR.
+      # Any component that calls these at module/render level crashes prerendering.
+      # This step wraps bare localStorage/sessionStorage/window calls in a
+      # typeof window !== 'undefined' guard so they are skipped on the server.
+      - name: "Fix P — Guard localStorage/sessionStorage/window for SSR"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          node - <<'NODEJS'
+          const fs   = require('fs');
+          const path = require('path');
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (['node_modules', '.next', 'dist', 'app'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (/\.(tsx|ts)$/.test(entry.name)) processFile(full);
+            }
+          }
+
+          function processFile(file) {
+            let src = fs.readFileSync(file, 'utf8');
+            const orig = src;
+
+            // Pattern 1: const x = localStorage.getItem(...)
+            // → const x = typeof window !== 'undefined' ? localStorage.getItem(...) : null
+            src = src.replace(
+              /\b(const|let|var)\s+(\w+)\s*=\s*(localStorage|sessionStorage)\.(\w+)\(([^)]*)\)/g,
+              (match, decl, varName, storage, method, args) => {
+                const fallback = method === 'getItem' ? 'null' : 'undefined';
+                return decl + ' ' + varName + " = typeof window !== 'undefined' ? " + storage + '.' + method + '(' + args + ') : ' + fallback;
+              }
+            );
+
+            // Pattern 2: localStorage.setItem(...) or localStorage.removeItem(...) as a statement
+            // → if (typeof window !== 'undefined') localStorage.setItem(...)
+            src = src.replace(
+              /^([ \t]*)(localStorage|sessionStorage)\.(setItem|removeItem|clear)\(/gm,
+              (match, indent, storage, method) => {
+                return indent + "if (typeof window !== 'undefined') " + storage + '.' + method + '(';
+              }
+            );
+
+            // Pattern 3: window.location, window.open, window.addEventListener at statement level
+            // → if (typeof window !== 'undefined') window.xxx
+            src = src.replace(
+              /^([ \t]*)(window\.(location|open|addEventListener|removeEventListener|scrollTo|scroll)\b)/gm,
+              (match, indent, expr) => {
+                return indent + "if (typeof window !== 'undefined') " + expr;
+              }
+            );
+
+            if (src !== orig) {
+              fs.writeFileSync(file, src);
+              console.log('Fix P — SSR-guarded browser APIs in: ' + file);
+            }
+          }
+
+          walk('src');
+          NODEJS
+
       # ─── 6. INSTALL DEPENDENCIES ─────────────────────────────────────────────
       - name: Install dependencies
         if: steps.check_flag.outputs.enabled == 'true'
