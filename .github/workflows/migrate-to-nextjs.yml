@@ -209,7 +209,13 @@ jobs:
 
           // ── Build JSON-LD ───────────────────────────────────────────────────
           let jsonLdScript = '';
-          if (businessSchema) {
+          // If a complete jsonLd object is in config, use it directly
+          if (cfg.jsonLd) {
+            const ldClean = JSON.parse(JSON.stringify(cfg.jsonLd));
+            jsonLdScript = '\n        <script\n          type="application/ld+json"\n' +
+              '          dangerouslySetInnerHTML={{ __html: ' + JSON.stringify(JSON.stringify(ldClean)) + ' }}\n' +
+              '        />';
+          } else if (businessSchema) {
             const ld = {
               '@context': 'https://schema.org',
               '@type': businessSchema.type || 'Organization',
@@ -219,7 +225,9 @@ jobs:
               telephone: businessSchema.telephone || undefined,
               areaServed: businessSchema.areaServed || undefined,
               priceRange: businessSchema.priceRange || undefined,
-              // openingHours and sameAs: add to businessSchema once client confirms
+              image: businessSchema.image || ogImage || undefined,
+              openingHours: businessSchema.openingHours || undefined,
+              sameAs: businessSchema.sameAs || undefined,
             };
             if (businessSchema.address) {
               ld.address = {
