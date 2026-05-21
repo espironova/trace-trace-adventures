@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import BookingModal from "@/components/BookingModal";
 import RateCalculator from "@/components/RateCalculator";
@@ -332,12 +333,22 @@ const Services = () => {
                   ))}
                 </ul>
 
-                <button
-                  onClick={() => setBookingOpen(true)}
-                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors"
-                >
-                  Book This Service <ArrowRight className="w-4 h-4" />
-                </button>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setBookingOpen(true)}
+                    className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors"
+                  >
+                    Book This Service <ArrowRight className="w-4 h-4" />
+                  </button>
+                  {service.id === "airport-transfers" && (
+                    <Link
+                      to="/services/airport-transfers"
+                      className="inline-flex items-center gap-2 border border-accent text-accent px-8 py-3 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent hover:text-accent-foreground transition-colors"
+                    >
+                      Learn More <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  )}
+                </div>
               </motion.div>
             </div>
           </div>
