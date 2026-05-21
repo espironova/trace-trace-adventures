@@ -27,6 +27,18 @@ const fadeInUp = {
   transition: { duration: 0.7 },
 };
 
+const learnMoreMap: Record<string, string> = {
+  "airport-transfers": "/services/airport-transfers",
+  "sgr-transfers": "/services/sgr-transfers",
+  "safari-tours": "/services/safari-tours",
+  "car-hire": "/services/car-hire",
+  "long-distance": "/services/long-distance",
+  "hotel-transfers": "/services/hotel-transfers",
+  "corporate-cocktail": "/services/corporate-transport",
+  "conference-transport": "/services/corporate-transport",
+  "schools-transport": "/services/schools-transport",
+};
+
 const serviceData = [
   {
     id: "airport-transfers",
@@ -340,9 +352,9 @@ const Services = () => {
                   >
                     Book This Service <ArrowRight className="w-4 h-4" />
                   </button>
-                  {service.id === "airport-transfers" && (
+                  {learnMoreMap[service.id] && (
                     <Link
-                      to="/services/airport-transfers"
+                      to={learnMoreMap[service.id]}
                       className="inline-flex items-center gap-2 border border-accent text-accent px-8 py-3 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
                       Learn More <ArrowRight className="w-4 h-4" />

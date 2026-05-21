@@ -8,6 +8,13 @@ import Index from "./pages/Index.tsx";
 import About from "./pages/About.tsx";
 import Services from "./pages/Services.tsx";
 import AirportTransfers from "./pages/AirportTransfers.tsx";
+import SgrTransfers from "./pages/SgrTransfers.tsx";
+import SafariTours from "./pages/SafariTours.tsx";
+import CarHire from "./pages/CarHire.tsx";
+import LongDistance from "./pages/LongDistance.tsx";
+import CorporateTransport from "./pages/CorporateTransport.tsx";
+import HotelTransfers from "./pages/HotelTransfers.tsx";
+import SchoolsTransport from "./pages/SchoolsTransport.tsx";
 import Fleet from "./pages/Fleet.tsx";
 import Destinations from "./pages/Destinations.tsx";
 import BlogsReviews from "./pages/BlogsReviews.tsx";
@@ -31,6 +38,13 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/airport-transfers" element={<AirportTransfers />} />
+          <Route path="/services/sgr-transfers" element={<SgrTransfers />} />
+          <Route path="/services/safari-tours" element={<SafariTours />} />
+          <Route path="/services/car-hire" element={<CarHire />} />
+          <Route path="/services/long-distance" element={<LongDistance />} />
+          <Route path="/services/corporate-transport" element={<CorporateTransport />} />
+          <Route path="/services/hotel-transfers" element={<HotelTransfers />} />
+          <Route path="/services/schools-transport" element={<SchoolsTransport />} />
           <Route path="/fleet" element={<Fleet />} />
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/blogs-reviews" element={<BlogsReviews />} />
