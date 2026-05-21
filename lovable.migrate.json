@@ -161,5 +161,23 @@
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     }
+  },
+  "jsonLd": {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Track & Trace Adventures",
+    "description": "Premium car hire, airport transfers, safari tours, SGR station transfers, and long-distance transport services in Nairobi, Kenya.",
+    "url": "https://tracktraceadventures.co.ke/",
+    "telephone": "+254721521009",
+    "image": "https://tracktraceadventures.co.ke/og-image.png",
+    "areaServed": "Kenya",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Milestone Business Center, Northern Bypass Road",
+      "addressLocality": "Nairobi",
+      "postalCode": "00100",
+      "addressCountry": "KE"
+    }
   }
 }
