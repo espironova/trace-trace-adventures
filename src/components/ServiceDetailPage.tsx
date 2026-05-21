@@ -1,4 +1,4 @@
-import { useState, type ComponentType } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Phone, type LucideIcon } from "lucide-react";
 import Layout from "@/components/Layout";
