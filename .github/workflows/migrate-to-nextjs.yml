@@ -977,9 +977,14 @@ jobs:
           if (!cfg.siteUrl) console.warn('WARNING: siteUrl missing from lovable.migrate.json — using placeholder');
 
           const routeData = JSON.parse(fs.readFileSync('/tmp/routes.json', 'utf8'));
-          const paths = routeData.fallback
-            ? ['/']
-            : (routeData.routes || []).map(r => r.path);
+          // Use sitemapPages from lovable.migrate.json if defined — gives full
+          // control over which pages appear in sitemap.xml. Excludes /admin,
+          // /qr-code, /blog/:id and any other non-indexable routes.
+          const paths = cfg.sitemapPages
+            ? cfg.sitemapPages
+            : routeData.fallback
+              ? ['/']
+              : (routeData.routes || []).map(r => r.path).filter(p => !p.includes(':'));
 
           const routeLines = paths.map(p => {
             const priority = p === '/' ? '1.0' : '0.8';
