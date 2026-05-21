@@ -7,6 +7,14 @@
     "/",
     "/about",
     "/services",
+    "/services/airport-transfers",
+    "/services/sgr-transfers",
+    "/services/safari-tours",
+    "/services/car-hire",
+    "/services/long-distance",
+    "/services/corporate-transport",
+    "/services/hotel-transfers",
+    "/services/schools-transport",
     "/fleet",
     "/destinations",
     "/blogs-reviews",
@@ -47,51 +55,107 @@
   },
   "pages": {
     "/": {
-      "title": "Track & Trace Adventures | Car Hire, Airport Transfers & Safari Tours in Nairobi, Kenya",
+      "title": "Track & Trace Adventures | Car Hire, Airport Transfers & Safari Tours Nairobi",
       "description": "Premium car hire, airport transfers, safari tours, SGR station transfers, and long-distance transport in Nairobi, Kenya. Book your JKIA airport pickup or Maasai Mara safari vehicle today.",
-      "keywords": "car hire Nairobi, airport transfers Nairobi, JKIA airport pickup, safari tours Kenya, SGR transfers, transport Nairobi, Track & Trace Adventures",
+      "keywords": "car hire Nairobi, airport transfers Nairobi, JKIA airport pickup, safari tours Kenya, SGR transfers Nairobi, transport Nairobi Kenya, Track & Trace Adventures",
       "robots": "index, follow",
       "googlebot": "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
     },
     "/about": {
-      "title": "About Us | Track & Trace Adventures — 20+ Years Serving East Africa",
-      "description": "Over 20 years of experience in car hire, airport transfers, and safari tours across East Africa. Meet the team behind Kenya's most trusted transport company.",
-      "keywords": "about Track & Trace Adventures, Kenya transport company history, car hire company Nairobi, trusted safari operator Kenya, East Africa transport experts",
+      "title": "About Track & Trace Adventures | 20+ Years Car Hire & Safari Tours East Africa",
+      "description": "Over 20 years of experience in car hire, airport transfers, and safari tours across East Africa. Meet the team behind Kenya's most trusted transport and safari company.",
+      "keywords": "about Track & Trace Adventures, Kenya transport company, car hire company Nairobi history, trusted safari operator Kenya, East Africa transport experts, 20 years car hire Kenya",
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     },
     "/services": {
-      "title": "Car Hire, Airport Transfers & Safari Tours Kenya | Track & Trace Adventures Services",
-      "description": "Airport transfers, safari tours, self-drive car hire, SGR transfers, long-distance transport, hotel transfers, and corporate travel in Nairobi, Kenya. Available 24/7.",
-      "keywords": "car hire services Kenya, JKIA airport transfer service, safari vehicle hire, SGR station transfer, corporate transport Nairobi, hotel transfers Kenya, long distance bus hire, chauffeur drive Nairobi",
+      "title": "Car Hire, Airport Transfers & Safari Tours Kenya | All Services — Track & Trace",
+      "description": "Complete transport services in Nairobi — airport transfers, safari tours, car hire, SGR transfers, long-distance transport, hotel transfers, corporate transport, and school trips. Available 24/7.",
+      "keywords": "car hire services Kenya, JKIA airport transfer, safari vehicle hire Nairobi, SGR station transfer, corporate transport Kenya, hotel transfers Nairobi, long distance bus hire Kenya, chauffeur drive Nairobi, school transport Nairobi",
       "robots": "index, follow",
       "googlebot": "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
     },
+    "/services/airport-transfers": {
+      "title": "JKIA Airport Transfers Nairobi | 24/7 Pickup & Drop-Off — Track & Trace Adventures",
+      "description": "Professional JKIA and Wilson Airport transfers in Nairobi. Meet & greet service, real-time flight tracking, fixed pricing, no hidden fees. Available 24/7. Book via WhatsApp today.",
+      "keywords": "JKIA airport transfer Nairobi, Wilson Airport transfer, airport pickup Nairobi, airport drop off Nairobi, meet and greet airport Kenya, 24 hour airport taxi Nairobi, JKIA pickup service, flight tracking airport transfer Kenya, fixed price airport transfer Nairobi",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/sgr-transfers": {
+      "title": "SGR Station Transfers Nairobi & Mombasa | Syokimau Terminus — Track & Trace",
+      "description": "Reliable SGR station transfers to and from Nairobi Terminus (Syokimau) and Mombasa Terminus. Timed around your train schedule. Sedans, vans, and minibuses for solo and group travel.",
+      "keywords": "SGR transfer Nairobi, Syokimau station transfer, SGR Nairobi terminus pickup, Mombasa SGR transfer, SGR station taxi Nairobi, Standard Gauge Railway transfer Kenya, Syokimau pickup service, SGR station transport Nairobi",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/safari-tours": {
+      "title": "Safari Tours Kenya | Maasai Mara, Amboseli & East Africa — Track & Trace Adventures",
+      "description": "Guided safari tours across Kenya and East Africa. 4x4 Land Cruisers with pop-up roofs, experienced guides, custom itineraries. Maasai Mara, Amboseli, Serengeti, Bwindi and more.",
+      "keywords": "safari tours Kenya, Maasai Mara safari vehicle hire, guided safari Kenya, 4x4 Land Cruiser safari, Amboseli safari tour, East Africa safari package, Kenya wildlife safari, custom safari itinerary Kenya, Serengeti tour vehicle, Bwindi gorilla safari transport",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/car-hire": {
+      "title": "Car Hire Nairobi | Self-Drive & Chauffeur-Driven Vehicles — Track & Trace Adventures",
+      "description": "Premium car hire in Nairobi. Self-drive and chauffeur-driven sedans, 4x4s, safari vans, and minibuses. Daily, weekly, and monthly rates. Comprehensive insurance included.",
+      "keywords": "car hire Nairobi, self drive car hire Kenya, chauffeur driven car Nairobi, 4x4 hire Kenya, sedan hire Nairobi, van hire Kenya, minibus hire Nairobi, daily car hire Kenya, weekly car hire Nairobi, comprehensive insurance car hire Kenya",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/long-distance": {
+      "title": "Long Distance Transfers Kenya | Nairobi to Mombasa, Kisumu & East Africa",
+      "description": "Comfortable long distance road transfers across Kenya and East Africa. Nairobi to Mombasa, Kisumu, Nakuru, Arusha, Kampala, Kigali. Professional drivers, flexible scheduling.",
+      "keywords": "long distance transfer Kenya, Nairobi to Mombasa transfer, Nairobi to Kisumu transport, Nairobi to Arusha transfer, cross border transport Kenya, intercity transfer Kenya, Nairobi Kampala transport, Nairobi Kigali transfer, long haul transport East Africa",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/corporate-transport": {
+      "title": "Corporate Transport Nairobi | Events, Conferences & Executive Travel — Track & Trace",
+      "description": "Professional corporate transport in Nairobi for conferences, cocktail events, executive travel, and team building. Multi-vehicle coordination, uniformed drivers, punctual and reliable.",
+      "keywords": "corporate transport Nairobi, conference transport Kenya, corporate event transport Nairobi, executive car hire Nairobi, cocktail event transport Kenya, corporate shuttle Nairobi, business travel Kenya, team building transport Nairobi, conference delegate transport Kenya",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/hotel-transfers": {
+      "title": "Hotel Transfers Nairobi | Door-to-Door City Transport — Track & Trace Adventures",
+      "description": "Reliable hotel-to-hotel and city transfers across Nairobi. Door-to-door service, fixed transparent pricing, smartly dressed drivers. Available for individuals, couples, and groups.",
+      "keywords": "hotel transfer Nairobi, hotel to hotel transport Nairobi, city transfer Nairobi, door to door transport Nairobi, Nairobi city taxi, hotel pickup Nairobi, fixed price city transfer Kenya, corporate hotel transfer Nairobi",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
+    "/services/schools-transport": {
+      "title": "International Schools Transport Nairobi | Field Trips & Sports Events — Track & Trace",
+      "description": "Trusted transport for international schools in Nairobi. Sports tournaments, educational field trips, co-curricular activities. Child safety trained drivers, coasters and buses.",
+      "keywords": "international schools transport Nairobi, school field trip transport Kenya, sports tournament transport Nairobi, school bus hire Nairobi, co-curricular transport Kenya, educational trip transport Nairobi, school coaster hire Kenya, inter-school transport Nairobi",
+      "robots": "index, follow",
+      "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
+    },
     "/fleet": {
-      "title": "Our Fleet | Sedans, 4x4 Land Cruisers, Safari Vans & Minibuses for Hire — Kenya",
-      "description": "Hire premium, well-maintained sedans, 4x4 Land Cruisers, Toyota Hiace safari vans, coaster buses and minibuses across Kenya and East Africa. All vehicles GPS-tracked.",
-      "keywords": "4x4 Land Cruiser hire Kenya, Toyota Hiace hire Nairobi, coaster bus hire Kenya, minibus hire Nairobi, safari van hire Kenya, sedan car hire Nairobi, GPS tracked vehicles Kenya, self drive 4x4 Kenya",
+      "title": "Our Fleet | Sedans, 4x4 Land Cruisers, Safari Vans & Buses for Hire — Kenya",
+      "description": "Hire from our premium fleet of sedans, 4x4 Land Cruisers, Toyota Hiace safari vans, coaster buses and minibuses across Kenya and East Africa. Well-maintained, GPS-tracked vehicles.",
+      "keywords": "4x4 Land Cruiser hire Kenya, Toyota Hiace hire Nairobi, coaster bus hire Kenya, minibus hire Nairobi, safari van hire Kenya, sedan car hire Nairobi, GPS tracked vehicles Kenya, self drive 4x4 Kenya, fleet car hire Nairobi, Mercedes bus hire Kenya",
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     },
     "/destinations": {
       "title": "Safari Destinations Kenya & East Africa | Maasai Mara, Zanzibar, Kilimanjaro & More",
-      "description": "Explore iconic East African destinations — Maasai Mara, Amboseli, Zanzibar, Bwindi, Kilimanjaro, and more. Reliable transport and safari vehicles from Track & Trace Adventures.",
-      "keywords": "Maasai Mara safari transport, Amboseli tour transport, Zanzibar travel Kenya, Kilimanjaro trip transport, Bwindi gorilla trekking transport, Lake Nakuru safari, Diani beach transfer, East Africa destinations",
+      "description": "Explore iconic East African destinations with Track & Trace Adventures. Maasai Mara, Amboseli, Zanzibar, Bwindi, Kilimanjaro, Lake Nakuru, Diani Beach and more. Reliable transport for every destination.",
+      "keywords": "Maasai Mara safari transport, Amboseli tour transport, Zanzibar travel Kenya, Kilimanjaro trip transport, Bwindi gorilla trekking transport, Lake Nakuru safari, Diani beach transfer, East Africa safari destinations, Kenya safari destinations, Serengeti transport",
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     },
     "/blogs-reviews": {
       "title": "Kenya Travel Blog & Client Reviews | Safari Guides & Transport Tips — Track & Trace",
-      "description": "Kenya travel tips, safari destination guides, JKIA transfer advice, and verified client reviews. Plan your Kenya trip with insights from Track & Trace Adventures.",
-      "keywords": "Kenya travel blog, safari guide Kenya, JKIA airport transfer tips, Nairobi travel tips, Maasai Mara safari guide, Kenya road trip guide, Track & Trace reviews, car hire Kenya reviews",
+      "description": "Kenya travel tips, safari destination guides, JKIA transfer advice, and verified client reviews. Plan your Kenya trip with expert insights from Track & Trace Adventures.",
+      "keywords": "Kenya travel blog, safari guide Kenya, JKIA airport transfer tips, Nairobi travel tips, Maasai Mara safari guide, Kenya road trip guide, Track & Trace reviews, car hire Kenya reviews, Kenya travel advice, East Africa travel blog",
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     },
     "/contact": {
       "title": "Contact Track & Trace Adventures | Book Car Hire & Airport Transfers Nairobi 24/7",
       "description": "Book car hire, JKIA airport transfers, safari tours, and SGR station transfers in Nairobi. Available 24/7. Call +254 721 521 009 or WhatsApp us today.",
-      "keywords": "book car hire Nairobi, JKIA airport transfer booking, safari tour booking Kenya, contact Track & Trace Adventures, WhatsApp car hire Kenya, 24 hour transport Nairobi",
+      "keywords": "book car hire Nairobi, JKIA airport transfer booking, safari tour booking Kenya, contact Track & Trace Adventures, WhatsApp car hire Kenya, 24 hour transport Nairobi, book airport transfer Kenya, car hire enquiry Nairobi",
       "robots": "index, follow",
       "googlebot": "index, follow, max-image-preview:large, max-snippet:-1"
     }
