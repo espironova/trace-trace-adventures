@@ -3,6 +3,15 @@
   "title": "Track & Trace Adventures | Car Hire, Airport Transfers & Safari Tours in Nairobi, Kenya",
   "description": "Premium car hire, airport transfers, safari tours, SGR station transfers, and long-distance transport services in Nairobi, Kenya. Book your JKIA airport pickup or Maasai Mara safari vehicle today.",
   "siteUrl": "https://tracktraceadventures.co.ke",
+  "sitemapPages": [
+    "/",
+    "/about",
+    "/services",
+    "/fleet",
+    "/destinations",
+    "/blogs-reviews",
+    "/contact"
+  ],
   "ogImage": "https://tracktraceadventures.co.ke/og-image.png",
   "ogType": "website",
   "twitterCard": "summary_large_image",
