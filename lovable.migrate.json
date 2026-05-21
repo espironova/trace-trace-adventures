@@ -47,9 +47,11 @@
     "telephone": "+254721521009",
     "areaServed": "Kenya",
     "priceRange": "$$",
+    "image": "https://tracktraceadventures.co.ke/og-image.png",
     "address": {
       "streetAddress": "Milestone Business Center, Northern Bypass Road",
       "locality": "Nairobi",
+      "postalCode": "00100",
       "country": "KE"
     }
   },
