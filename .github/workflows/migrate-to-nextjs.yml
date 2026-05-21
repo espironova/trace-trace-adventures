@@ -130,14 +130,25 @@ jobs:
           const cfg = JSON.parse(fs.readFileSync('lovable.migrate.json', 'utf8'));
           let title       = cfg.title       || '';
           let description = cfg.description || '';
-          const siteUrl       = cfg.siteUrl       || '';
-          const ogImage       = cfg.ogImage       || '';
-          const ogType        = cfg.ogType        || 'website';
-          const twitterHandle = cfg.twitterHandle || '';
-          const twitterCard   = cfg.twitterCard   || 'summary_large_image';
-          const locale        = cfg.locale        || 'en';
-          const businessName  = (cfg.businessSchema && cfg.businessSchema.name) || '';
+          const siteUrl        = cfg.siteUrl        || '';
+          const ogImage        = cfg.ogImage        || '';
+          const ogType         = cfg.ogType         || 'website';
+          const twitterHandle  = cfg.twitterHandle  || '';
+          const twitterCard    = cfg.twitterCard    || 'summary_large_image';
+          const locale         = cfg.locale         || 'en';
+          const businessName   = (cfg.businessSchema && cfg.businessSchema.name) || '';
           const businessSchema = cfg.businessSchema || null;
+          const author         = cfg.author         || businessName || '';
+          const publisher      = cfg.publisher      || businessName || '';
+          const creator        = cfg.creator        || businessName || '';
+          const category       = cfg.category       || '';
+          const classification = cfg.classification || '';
+          const themeColor     = cfg.themeColor     || '';
+          const revisitAfter   = cfg.revisitAfter   || '';
+          const robots         = cfg.robots         || 'index, follow';
+          const googlebot      = cfg.googlebot      || 'index, follow, max-image-preview:large, max-snippet:-1';
+          const keywords       = cfg.keywords       || '';
+          const geo            = cfg.geo            || null;
 
           // Fallback metadata from index.html
           if ((!title || !description) && fs.existsSync('index.html')) {
@@ -208,6 +219,7 @@ jobs:
               telephone: businessSchema.telephone || undefined,
               areaServed: businessSchema.areaServed || undefined,
               priceRange: businessSchema.priceRange || undefined,
+              // openingHours and sameAs: add to businessSchema once client confirms
             };
             if (businessSchema.address) {
               ld.address = {
@@ -231,6 +243,30 @@ jobs:
           // ── Create src/app/ ─────────────────────────────────────────────────
           fs.mkdirSync('src/app', { recursive: true });
 
+          // ── Build extra <head> tags (geo, keywords, author etc.) ────────────
+          // Next.js Metadata API doesn't cover every meta tag.
+          // We inject them as <meta> elements directly in the layout <head>.
+          const extraMetaTags = [];
+          if (robots)         extraMetaTags.push('<meta name="robots" content="' + robots + '" />');
+          if (googlebot)      extraMetaTags.push('<meta name="googlebot" content="' + googlebot + '" />');
+          if (keywords)       extraMetaTags.push('<meta name="keywords" content="' + keywords + '" />');
+          if (author)         extraMetaTags.push('<meta name="author" content="' + author + '" />');
+          if (publisher)      extraMetaTags.push('<meta name="publisher" content="' + publisher + '" />');
+          if (creator)        extraMetaTags.push('<meta name="creator" content="' + creator + '" />');
+          if (category)       extraMetaTags.push('<meta name="category" content="' + category + '" />');
+          if (classification) extraMetaTags.push('<meta name="classification" content="' + classification + '" />');
+          if (themeColor)     extraMetaTags.push('<meta name="theme-color" content="' + themeColor + '" />');
+          if (revisitAfter)   extraMetaTags.push('<meta name="revisit-after" content="' + revisitAfter + '" />');
+          if (geo) {
+            if (geo.placename) extraMetaTags.push('<meta name="geo.placename" content="' + geo.placename + '" />');
+            if (geo.region)    extraMetaTags.push('<meta name="geo.region" content="' + geo.region + '" />');
+            if (geo.position)  extraMetaTags.push('<meta name="geo.position" content="' + geo.position + '" />');
+            if (geo.ICBM)      extraMetaTags.push('<meta name="ICBM" content="' + geo.ICBM + '" />');
+          }
+          const extraMetaJsx = extraMetaTags.length
+            ? '\n        ' + extraMetaTags.join('\n        ')
+            : '';
+
           // ── layout.tsx ──────────────────────────────────────────────────────
           const layoutLines = [
             "import type { Metadata } from 'next'",
@@ -246,6 +282,7 @@ jobs:
             'export default function RootLayout({ children }: { children: React.ReactNode }) {',
             '  return (',
             '    <html lang="' + locale + '">',
+            '      <head>' + extraMetaJsx + '\n      </head>',
             '      <body>' + jsonLdScript,
             '        <div id="root">',
             '          <Providers>',
@@ -322,8 +359,17 @@ jobs:
               const componentName = route.component + 'Page';
               // Check for per-page metadata in lovable.migrate.json
               const pagesMeta = cfg.pages && cfg.pages[route.path];
-              const pageMeta = pagesMeta
-                ? '\nexport const metadata: Metadata = {\n  title: ' + JSON.stringify(pagesMeta.title || '') + ',\n  description: ' + JSON.stringify(pagesMeta.description || '') + ',\n}\n'
+              // Per-page metadata — includes keywords, robots, googlebot if set
+              const pageKeywords = pagesMeta && pagesMeta.keywords ? pagesMeta.keywords : '';
+              const pageRobots   = pagesMeta && pagesMeta.robots   ? pagesMeta.robots   : '';
+              const pageGooglebot= pagesMeta && pagesMeta.googlebot? pagesMeta.googlebot: '';
+              let pageMetaFields = '';
+              if (pagesMeta && pagesMeta.title)       pageMetaFields += '\n  title: ' + JSON.stringify(pagesMeta.title) + ',';
+              if (pagesMeta && pagesMeta.description) pageMetaFields += '\n  description: ' + JSON.stringify(pagesMeta.description) + ',';
+              if (pageKeywords)  pageMetaFields += '\n  keywords: ' + JSON.stringify(pageKeywords) + ',';
+              if (pageRobots)    pageMetaFields += '\n  robots: ' + JSON.stringify(pageRobots) + ',';
+              const pageMeta = pageMetaFields
+                ? '\nexport const metadata: Metadata = {' + pageMetaFields + '\n}\n'
                 : '';
               const metadataImport = pagesMeta ? "import type { Metadata } from 'next'" : '';
 
