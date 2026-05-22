@@ -1195,7 +1195,7 @@ jobs:
             // Safe rewrite: location.xxx → (typeof window !== 'undefined' ? location.xxx : '')
             // Must NOT match when already inside a typeof window check
             src = src.replace(
-              /(?<!typeof window !== ['"]undefined['"] \? )(?<!window\.)location\.(href|pathname|search|hash|host|hostname|origin|protocol)(?!\s*=\s*`)/g,
+              /(?<!typeof window !== ['"]undefined['"] \? )(?<!window\.)location\.(href|pathname|search|hash|host|hostname|origin|protocol)(?!\s*=\s*`)/g,
               (match, prop) => {
                 return "(typeof window !== 'undefined' ? location." + prop + " : '')";
               }
