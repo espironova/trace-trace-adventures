@@ -1190,20 +1190,23 @@ jobs:
               }
             );
 
-            // Pattern 4: bare location.href, location.pathname, location.assign etc (without window.)
+            // Pattern 4: bare location.href, location.pathname etc (without window.)
             // These crash SSR with "location is not defined"
+            // Safe rewrite: location.xxx → (typeof window !== 'undefined' ? location.xxx : '')
+            // Must NOT match when already inside a typeof window check
             src = src.replace(
-              /\b(location\.(href|pathname|search|hash|host|hostname|origin|protocol|assign|replace|reload))\b/g,
-              (match) => {
-                return '(typeof window !== \'undefined\' ? ' + match + ' : \'\')';
+              /(?<!typeof window !== ['"]undefined['"] \? )(?<!window\.)location\.(href|pathname|search|hash|host|hostname|origin|protocol)(?!\s*=\s*`)/g,
+              (match, prop) => {
+                return "(typeof window !== 'undefined' ? location." + prop + " : '')";
               }
             );
 
-            // Pattern 5: const x = location.href etc at variable declaration level
+            // Pattern 5: assignment to location.href = ... (navigation)
+            // window.location.href = url  →  if (typeof window !== 'undefined') window.location.href = url
             src = src.replace(
-              /\b(const|let|var)\s+(\w+)\s*=\s*location\.(href|pathname|search|hash|host|hostname|origin|protocol)/g,
-              (match, decl, varName, prop) => {
-                return decl + ' ' + varName + " = typeof window !== 'undefined' ? location." + prop + " : ''";
+              /^([ \t]*)(?:window\.)?location\.href\s*=/gm,
+              (match, indent) => {
+                return indent + "if (typeof window !== 'undefined') location.href =";
               }
             );
 
