@@ -1399,6 +1399,7 @@ jobs:
             'src/app/qr',
             'src/app/qr-landing',
             'src/app/blogs-reviews',
+            'src/app/fleet',
             'src/app/blog-detail',
             'src/app/resources',
           ];
