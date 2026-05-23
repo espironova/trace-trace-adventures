@@ -980,10 +980,11 @@ jobs:
 
             if (src !== orig) {
               fs.writeFileSync(p, src);
-              console.log('Fix N — Inlined Supabase credentials in: ' + p);
+              console.log('Fix N — Inlined Supabase credentials in ' + p);
             }
           }
           NODEJS
+
 
       # ─── FIX J: Generate SEO files ───────────────────────────────────────────
       - name: "Fix J — Generate sitemap.ts and robots.ts"
@@ -1137,6 +1138,22 @@ jobs:
           fi
           rm -f public/robots.txt public/sitemap.xml
           echo "Removed public/robots.txt and public/sitemap.xml (Next.js serves these dynamically)"
+
+      # ─── FIX N2: Guard Supabase client localStorage for SSR ────────────────────
+      - name: "Fix N2 — Guard Supabase createClient for SSR"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          SUPABASE_CLIENT="src/integrations/supabase/client.ts"
+          if [ ! -f "$SUPABASE_CLIENT" ]; then
+            echo "No Supabase client found — skipping"
+            exit 0
+          fi
+          if grep -q "typeof window" "$SUPABASE_CLIENT"; then
+            echo "Supabase client already has SSR guard — skipping"
+            exit 0
+          fi
+          printf "\nexport const getSupabaseClient = () => { if (typeof window === 'undefined') return null; return supabase; }\n" >> "$SUPABASE_CLIENT"
+          echo "Fix N2 — SSR guard added to Supabase client"
 
       # ─── FIX O: Convert .avif images to .jpg ────────────────────────────────
       # Next.js 15's sharp cannot process certain HEIF-encoded .avif files
@@ -1382,7 +1399,6 @@ jobs:
             'src/app/qr',
             'src/app/qr-landing',
             'src/app/blogs-reviews',
-            'src/app/fleet',
             'src/app/blog-detail',
             'src/app/resources',
           ];
