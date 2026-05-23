@@ -1071,6 +1071,18 @@ jobs:
             { source: '/product-category/:path*',      destination: '/', permanent: true },
             { source: '/product/:path*',               destination: '/', permanent: true },
             { source: '/tag/:path*',                   destination: '/', permanent: true },
+            // Additional stale URLs found in Google Search Console
+            { source: '/women',                            destination: '/', permanent: true },
+            { source: '/men',                              destination: '/', permanent: true },
+            { source: '/unisex',                           destination: '/', permanent: true },
+            { source: '/services/100-satisfaction',        destination: '/services', permanent: true },
+            { source: '/services/taxi-tours',              destination: '/services', permanent: true },
+            { source: '/services/airport-transfer',        destination: '/services/airport-transfers', permanent: true },
+            { source: '/services_group/our-benefits',      destination: '/about', permanent: true },
+            { source: '/category/passengers',              destination: '/services', permanent: true },
+            { source: '/homepage-1/',                      destination: '/', permanent: true },
+            { source: '/woocommerce-cart',                 destination: '/', permanent: true },
+            { source: '/store/:path*',                     destination: '/', permanent: true },
           ];
 
           // Read extra redirects from lovable.migrate.json if defined
@@ -1099,15 +1111,29 @@ jobs:
       - name: "Fix M — Copy logo as Next.js app favicon"
         if: steps.check_flag.outputs.enabled == 'true'
         run: |
-          if [ -f "src/assets/logo.png" ]; then
+          if [ -f "src/assets/lnk-logo.png" ]; then
+            cp src/assets/lnk-logo.png src/app/icon.png
+            cp src/assets/lnk-logo.png src/app/apple-icon.png
+            cp src/assets/lnk-logo.png public/favicon.png
+            cp src/assets/lnk-logo.png public/apple-touch-icon.png
+            rm -f public/favicon.ico
+            echo "Updated all favicon/icon files from src/assets/lnk-logo.png"
+          elif [ -f "src/assets/logo.png" ]; then
             cp src/assets/logo.png src/app/icon.png
             cp src/assets/logo.png src/app/apple-icon.png
             cp src/assets/logo.png public/favicon.png
             cp src/assets/logo.png public/apple-touch-icon.png
             rm -f public/favicon.ico
             echo "Updated all favicon/icon files from src/assets/logo.png"
+          elif [ -f "src/assets/espiranova-logo-new.png" ]; then
+            cp src/assets/espiranova-logo-new.png src/app/icon.png
+            cp src/assets/espiranova-logo-new.png src/app/apple-icon.png
+            cp src/assets/espiranova-logo-new.png public/favicon.png
+            cp src/assets/espiranova-logo-new.png public/apple-touch-icon.png
+            rm -f public/favicon.ico
+            echo "Updated all favicon/icon files from src/assets/espiranova-logo-new.png"
           else
-            echo "No logo.png in src/assets — skipping favicon update"
+            echo "No logo found in src/assets — skipping favicon update"
           fi
           rm -f public/robots.txt public/sitemap.xml
           echo "Removed public/robots.txt and public/sitemap.xml (Next.js serves these dynamically)"
@@ -1307,6 +1333,29 @@ jobs:
           }
           NODEJS
 
+      # ─── FIX Q-PRE: Remove stale _nossr.tsx from SEO pages ─────────────────
+      # Pages previously in CLIENT_ONLY_DIRS may still have _nossr.tsx files
+      # committed to the repo. These must be deleted before Fix Q runs so
+      # page.tsx gets regenerated to import _client.tsx directly (full SSR).
+      - name: "Fix Q-pre — Delete stale _nossr.tsx from SEO-critical pages"
+        if: steps.check_flag.outputs.enabled == 'true'
+        run: |
+          for dir in src/app/about src/app/contact src/app/services src/app/portfolio src/app/resources; do
+            if [ -f "$dir/_nossr.tsx" ]; then
+              rm "$dir/_nossr.tsx"
+              echo "Removed stale _nossr.tsx from $dir"
+            fi
+            # Also rewrite page.tsx to import from _client directly (not _nossr)
+            if [ -f "$dir/page.tsx" ] && grep -q "_nossr" "$dir/page.tsx"; then
+              # Get the nossr component name and replace with client component
+              sed -i 's|_nossr|_client|g' "$dir/page.tsx"
+              # Fix the component name — remove NoSSR suffix
+              sed -i 's/\([A-Z][a-zA-Z]*\)NoSSR/Client/g' "$dir/page.tsx"
+              echo "Fixed page.tsx imports in $dir"
+            fi
+          done
+          echo "Fix Q-pre complete"
+
       # ─── FIX Q: Force non-SEO pages to client-only rendering ────────────────
       # Pages like /admin, /qr use localStorage at module level in ways that
       # Fix P's regex cannot safely rewrite. These pages don't need Google to
@@ -1329,15 +1378,12 @@ jobs:
           // are excluded so Google can still read their content.
           const CLIENT_ONLY_DIRS = [
             'src/app/admin',
+            'src/app/admin/login',
             'src/app/qr',
             'src/app/qr-landing',
             'src/app/blogs-reviews',
-            'src/app/fleet',
             'src/app/blog-detail',
-            'src/app/about',
-            'src/app/contact',
-            'src/app/services',
-            'src/app/portfolio',
+            'src/app/resources',
           ];
 
           for (const pageDir of CLIENT_ONLY_DIRS) {
