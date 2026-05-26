@@ -25,10 +25,10 @@ export const vehicles: RateVehicle[] = [
   { id: "noah-5", name: "5-Pax Toyota Noah Minivan", dayRate: { type: "fixed", baseDay: 12000, perKmOverage: 60, includedKm: INCLUDED_KM }, airport: 6000, hotel: 6000, dinner: 8000, cocktail: 8000, standby: 8000, driverAllowance: 2000 },
   { id: "safari-8", name: "8-Pax Safari Land Cruiser", dayRate: { type: "inquire", startingFrom: 25000 }, airport: 15000, hotel: 10000, dinner: 10000, cocktail: 10000, standby: 10000, driverAllowance: 2500 },
   { id: "van-8", name: "8-Pax Safari Van", dayRate: { type: "inquire", startingFrom: 20000 }, airport: 10000, hotel: 12000, dinner: 10000, cocktail: 12000, standby: 12000, driverAllowance: 2000 },
-  { id: "coaster-14", name: "14-Pax Van", dayRate: { type: "fixed", baseDay: 12000, perKmOverage: 80, includedKm: INCLUDED_KM }, airport: 7000, hotel: 8000, dinner: 8000, cocktail: 10000, standby: 10000, driverAllowance: 2000 },
+  { id: "coaster-14", name: "14-Pax Van", dayRate: { type: "fixed", baseDay: 14000, perKmOverage: 80, includedKm: INCLUDED_KM }, airport: 7000, hotel: 8000, dinner: 8000, cocktail: 10000, standby: 10000, driverAllowance: 2000 },
   { id: "mercedes-22", name: "22-Pax Coaster Shuttle", dayRate: { type: "fixed", baseDay: 17000, perKmOverage: 100, includedKm: INCLUDED_KM }, airport: 12000, hotel: 12000, dinner: 12000, cocktail: 12000, standby: 12000, driverAllowance: 2500 },
-  { id: "bus-33", name: "33/37-Pax Mercedes Bus", dayRate: { type: "fixed", baseDay: 20000, perKmOverage: 130, includedKm: INCLUDED_KM }, airport: 15000, hotel: 15000, dinner: 15000, cocktail: 15000, standby: 15000, driverAllowance: 3000 },
-  { id: "bus-45", name: "45-Pax Mercedes Bus", dayRate: { type: "fixed", baseDay: 30000, perKmOverage: 150, includedKm: INCLUDED_KM }, airport: 18000, hotel: 18000, dinner: 18000, cocktail: 15000, standby: 25000, driverAllowance: 4000 },
+  { id: "bus-33", name: "33/37-Pax Mercedes Bus", dayRate: { type: "fixed", baseDay: 23000, perKmOverage: 130, includedKm: INCLUDED_KM }, airport: 15000, hotel: 15000, dinner: 15000, cocktail: 15000, standby: 15000, driverAllowance: 3000 },
+  { id: "bus-45", name: "45-Pax Mercedes Bus", dayRate: { type: "fixed", baseDay: 35000, perKmOverage: 150, includedKm: INCLUDED_KM }, airport: 18000, hotel: 18000, dinner: 18000, cocktail: 15000, standby: 25000, driverAllowance: 4000 },
 ];
 
 export const serviceTypes = [
