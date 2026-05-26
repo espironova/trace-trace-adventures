@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Phone, MapPin, Calendar, Car, UserCheck, Wallet, Route, CalendarDays, Briefcase, Mail } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { serviceTypes, calculateEstimate, getServiceMeta, matchRateVehicle } from "@/data/rates";
+import { useVehicleRates } from "@/hooks/useVehicleRates";
 
 interface BookingModalProps {
   open: boolean;
@@ -59,11 +60,13 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const { vehicles: rateVehicles } = useVehicleRates();
+
   // Map the chosen vehicle label to a rate-card id, then compute a live estimate.
   const rateVehicleId = useMemo(() => matchRateVehicle(form.vehicleType), [form.vehicleType]);
   const { needsKm, needsDays } = useMemo(
-    () => getServiceMeta(rateVehicleId ?? "", form.serviceId),
-    [rateVehicleId, form.serviceId],
+    () => getServiceMeta(rateVehicleId ?? "", form.serviceId, rateVehicles),
+    [rateVehicleId, form.serviceId, rateVehicles],
   );
   const estimate = useMemo(
     () =>
@@ -73,9 +76,9 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
             serviceId: form.serviceId,
             km: form.km,
             days: form.days,
-          })
+          }, rateVehicles)
         : null,
-    [rateVehicleId, form.serviceId, form.km, form.days],
+    [rateVehicleId, form.serviceId, form.km, form.days, rateVehicles],
   );
 
   const buildBookingMessage = () => {
