@@ -73,8 +73,8 @@ export function isDayService(serviceId: string) {
   return DAY_SERVICES.has(serviceId);
 }
 
-export function getServiceMeta(vehicleId: string, serviceId: string) {
-  const vehicle = vehicles.find((v) => v.id === vehicleId);
+export function getServiceMeta(vehicleId: string, serviceId: string, list: RateVehicle[] = vehicles) {
+  const vehicle = list.find((v) => v.id === vehicleId);
   const dayService = isDayService(serviceId);
   const inquire = !!(vehicle && dayService && vehicle.dayRate.type === "inquire");
   // For day-based services we always offer the km input (optional, defaults to 120).
@@ -83,9 +83,9 @@ export function getServiceMeta(vehicleId: string, serviceId: string) {
   return { vehicle, isDayService: dayService, needsKm, needsDays, inquire };
 }
 
-export function calculateEstimate(input: EstimateInput): Estimate | null {
+export function calculateEstimate(input: EstimateInput, list: RateVehicle[] = vehicles): Estimate | null {
   const { vehicleId, serviceId } = input;
-  const vehicle = vehicles.find((v) => v.id === vehicleId);
+  const vehicle = list.find((v) => v.id === vehicleId);
   const service = serviceTypes.find((s) => s.id === serviceId);
   if (!vehicle || !service) return null;
 
