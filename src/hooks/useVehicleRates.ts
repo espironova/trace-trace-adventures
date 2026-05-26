@@ -55,7 +55,7 @@ export function useVehicleRates() {
   useEffect(() => {
     load();
     const channel = supabase
-      .channel("vehicle_rates_changes")
+      .channel(`vehicle_rates_changes_${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "vehicle_rates" }, () => load())
       .subscribe();
     return () => {
