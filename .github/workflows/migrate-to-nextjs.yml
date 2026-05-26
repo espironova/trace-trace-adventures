@@ -978,6 +978,13 @@ jobs:
             src = src.replace(/process\.env\.VITE_SUPABASE_URL/g, JSON.stringify(supabaseUrl));
             src = src.replace(/process\.env\.VITE_SUPABASE_PUBLISHABLE_KEY/g, JSON.stringify(supabaseKey));
 
+            // Guard bare `storage: localStorage` for Next.js SSR — evaluated at module level
+            // crashes server rendering with "localStorage is not defined"
+            src = src.replace(
+              /\bstorage:\s*localStorage\b/g,
+              "storage: typeof window !== 'undefined' ? localStorage : undefined"
+            );
+
             if (src !== orig) {
               fs.writeFileSync(p, src);
               console.log('Fix N — Inlined Supabase credentials in ' + p);
