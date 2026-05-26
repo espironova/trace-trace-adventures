@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, Phone, MessageCircle, TableProperties } from "lucide-react";
-import { vehicles, serviceTypes, calculateEstimate, getServiceMeta, INCLUDED_KM } from "@/data/rates";
+import { serviceTypes, calculateEstimate, getServiceMeta, INCLUDED_KM } from "@/data/rates";
+import { useVehicleRates } from "@/hooks/useVehicleRates";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Result =
@@ -17,11 +18,12 @@ const RateCalculator = () => {
   const [days, setDays] = useState("1");
   const [result, setResult] = useState<Result>(null);
   const [showRateSheet, setShowRateSheet] = useState(false);
+  const { vehicles } = useVehicleRates();
 
-  const { vehicle: selectedVehicle, needsKm, needsDays, inquire } = getServiceMeta(vehicleId, serviceId);
+  const { vehicle: selectedVehicle, needsKm, needsDays, inquire } = getServiceMeta(vehicleId, serviceId, vehicles);
 
   const calculate = () => {
-    const est = calculateEstimate({ vehicleId, serviceId, km, days });
+    const est = calculateEstimate({ vehicleId, serviceId, km, days }, vehicles);
     if (!est) return;
     if (est.inquire) {
       setResult({
