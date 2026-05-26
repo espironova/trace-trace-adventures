@@ -161,6 +161,66 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_rates: {
+        Row: {
+          airport: number
+          base_day: number
+          cocktail: number
+          created_at: string
+          day_rate_type: string
+          dinner: number
+          driver_allowance: number
+          hotel: number
+          id: string
+          included_km: number
+          name: string
+          per_km_overage: number
+          sort_order: number
+          standby: number
+          starting_from: number
+          updated_at: string
+          vehicle_key: string
+        }
+        Insert: {
+          airport?: number
+          base_day?: number
+          cocktail?: number
+          created_at?: string
+          day_rate_type?: string
+          dinner?: number
+          driver_allowance?: number
+          hotel?: number
+          id?: string
+          included_km?: number
+          name: string
+          per_km_overage?: number
+          sort_order?: number
+          standby?: number
+          starting_from?: number
+          updated_at?: string
+          vehicle_key: string
+        }
+        Update: {
+          airport?: number
+          base_day?: number
+          cocktail?: number
+          created_at?: string
+          day_rate_type?: string
+          dinner?: number
+          driver_allowance?: number
+          hotel?: number
+          id?: string
+          included_km?: number
+          name?: string
+          per_km_overage?: number
+          sort_order?: number
+          standby?: number
+          starting_from?: number
+          updated_at?: string
+          vehicle_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
