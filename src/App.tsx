@@ -1,28 +1,28 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom'
 import Seo from "@/components/Seo";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import About from "./pages/About.tsx";
-import Services from "./pages/Services.tsx";
-import AirportTransfers from "./pages/AirportTransfers.tsx";
-import SgrTransfers from "./pages/SgrTransfers.tsx";
-import SafariTours from "./pages/SafariTours.tsx";
-import CarHire from "./pages/CarHire.tsx";
-import LongDistance from "./pages/LongDistance.tsx";
-import CorporateTransport from "./pages/CorporateTransport.tsx";
-import HotelTransfers from "./pages/HotelTransfers.tsx";
-import SchoolsTransport from "./pages/SchoolsTransport.tsx";
-import Fleet from "./pages/Fleet.tsx";
-import Destinations from "./pages/Destinations.tsx";
-import BlogsReviews from "./pages/BlogsReviews.tsx";
-import BlogDetail from "./pages/BlogDetail.tsx";
-import Contact from "./pages/Contact.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import QrLanding from "./pages/QrLanding.tsx";
-import Admin from "./pages/Admin.tsx";
+import Index from "./routes/Index.tsx";
+import About from "./routes/About.tsx";
+import Services from "./routes/Services.tsx";
+import AirportTransfers from "./routes/AirportTransfers.tsx";
+import SgrTransfers from "./routes/SgrTransfers.tsx";
+import SafariTours from "./routes/SafariTours.tsx";
+import CarHire from "./routes/CarHire.tsx";
+import LongDistance from "./routes/LongDistance.tsx";
+import CorporateTransport from "./routes/CorporateTransport.tsx";
+import HotelTransfers from "./routes/HotelTransfers.tsx";
+import SchoolsTransport from "./routes/SchoolsTransport.tsx";
+import Fleet from "./routes/Fleet.tsx";
+import Destinations from "./routes/Destinations.tsx";
+import BlogsReviews from "./routes/BlogsReviews.tsx";
+import BlogDetail from "./routes/BlogDetail.tsx";
+import Contact from "./routes/Contact.tsx";
+import NotFound from "./routes/NotFound.tsx";
+import QrLanding from "./routes/QrLanding.tsx";
+import Admin from "./routes/Admin.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +31,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      
         <Seo />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -54,7 +54,7 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image'
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -145,11 +146,13 @@ export default function BlogsManager() {
           <div className="md:col-span-2"><Label>Full article body (optional)</Label><Textarea rows={8} value={form.body ?? ""} onChange={e => setForm({ ...form, body: e.target.value })} /></div>
           <div className="md:col-span-2"><Label>Image alt text</Label><Input value={form.alt} onChange={e => setForm({ ...form, alt: e.target.value })} /></div>
           <div className="md:col-span-2 flex items-center gap-4">
-            {form.image_url ? <img
-              src={form.image_url}
-              alt=""
-              className="w-32 h-20 object-cover rounded"
-            /> : null}
+            {form.image_url ? <Image
+          src={form.image_url}
+          alt=""
+          width={180}
+          height={64}
+          className="w-32 h-20 object-cover rounded w-auto"
+        /> : null}
             <ImageUpload onUploaded={(url) => setForm({ ...form, image_url: url })} label={form.image_url ? "Replace image" : "Upload image"} />
           </div>
         </div>
@@ -168,11 +171,13 @@ export default function BlogsManager() {
         <h3 className="font-serif text-xl">Existing blogs ({items.length})</h3>
         {items.map(b => (
           <div key={b.id} className="flex items-center gap-4 bg-card border border-border p-3 rounded">
-            {b.image_url && <img
-              src={b.image_url}
-              alt={b.alt}
-              className="w-20 h-14 object-cover rounded"
-            />}
+            {b.image_url && <Image
+          src={b.image_url}
+          alt={b.alt}
+          width={180}
+          height={64}
+          className="w-20 h-14 object-cover rounded w-auto"
+        />}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="font-bold truncate">{b.title}</p>

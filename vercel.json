@@ -1,34 +1,160 @@
 {
-  "routes": [
-    { "src": "/safari-tours", "headers": { "Location": "/services" }, "status": 301 },
-    { "src": "/all-team-members", "headers": { "Location": "/about" }, "status": 301 },
-    { "src": "/team", "headers": { "Location": "/about" }, "status": 301 },
-    { "src": "/about-us", "headers": { "Location": "/about" }, "status": 301 },
-    { "src": "/contact-us", "headers": { "Location": "/contact" }, "status": 301 },
-    { "src": "/tours", "headers": { "Location": "/destinations" }, "status": 301 },
-    { "src": "/car-hire", "headers": { "Location": "/services" }, "status": 301 },
-    { "src": "/airport-transfers", "headers": { "Location": "/services" }, "status": 301 },
-    { "src": "/blog", "headers": { "Location": "/blogs-reviews" }, "status": 301 },
-    { "src": "/reviews", "headers": { "Location": "/blogs-reviews" }, "status": 301 },
-    { "src": "/our-fleet", "headers": { "Location": "/fleet" }, "status": 301 },
-
-    { "src": "/shop", "status": 410 },
-    { "src": "/store", "status": 410 },
-    { "src": "/all-posts", "status": 410 },
-    { "src": "/posts", "status": 410 },
-    { "src": "/professional-and-reliability", "status": 410 },
-    { "src": "/professional-reliability", "status": 410 },
-    { "src": "/wp-admin", "status": 410 },
-    { "src": "/wp-login.php", "status": 410 },
-    { "src": "/wp-content/(.*)", "status": 410 },
-    { "src": "/wp-includes/(.*)", "status": 410 },
-    { "src": "/wp-json/(.*)", "status": 410 },
-    { "src": "/feed", "status": 410 },
-    { "src": "/feed/(.*)", "status": 410 },
-
-    { "src": "/(favicon\\.ico|favicon\\.png|favicon-32x32\\.png|favicon-96x96\\.png|apple-touch-icon\\.png|icon-192\\.png|icon-512\\.png|og-image\\.png|site\\.webmanifest|sitemap\\.xml|robots\\.txt)", "dest": "/$1" },
-    { "src": "/google(.*)\\.html", "dest": "/google$1.html" },
-
-    { "src": "/(.*)", "dest": "/index.html" }
+  "framework": "nextjs",
+  "redirects": [
+    {
+      "source": "/kids",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/caps",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cart",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/my-account",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/checkout",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/homepage-1",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/homepage-1/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/professional-and-reliability",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/customer-satisfaction",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/all-posts",
+      "destination": "/blogs-reviews",
+      "permanent": true
+    },
+    {
+      "source": "/all-posts/:path*",
+      "destination": "/blogs-reviews",
+      "permanent": true
+    },
+    {
+      "source": "/services_group/services",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/services_group/:path*",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/services/no-fee",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-2-columns/page/2",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-2-columns/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product-category/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tag/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/women",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/men",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/unisex",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/services/100-satisfaction",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/services/taxi-tours",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/services/airport-transfer",
+      "destination": "/services/airport-transfers",
+      "permanent": true
+    },
+    {
+      "source": "/services_group/our-benefits",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/category/passengers",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/woocommerce-cart",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/store/:path*",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }

@@ -1,3 +1,5 @@
+"use client";
+import Image from 'next/image'
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Phone, type LucideIcon } from "lucide-react";
@@ -76,7 +78,13 @@ const ServiceDetailPage = ({
     <Layout>
       {/* Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden py-24">
-        <img src={heroImage} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
+        <Image
+          src={heroImage}
+          alt={heroAlt}
+          fill
+          className="absolute inset-0 object-cover"
+          sizes="100vw"
+        />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/75 to-primary/65" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(244,196,48,0.22),transparent_55%)]" />
         <div className="absolute -top-24 left-[15%] h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
@@ -216,12 +224,13 @@ const ServiceDetailPage = ({
                     className="bg-card border border-border overflow-hidden transition-shadow hover:shadow-lg"
                   >
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={v.img}
-                        alt={v.alt}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                        loading="lazy"
-                      />
+                      <Image
+          src={v.img}
+          alt={v.alt}
+          fill
+          className="object-cover transition-transform duration-500 hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
                     </div>
                     <div className="p-6">
                       <h3 className="font-serif text-xl text-foreground mb-2">{v.name}</h3>
@@ -245,12 +254,13 @@ const ServiceDetailPage = ({
                     className="bg-card border border-border overflow-hidden transition-shadow hover:shadow-lg"
                   >
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={c.img}
-                        alt={c.alt}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                        loading="lazy"
-                      />
+                      <Image
+          src={c.img}
+          alt={c.alt}
+          fill
+          className="object-cover transition-transform duration-500 hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
                     </div>
                     <div className="p-6">
                       <h3 className="font-serif text-xl text-foreground mb-2">{c.title}</h3>
