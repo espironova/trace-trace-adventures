@@ -1521,3 +1521,4 @@ jobs:
       - name: Skip notice
         if: steps.check_flag.outputs.enabled == 'false'
         run: echo "lovable.migrate.json not found — skipping migration for this repo."
+        
