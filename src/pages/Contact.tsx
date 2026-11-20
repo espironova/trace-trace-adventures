@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import RateCalculator from "@/components/RateCalculator";
-import { Phone, Mail, MapPin, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const CONTACT_EMAIL = "info@tracktraceadventures.co.ke";
 
@@ -33,8 +34,13 @@ const Contact = () => {
     message: "",
   });
 
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState<{ name: string; whatsappText: string } | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sending) return;
+    setSending(true);
     const serviceLabel = form.service ? serviceLabels[form.service] ?? form.service : "General inquiry";
     const { error } = await supabase.from("contact_messages").insert({
       name: form.name.trim().slice(0, 120),
@@ -44,6 +50,7 @@ const Contact = () => {
       service_label: serviceLabel.slice(0, 80),
       message: form.message.trim().slice(0, 4000),
     });
+    setSending(false);
 
     if (error) {
       toast({
@@ -54,17 +61,12 @@ const Contact = () => {
       return;
     }
 
-    const subject = encodeURIComponent(`Track & Trace — ${serviceLabel} — ${form.name}`);
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone || "(not provided)"}\nService: ${serviceLabel}\n\nMessage:\n${form.message}\n`
-    );
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-
-    setForm({ name: "", email: "", phone: "", service: "", message: "" });
-    toast({
-      title: "Message received",
-      description: "We have your message and will reply within 24 hours. If your email app opens, press send to send us a copy too.",
+    setSent({
+      name: form.name.trim(),
+      whatsappText: `Hello Track & Trace, I'm ${form.name.trim()}. I just sent a message on your website about ${serviceLabel}.\n\n${form.message.trim()}`,
     });
+    setForm({ name: "", email: "", phone: "", service: "", message: "" });
+    toast({ title: "Message sent", description: "Thank you! We'll get back to you within 24 hours." });
   };
 
   return (
@@ -93,6 +95,33 @@ const Contact = () => {
               transition={{ duration: 0.7 }}
             >
               <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">Send Us a Message</h2>
+              {sent ? (
+                <div className="border border-accent/40 bg-accent/5 p-8 space-y-4">
+                  <CheckCircle2 className="w-10 h-10 text-accent" />
+                  <h3 className="font-serif text-2xl text-foreground">Thank you, {sent.name}!</h3>
+                  <p className="font-sans text-sm text-foreground/80">
+                    Your message has been received. Our team will get back to you within 24 hours.
+                  </p>
+                  <p className="font-sans text-sm text-foreground/80">Need a faster reply? Continue the conversation on WhatsApp.</p>
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <a
+                      href={`https://wa.me/254721521009?text=${encodeURIComponent(sent.whatsappText)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors"
+                    >
+                      <WhatsAppIcon className="w-4 h-4" /> Chat on WhatsApp
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setSent(null)}
+                      className="inline-flex items-center gap-2 border border-accent text-accent px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] font-bold hover:bg-accent/10 transition-colors"
+                    >
+                      Send another message
+                    </button>
+                  </div>
+                </div>
+              ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className="font-sans text-sm text-foreground/80 block mb-1.5">Full Name *</label>
@@ -161,11 +190,13 @@ const Contact = () => {
                 </div>
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-10 py-4 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors"
+                  disabled={sending}
+                  className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-10 py-4 font-sans text-sm uppercase tracking-[0.15em] font-bold hover:bg-accent/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" /> Send Message
+                  <Send className="w-4 h-4" /> {sending ? "Sending..." : "Send Message"}
                 </button>
               </form>
+              )}
             </motion.div>
 
             <motion.div
