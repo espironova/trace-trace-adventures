@@ -40,7 +40,7 @@ function readBrokerReply(data: unknown, requestId: string): BrokerReply | null {
  */
 export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
   if (typeof window === 'undefined') return undefined;
-  const host = location.hostname;
+  const host = (typeof window !== 'undefined' ? location.hostname : '');
   const PREVIEW_ZONES = ['lovableproject.com', 'lovableproject-dev.com', 'lovable.app', 'gpt-eng.com', 'gptengineer.run'];
   const onPreviewZone = PREVIEW_ZONES.some((z) => host === z || host.endsWith('.' + z));
   // Read the id only from non-user-controlled host positions, so a user-named
@@ -79,7 +79,7 @@ export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
         if (done) return;
         done = true;
         clearTimeout(timer);
-        window.removeEventListener('message', onMessage);
+        if (typeof window !== 'undefined') window.removeEventListener('message', onMessage);
         resolve(reply);
       };
       const onMessage = (e: MessageEvent<unknown>) => {
@@ -87,7 +87,7 @@ export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
         const reply = readBrokerReply(e.data, requestId);
         if (reply) finish(reply);
       };
-      window.addEventListener('message', onMessage);
+      if (typeof window !== 'undefined') window.addEventListener('message', onMessage);
       const timer = setTimeout(() => { finish(null); }, TIMEOUT);
       const msg: BrokerRequest = { type, requestId, projectId, key };
       if (value !== undefined) msg.value = value;
@@ -127,7 +127,7 @@ export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
       return localStorage.getItem(key);
     },
     setItem: (key, value) => {
-      localStorage.setItem(key, value);
+      if (typeof window !== 'undefined') localStorage.setItem(key, value);
       return request('lovable-preview-auth:set', key, value).then((res) => {
         if (res?.ok && res.value !== null && localStorage.getItem(key) === value) {
           if (res.value === '') localStorage.removeItem(key);
@@ -137,7 +137,7 @@ export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
     },
     removeItem: (key) => {
       const local = readLocal(key);
-      localStorage.removeItem(key);
+      if (typeof window !== 'undefined') localStorage.removeItem(key);
       return request('lovable-preview-auth:remove', key, local ?? undefined).then(() => {});
     },
   };

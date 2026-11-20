@@ -85,7 +85,7 @@ const SidebarProvider = React.forwardRef<
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    if (typeof window !== 'undefined') window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [toggleSidebar]);
 

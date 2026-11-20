@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image'
 import { useState } from "react";
 import { Phone, Mail, Menu, X } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -50,13 +51,13 @@ const Header = () => {
       <nav className="bg-background/95 backdrop-blur-md border-b border-border">
         <div className="container mx-auto flex items-center justify-between py-3 px-4">
           <a href="/" className="flex items-center gap-3">
-            <img
-              src={logo}
-              alt="Track & Trace Adventures logo"
-              width={180}
-              height={64}
-              className="h-12 w-auto"
-            />
+            <Image
+          src={logo}
+          alt="Track & Trace Adventures logo"
+          width={180}
+          height={64}
+          className="h-12 w-auto w-auto"
+        />
             <div className="hidden sm:block">
               <span className="font-serif text-lg md:text-xl font-bold text-primary tracking-tight leading-none block">
                 Track & Trace

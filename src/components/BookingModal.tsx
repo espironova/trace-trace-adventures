@@ -124,7 +124,7 @@ const BookingModal = ({ open, onClose, initialVehicleType, initialServiceId }: B
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const message = buildBookingMessage();
-    window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
+    if (typeof window !== 'undefined') window.open(`https://wa.me/254721521009?text=${encodeURIComponent(message)}`, "_blank");
     onClose();
   };
 
