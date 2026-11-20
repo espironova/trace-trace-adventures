@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import RateCalculator from "@/components/RateCalculator";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const CONTACT_EMAIL = "info@tracktraceadventures.co.ke";
 
@@ -32,17 +33,37 @@ const Contact = () => {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const serviceLabel = form.service ? serviceLabels[form.service] ?? form.service : "General inquiry";
+    const { error } = await supabase.from("contact_messages").insert({
+      name: form.name.trim().slice(0, 120),
+      email: form.email.trim().slice(0, 200),
+      phone: (form.phone || "").trim().slice(0, 40),
+      service: form.service,
+      service_label: serviceLabel.slice(0, 80),
+      message: form.message.trim().slice(0, 4000),
+    });
+
+    if (error) {
+      toast({
+        title: "Message could not be saved",
+        description: `Please email us directly at ${CONTACT_EMAIL} or call +254 721 521 009.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     const subject = encodeURIComponent(`Track & Trace — ${serviceLabel} — ${form.name}`);
     const body = encodeURIComponent(
       `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone || "(not provided)"}\nService: ${serviceLabel}\n\nMessage:\n${form.message}\n`
     );
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+
+    setForm({ name: "", email: "", phone: "", service: "", message: "" });
     toast({
-      title: "Opening your email",
-      description: "Complete and send the message in your email app to reach us.",
+      title: "Message received",
+      description: "We have your message and will reply within 24 hours. If your email app opens, press send to send us a copy too.",
     });
   };
 

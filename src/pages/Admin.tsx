@@ -10,6 +10,7 @@ import ReviewsManager from "@/components/admin/ReviewsManager";
 import FleetManager from "@/components/admin/FleetManager";
 import RatesManager from "@/components/admin/RatesManager";
 import AdminsManager from "@/components/admin/AdminsManager";
+import MessagesManager from "@/components/admin/MessagesManager";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
 
@@ -92,12 +93,14 @@ export default function Admin() {
             <TabsTrigger value="fleet">Fleet</TabsTrigger>
             <TabsTrigger value="rates">Rates</TabsTrigger>
             <TabsTrigger value="admins">Admins</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
           <TabsContent value="blogs" className="mt-6"><BlogsManager /></TabsContent>
           <TabsContent value="reviews" className="mt-6"><ReviewsManager /></TabsContent>
           <TabsContent value="fleet" className="mt-6"><FleetManager /></TabsContent>
           <TabsContent value="rates" className="mt-6"><RatesManager /></TabsContent>
           <TabsContent value="admins" className="mt-6"><AdminsManager /></TabsContent>
+          <TabsContent value="messages" className="mt-6"><MessagesManager /></TabsContent>
         </Tabs>
       </section>
     </Layout>
