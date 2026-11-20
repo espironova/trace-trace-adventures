@@ -6,23 +6,10 @@ import { Phone, Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-
-const CONTACT_EMAIL = "info@tracktraceadventures.co.ke";
+import { CONTACT_EMAIL, buildContactPayload } from "@/lib/contact-payload";
 
 const OFFICE_MAP_EMBED_SRC =
   "https://www.google.com/maps?q=Milestone+Business+Center,+Northern+Bypass+Road,+Nairobi,+Kenya&output=embed&hl=en&z=16";
-
-const serviceLabels: Record<string, string> = {
-  "airport-transfer": "Airport Transfer",
-  "safari-tour": "Safari Tour",
-  "car-hire": "Car Hire / Van Hire",
-  "long-distance": "Long Distance Transfer",
-  "sgr-transfer": "SGR Transfers",
-  "travel-consultation": "Travel Consultation",
-  "corporate": "Corporate Transport",
-  "leave-review": "Leave a review",
-  other: "Other",
-};
 
 const Contact = () => {
   const { toast } = useToast();
@@ -41,15 +28,9 @@ const Contact = () => {
     e.preventDefault();
     if (sending) return;
     setSending(true);
-    const serviceLabel = form.service ? serviceLabels[form.service] ?? form.service : "General inquiry";
-    const { error } = await supabase.from("contact_messages").insert({
-      name: form.name.trim().slice(0, 120),
-      email: form.email.trim().slice(0, 200),
-      phone: (form.phone || "").trim().slice(0, 40),
-      service: form.service,
-      service_label: serviceLabel.slice(0, 80),
-      message: form.message.trim().slice(0, 4000),
-    });
+    const payload = buildContactPayload(form);
+    const serviceLabel = payload.service_label;
+    const { error } = await supabase.from("contact_messages").insert(payload);
     setSending(false);
 
     if (error) {
